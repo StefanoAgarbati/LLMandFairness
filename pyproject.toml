@@ -1,0 +1,22 @@
+[project]
+name = "llm-and-fairness"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "StefanoAgarbati",email = "stefano.agarbati.unibo@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas",
+    "numpy",
+    "langchain"
+]
+
+[tool.poetry]
+packages = [{include = "llm_and_fairness", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
