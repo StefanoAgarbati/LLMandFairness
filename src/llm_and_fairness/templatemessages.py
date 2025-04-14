@@ -1,22 +1,39 @@
 import json
 from messages import UserMessage
 
+
 class UserMessageRepository:
-    path = ".\messageTemplates.json"
-    def __init__(self, pathname=None):
+    def __init__(self):
         self.messages = []
-        if(pathname==None):
-            self.pathname = UserMessageRepository.path
-        else:
-            self.pathname = pathname
-        self.initRepository(self.pathname)
-    def initRepository(self, pathname):
-        jsonRep = json.load(open(pathname, "r"))
+
+    def addUserMessage(self, aMessage):
+        self.messages.append(aMessage)
+
+    def getMessages(self):
+        return self.messages
+
+
+class UserMessageRepositoryFiller:
+    def __init__(self, userMessageRepository, pathname=".\messageTemplates.json"):
+        self.pathname = pathname
+        self.repository = userMessageRepository
+
+    def initRepository(self):
+        jsonRep = json.load(open(self.pathname, "r"))
         templates = jsonRep['templates']
         for template in templates:
             message = template['message']
             params = template['params']
-            userMessage = UserMessage(message, params)
-            self.messages.append(userMessage)
-    def getMessages(self):
-        return self.messages
+            for param in params:
+                userMessage = UserMessage(message, param)
+                self.repository.addUserMessage(userMessage)
+
+class UserMessageRepositoryFactory:
+
+    @staticmethod
+    def createUserMessageRepository():
+        repository = UserMessageRepository()
+        filler = UserMessageRepositoryFiller(repository)
+        filler.initRepository()
+        return repository
+

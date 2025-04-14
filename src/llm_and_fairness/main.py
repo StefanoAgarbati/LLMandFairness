@@ -1,14 +1,15 @@
 from applogic import LlmFairnessApplLogic
 from chat import ChatModelFactory, ChatModelType
 from outputdevice import OutputDeviceFactory, OutputDeviceType
-from templatemessages import UserMessageRepository
+from templatemessages import UserMessageRepositoryFactory
+
 
 def llmFairnessMain():
     main = MainLLMFairness()
     main.startTheSystem()
 
 class ApplConfig:
-    outputDevice = OutputDeviceType.Standard
+    outputDevice = OutputDeviceType.Jupyter
     apiKey = "AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY"
     modelName = "gemini-2.0-flash"
     chatModelType = ChatModelType.GOOGLE
@@ -31,7 +32,7 @@ class MainLLMFairness:
         return applLogic
 
     def createMessageRepository(self):
-        repository = UserMessageRepository()
+        repository = UserMessageRepositoryFactory.createUserMessageRepository()
         return repository
 
     def createChatModel(self):
