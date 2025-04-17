@@ -16,6 +16,7 @@ class DatasetLoader:
     def get_data(self):
         return self.frame
 
+    @staticmethod
     def create_dataset(pathname, description):
         dataset_loader = DatasetLoader(pathname, description)
         return dataset_loader.get_data()
