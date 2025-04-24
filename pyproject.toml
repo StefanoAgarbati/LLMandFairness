@@ -11,7 +11,8 @@ dependencies = [
     "pandas",
     "numpy",
     "langchain",
-    "IPhyton"
+    "IPhyton",
+    "sklearn"
 ]
 
 [tool.poetry]
