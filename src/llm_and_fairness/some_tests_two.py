@@ -8,6 +8,7 @@ from src.llm_and_fairness.tools.tool_repository_factory import ToolRepositoryTyp
 from src.llm_and_fairness.use_cases.add_memory_use_case import AddMemoryUseCase
 from src.llm_and_fairness.use_cases.bind_tools_use_case import BindToolsToChatUseCase
 from src.llm_and_fairness.use_cases.calculate_distribution_use_case import CalculateDistributionUseCase
+from src.llm_and_fairness.use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
 from src.llm_and_fairness.use_cases.get_memories_use_case import GetMemoriesUseCase
 from src.llm_and_fairness.use_cases.handle_response_use_case import HandleResponseUseCase
 from src.llm_and_fairness.use_cases.load_dataset_use_case import LoadDatasetUseCase
@@ -68,6 +69,9 @@ def create_add_memory_use_case(memory_repository):
 def create_get_memories_use_case(memory_repository):
     return GetMemoriesUseCase(memory_repository)
 
+def create_get_correlation_matrix_use_case(dataset_repository):
+    return GetCorrelationMatrixUseCase(dataset_repository)
+
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name,SystemConfig.api_key)
     output_device = create_output_device(SystemConfig.out_dev_type)
@@ -79,9 +83,11 @@ def create_system():
     memory_repository = create_memory_repository()
     add_memory_uc = create_add_memory_use_case(memory_repository)
     get_memories_uc = create_get_memories_use_case(memory_repository)
+    get_correlation_matrix_uc = create_get_correlation_matrix_use_case(dataset_repository)
 
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
     UseCaseRepository.add_use_case(UseCase.GET_DISTRIBUTION,calculate_distr_uc)
+    UseCaseRepository.add_use_case(UseCase.GET_CORRELATION_MATRIX, get_correlation_matrix_uc)
 
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)

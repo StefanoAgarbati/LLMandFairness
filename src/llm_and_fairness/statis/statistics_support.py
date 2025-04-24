@@ -17,3 +17,8 @@ class StatisticsSupport:
     @staticmethod
     def percentage_distribution(data):
         return StatisticsSupport.relative_frequency_distribution(data) * 100
+
+    @staticmethod
+    def correlation_matrix(dataset):
+        return dataset.corr(numeric_only=True)
+

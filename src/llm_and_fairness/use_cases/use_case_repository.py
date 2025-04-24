@@ -24,5 +24,6 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    GET_CORRELATION_MATRIX = 'get_correlation_matrix'
     LOAD_DATASET = 'load_dataset'
     GET_DISTRIBUTION = 'get_distribution'

@@ -13,7 +13,7 @@ def toolDispatcher(data):
             return loadDataset.invoke(data)
 
 def get_available_tools_names():
-    names = ['somma', 'load_dataset', 'get_distribution']
+    names = ['somma', 'load_dataset', 'get_distribution', 'get_correlation_matrix']
     return names
 
 def get_tool_by_name(toolname):
@@ -22,6 +22,8 @@ def get_tool_by_name(toolname):
             return loadDataset
         case 'get_distribution':
             return get_distribution
+        case 'get_correlation_matrix':
+            return get_correlation_matrix
         case 'somma':
             return somma
         case 'load_dataset':
@@ -31,7 +33,7 @@ def get_tool_by_name(toolname):
 
 
 def get_all_tools():
-    tools = [load_dataset, somma, get_distribution]
+    tools = [load_dataset, somma, get_distribution, get_correlation_matrix]
     return tools
 
 
@@ -58,6 +60,12 @@ def get_distribution(attribute_name: str, dataset_name: str) -> tuple[str, pd.Se
     content = f"Ecco la distribuzione relativa all'attributo {attribute_name}: {data}"
     return content, data
 
+@tool(response_format="content_and_artifact")
+def get_correlation_matrix(dataset_name: str) -> tuple[str, pd.DataFrame]:
+    """Calcola la matrice di correlazione relativa ad un dataset"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_CORRELATION_MATRIX).get_correlation_matrix(dataset_name)
+    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n {data}"
+    return content, data
 
 @tool(response_format="content_and_artifact")
 def somma(a: int, b: int) -> tuple[str, int]:
