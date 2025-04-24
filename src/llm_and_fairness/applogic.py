@@ -25,6 +25,7 @@ class LlmFairnessApplLogic(ActiveObject):
     def processMessage(self, message):
         self.showQuestion(PromptSupport.getResolvedMessage(message))
         response = self.sendMessageToLLM(message)
+        self.processResponse(response)
         self.showResponse(response.getMessage())
 
     def showQuestion(self, aMessage):
@@ -38,3 +39,6 @@ class LlmFairnessApplLogic(ActiveObject):
 
     def doJob(self):
         self.executeLogic()
+
+    def processResponse(self, response):
+        pass

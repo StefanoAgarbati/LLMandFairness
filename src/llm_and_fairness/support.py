@@ -35,3 +35,15 @@ class DatasetLoader:
     def create_dataset(pathname, description):
         dataset_loader = DatasetLoader(pathname, description)
         return dataset_loader.get_data()
+
+
+class DatasetFactory:
+    datapath = "datasets/name/name.data"
+    columnspath = "datasets/name/namecolumns.json"
+
+    @staticmethod
+    def create_dataset(name):
+        path = DatasetFactory.datapath.replace("name", name)
+        colpath = DatasetFactory.columnspath.replace("name", name)
+        dataset = DatasetLoader.create_dataset(path, colpath)
+        return dataset

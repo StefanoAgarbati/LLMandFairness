@@ -1,0 +1,68 @@
+{
+	"templates": [
+		{
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.Hai compreso? Rispondi si oppure no.",
+			"params": [ {
+				"ruolo" : "un esperto di data science e analisi dei dati",
+				"contesto": "quello delle scienze sociali con attenzione alle questioni di bias e fairness"
+			}]
+		},
+		{
+			"message": "Sono un {ruolo}. Devo {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possone essere critici per ciò che riguarda la fairness? Solo elenco.",
+			"params": [{
+				"ruolo" : "data scientist",
+				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
+				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
+			}]
+		},
+		{
+			"message": "Sono un {ruolo}. Devo {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali altri attributi potrebbero essere necessari a raggiungere l'obiettivo ma non presenti nell'elenco che ti ho fornito?",
+			"params": [{
+				"ruolo" : "data scientist",
+				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
+				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
+			}]
+		},
+		{
+			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Rispondi nella forma [n1,n2,...]",
+			"params" : [
+				{
+					"nome" : "race",
+					"valori": "White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black"
+				},
+				{
+					"nome" : "sex",
+					"valori": "Female, Male"
+				}
+			]
+		},
+		{
+			"message": "Calcola la distribuzione dell'attributo {attributo} del dataset {dataset}",
+			"params" : [
+				{
+					"attributo" : "age",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "sex",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "occupation",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "education",
+					"dataset": "adult"
+				}
+			]
+		},
+		{
+			"message": "Il mio dataset contiene i seguenti attributi {attributi}. Devo raggiungere il seguente obiettivo: {obiettivo}. Quale fra gli attributi individui come variabile target?",
+			"params": [{
+				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
+				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
+			}]
+		}
+	]
+}

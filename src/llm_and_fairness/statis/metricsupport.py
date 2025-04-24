@@ -1,4 +1,4 @@
-from statis.statisdomain import Distribution, StatisticsSupport
+from statisdomain import Distribution, StatisticsSupport
 
 def frequency_distribution(data):
     distribution = data.value_counts().sort_index()
@@ -12,6 +12,7 @@ def relative_frequency_distribution(data):
 
 def percentage_distribution(data):
     return relative_frequency_distribution(data) * 100
+
 
 class StatisticsSupportImpl(StatisticsSupport):
     def __init__(self, dataset):

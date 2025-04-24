@@ -22,6 +22,8 @@ class ChatModel:
     def getStream(self, aMessage):
         return self.chatImpl.getStream(aMessage)
 
+    def bind_tools(self, tools):
+        self.chatImpl.bind_tools(tools)
 
 class ChatModelImplementation:
     def __init__(self, modelName):
@@ -39,7 +41,8 @@ class ChatModelImplementation:
         # chain = self.createChain(aMessage, self.llm)
         # stream = chain.stream(aMessage.getParameters())
         pass
-
+    def bind_tools(self, tools):
+        pass
     def getLLM(self):
         pass
 
@@ -59,6 +62,9 @@ class GoogleChatModel(ChatModelImplementation):
         super().__init__(modelName)
         #print(f"GoogleChatModel cons() llm is  {self.llm}")
         #print(f"GoogleChatModel apikey {self.apiKey}")
+
+    def bind_tools(self, tools):
+        self.llm = self.llm.bind_tools(tools)
 
     def getLLM(self):
         #print("GoogleChatModel getLLM called")
