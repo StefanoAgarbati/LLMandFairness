@@ -5,12 +5,12 @@ from messages.user_message import UserMessage
 
 class ApplController:
 
-    def __init__(self, add_memory_use_case, get_memories_use_case, output_device, handle_response_use_case,
+    def __init__(self, add_memory_use_case, get_memories_use_case, display_use_case, handle_response_use_case,
                  send_message_use_case
                  ):
         self.send_message_uc = send_message_use_case
         self.handle_response_uc = handle_response_use_case
-        self.output_device = output_device
+        self.display_use_case = display_use_case
         self.get_memories_uc = get_memories_use_case
         self.add_memory_uc = add_memory_use_case
         self.messages = []
@@ -26,7 +26,7 @@ class ApplController:
 
     def process_message(self, message):
         self.add_memory(message.get_message())
-        self.show_message(message.get_message())
+        self.show_request(message)
         memories = self.get_memories()
         #print("Memories:" , memories)
         response = self.send_memory_to_chat(memories)
@@ -34,9 +34,12 @@ class ApplController:
         self.show_response(responses)
         self.add_memories(responses)
 
+    def show_request(self, message):
+        self.display_use_case.display_request(message)
+
     def show_response(self, responses):
         for response in responses:
-            self.show_message(response.get_message())
+            self.display_use_case.display_response(response)
 
     def add_memory(self, message):
         self.add_memory_uc.add_memory(message)
@@ -50,8 +53,8 @@ class ApplController:
     def handle_response(self, response):
         return self.handle_response_uc.handle(response)
 
-    def show_message(self, message):
-        self.output_device.out(message)
+    """def show_message(self, message):
+        self.output_device.out(message)"""
 
     def init_messages(self):
         self.messages.append(UserMessage("Ciao, io sono Stefano", {}))
@@ -79,3 +82,4 @@ class ApplController:
 
     def add_memories(self, memories):
         self.add_memory_uc.add_memories(memories)
+

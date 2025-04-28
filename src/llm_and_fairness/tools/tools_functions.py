@@ -10,7 +10,8 @@ def get_available_tools_names():
     names = ['somma', 'load_dataset', 'get_distribution', 'get_correlation_matrix', 'encode_dataset',
              'clean_dataset', 'esegui_codifica_dataset', 'split_dataset_in_train_test_set',
              'addestra_un_modello_e_fai_una_previsione', 'calculate_the_distributions_of_all_attributes',
-             'valuta_modelli_su_dataset_rispetto_a_target']
+             'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
+             'disegna_la_matrice_di_correlazione_come_heatmap']
     return names
 
 def get_tool_by_name(toolname):
@@ -35,6 +36,10 @@ def get_tool_by_name(toolname):
             return addestra_un_modello_e_fai_una_previsione
         case 'valuta_modelli_su_dataset_rispetto_a_target':
             return valuta_modelli_su_dataset_rispetto_a_target
+        case 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi':
+            return disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi
+        case 'disegna_la_matrice_di_correlazione_come_heatmap':
+            return disegna_la_matrice_di_correlazione_come_heatmap
         case 'somma':
             return somma
         case 'load_dataset':
@@ -44,11 +49,18 @@ def get_tool_by_name(toolname):
 
 
 def get_all_tools():
-    tools = [load_dataset, somma, get_distribution, get_correlation_matrix, encode_dataset,
+    tools =[]
+    for name in get_available_tools_names():
+        tool = get_tool_by_name(name)
+        tools.append(tool)
+    return tools
+
+    """tools = [load_dataset, somma, get_distribution, get_correlation_matrix, encode_dataset,
              clean_dataset, esegui_codifica_dataset, split_dataset_in_train_test_set,
              addestra_un_modello_e_fai_una_previsione, calculate_the_distributions_of_all_attributes,
-             valuta_modelli_su_dataset_rispetto_a_target]
-    return tools
+             valuta_modelli_su_dataset_rispetto_a_target, disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi,
+             disegna_la_matrice_di_correlazione_come_heatmap]
+    return tools"""
 
 
 @tool(response_format="content_and_artifact")
@@ -64,6 +76,9 @@ def load_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Load a csv dataset from its name"""
     print("Load dataset tool called")
     data = UseCaseRepository.get_use_case_by_name(UseCase.LOAD_DATASET).load_dataset(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(f"Il dataset {dataset_name} è stato caricato.")
+    display_uc.display(data)
     content = f"Dataset {dataset_name} caricato con successo"
     return content, data
 
@@ -72,8 +87,11 @@ def load_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
 def clean_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Esegue operazioni di pulizia (cleaning) su di un dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.CLEAN_DATASET).clean_dataset(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(f"Ho eseguito la pulizia del dataset {dataset_name}")
+    display_uc.display(data)
     content = f"Il dataset {dataset_name} è stato pulito"
-    print(f"Tool clean_dataset eseguito su {dataset_name}")
+    #print(f"Tool clean_dataset eseguito su {dataset_name}")
     return content, data
 
 @tool(response_format="content_and_artifact")
@@ -81,16 +99,21 @@ def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[st
     """Calcola la distribuzione di frequenza di tutti gli attributi presenti nel dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_all_frequency_distributions(
         dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(f"Quelle che seguono sono le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    for distri in data:
+        display_uc.display(data)
+
     content = f"Ecco le distribuzioni di tutti gli attributi presenti nel dataset {dataset_name}:\n"
     for item in data:
-        content += item.to_string() + "\n"
+        content += item.to_json() + "\n"
     return content, data
 
 @tool(response_format="content_and_artifact")
 def get_distribution(attribute_name: str, dataset_name: str) -> tuple[str, pd.Series]:
     """Calcola la distribuzione di frequenza di un attributo presente nel dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_frequency_distribution(dataset_name, attribute_name)
-    content = f"Ecco la distribuzione relativa all'attributo {attribute_name}:\n {data.to_String()}"
+    content = f"Ecco la distribuzione relativa all'attributo {attribute_name}:\n {data.to_json()}"
     return content, data
 
 
@@ -98,7 +121,10 @@ def get_distribution(attribute_name: str, dataset_name: str) -> tuple[str, pd.Se
 def get_correlation_matrix(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Calcola la matrice di correlazione relativa ad un dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_CORRELATION_MATRIX).get_correlation_matrix(dataset_name)
-    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n {data.to_string()}"
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name}")
+    display_uc.display(data)
+    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n {data.to_json()}"
     return content, data
 
 @tool(response_format="content_and_artifact")
@@ -146,6 +172,31 @@ def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) 
     for item in data:
         content += f"Modello {item['model_name']}\n"
         content += f"{item['score'].mean()}\n"
+    return content, data
+
+@tool(response_format="content_and_artifact")
+def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: str) -> tuple[str, list]:
+    """Disegna i grafici delle distribuzione di tutti gli attributi di un dataset"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_all_distribution(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(f"Ecco i grafici che mostrano le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    for figure in data:
+        display_uc.display_figure(figure)
+
+    content = f"Ecco i grafici che mostrano le distribuzioni di tutte le variabili del dataset {dataset_name}"
+    return content, data
+
+
+@tool(response_format="content_and_artifact")
+def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[str, list]:
+    """Disegna i grafici delle distribuzione di tutti gli attributi di un dataset"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_correlation_matrix(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display(
+        f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name} in forma di heatmap")
+    display_uc.display_figure(data)
+
+    content = f"Ho disegnato la heatmap rappresentativa della matrice di correlazione del dataset {dataset_name}"
     return content, data
 
 @tool(response_format="content_and_artifact")

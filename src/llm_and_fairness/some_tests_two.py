@@ -39,10 +39,13 @@ from appl_logic.appl_controller import ApplController
 from chat.chat_factory import ChatModelType, ChatFactory
 from datasets.dataset_info import DatasetInfo
 from datasets.dataset_repository import DatasetRepository
+from drawing.statistical_drawer_factory import StatisticalDrawerFactory, StatisticalDrawerType
 from use_cases.add_memory_use_case import AddMemoryUseCase
 from use_cases.bind_tools_use_case import BindToolsToChatUseCase
 from use_cases.calculate_distribution_use_case import CalculateDistributionUseCase
 from use_cases.clean_dataset_use_case import CleanDatasetUseCase
+from use_cases.display_use_case import DisplayUseCase
+from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
 from use_cases.fit_predict_model_use_case import FitPredictModelUseCase
 from use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
@@ -72,6 +75,8 @@ class SystemConfig:
     classifier_config = {"model": ClassifierModel.RANDOM_FOREST}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
     models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]
+    drawer = StatisticalDrawerType.SEABORN
+
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
     params = {
@@ -162,6 +167,15 @@ def create_evaluate_models_use_case(validator, models, scorings, dataset_reposit
 def create_cross_validator():
     return CrossValidationSklearn()
 
+def create_display_use_case(output_device):
+    return DisplayUseCase(output_device)
+
+def create_draw_statistical_data_use_case(dataset_repository, drawer, get_correlation_matrix_uc):
+    return DrawStatisticalDataUseCase(dataset_repository, drawer, get_correlation_matrix_uc)
+
+def create_drawer(name):
+    return StatisticalDrawerFactory.create_statistical_drawer(name)
+
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name,SystemConfig.api_key)
     output_device = create_output_device(SystemConfig.out_dev_type)
@@ -186,6 +200,10 @@ def create_system():
     classifier = create_classifier(SystemConfig.classifier_config)
     fit_predict_uc = create_fit_predict_model_use_case(classifier,split_repository,prediction_repository)
     evaluate_models_uc = create_evaluate_models_use_case(validator, models, SystemConfig.scorings, dataset_repository)
+    display_uc = create_display_use_case(output_device)
+    drawer = create_drawer(SystemConfig.drawer)
+    draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer, get_correlation_matrix_uc)
+
 
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
     UseCaseRepository.add_use_case(UseCase.GET_DISTRIBUTION,calculate_distr_uc)
@@ -195,6 +213,9 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.SPLIT_TRAIN_TEST, train_test_split_uc)
     UseCaseRepository.add_use_case(UseCase.FIT_PREDICT_MODEL, fit_predict_uc)
     UseCaseRepository.add_use_case(UseCase.EVALUATE_MODELS, evaluate_models_uc)
+    UseCaseRepository.add_use_case(UseCase.DISPLAY, display_uc)
+    UseCaseRepository.add_use_case(UseCase.DRAW_STATISTICAL_DATA, draw_statistical_data_use_case)
+
 
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)

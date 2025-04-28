@@ -23,6 +23,8 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    DRAW_STATISTICAL_DATA = 'draw_statistical_data'
+    DISPLAY = 'display'
     EVALUATE_MODELS = 'evaluate_models'
     FIT_PREDICT_MODEL = 'fit_predict_model'
     SPLIT_TRAIN_TEST = 'plit_train_test'

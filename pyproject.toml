@@ -12,7 +12,8 @@ dependencies = [
     "numpy",
     "langchain",
     "IPhyton",
-    "sklearn"
+    "sklearn",
+    "seaborn"
 ]
 
 [tool.poetry]
