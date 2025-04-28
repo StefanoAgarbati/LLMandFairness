@@ -1,9 +1,9 @@
 from langchain_core.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from src.llm_and_fairness.chat.chat_model import ChatModel
+from chat.chat_model import ChatModel
 
-from src.llm_and_fairness.messages.chat_message_langchain import ChatMessageLangchain
+from messages.chat_message_langchain import ChatMessageLangchain
 
 
 class GoogleChatModelLangchain(ChatModel):

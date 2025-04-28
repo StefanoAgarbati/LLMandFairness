@@ -1,4 +1,4 @@
-from src.llm_and_fairness.statis.statistics_support import StatisticsSupport
+from statis.statistics_support import StatisticsSupport
 
 
 class StatisticsService:

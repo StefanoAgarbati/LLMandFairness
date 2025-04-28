@@ -1,4 +1,4 @@
-from src.llm_and_fairness.ML.encoding.encoder import Encoder
+from ML.encoding.encoder import Encoder
 from sklearn.preprocessing import LabelEncoder
 
 class SkLearnNominalEncoder(Encoder):

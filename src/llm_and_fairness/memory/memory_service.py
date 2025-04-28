@@ -1,4 +1,4 @@
-from src.llm_and_fairness.memory.memory import Memory
+from memory.memory import Memory
 
 
 class MemoryService:

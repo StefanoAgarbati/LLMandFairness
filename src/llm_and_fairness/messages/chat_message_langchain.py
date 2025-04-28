@@ -1,5 +1,5 @@
-from src.llm_and_fairness.messages.chat_message import ChatMessage
-from src.llm_and_fairness.tools.tool_call import ToolCall
+from messages.chat_message import ChatMessage
+from tools.tool_call import ToolCall
 
 
 class ChatMessageLangchain(ChatMessage):
@@ -20,6 +20,7 @@ class ChatMessageLangchain(ChatMessage):
 
     def get_tool_calls(self) -> list[ToolCall]:
         calls = self.ai_message.tool_calls
+        print(f"ChatMessageLangchein tool calls: -> {calls}")
         tool_calls = []
         for call in calls:
             tc = ToolCall(call)

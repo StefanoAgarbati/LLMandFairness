@@ -1,6 +1,3 @@
-from src.llm_and_fairness.messages.tool_execution_message import ToolExecutionMessage
-
-
 class HandleResponseUseCase:
 
     def __init__(self, tool_repository):
@@ -23,6 +20,8 @@ class HandleResponseUseCase:
         for tool_call in tool_calls:
             tool = self.tool_repository.get_tool_by_name(tool_call.get_name())
             tool_exec_result = tool.execute(tool_call.get_data())
+            print("tool_exec_result: " , tool_exec_result.get_tool_name())
+            print("tool_exec_result: ", tool_exec_result.get_args())
             exec_results.append(tool_exec_result)
             return exec_results
             #self.process_execution_result(exec_results)

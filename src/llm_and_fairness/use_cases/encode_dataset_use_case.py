@@ -5,9 +5,10 @@ class EncodeDatasetUseCase:
         self.dataset_encoder = dataset_encoder
         self.dataset_info = dataset_info
 
-    def encode_dataset(self, dataset_name, encoding_config):
+    def encode_dataset(self, dataset_name):
         dataset = self.dataset_repository.get_dataset_by_name(dataset_name)
-        encoded_dataset = self.dataset_encoder(dataset, self.dataset_info)
+        encoded_dataset = self.dataset_encoder.encode(dataset, self.dataset_info.get_info())
+        self.dataset_repository.add_dataset(dataset_name + "_encoded", encoded_dataset)
         return encoded_dataset
 
 

@@ -1,6 +1,6 @@
 from abc import abstractmethod
-from src.llm_and_fairness.messages.message import Message
-from src.llm_and_fairness.tools.tool_call import ToolCall
+from messages.message import Message
+from tools.tool_call import ToolCall
 
 
 class ChatMessage(Message):

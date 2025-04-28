@@ -1,5 +1,5 @@
-from src.llm_and_fairness.output_device.jupyter_output_device import JupyterOutputDevice
-from src.llm_and_fairness.output_device.standard_output_device import StandardOutputDevice
+from output_device.jupyter_output_device import JupyterOutputDevice
+from output_device.standard_output_device import StandardOutputDevice
 
 
 class OutputDeviceFactory:

@@ -1,4 +1,4 @@
-from src.llm_and_fairness.statis.statistics_support import StatisticsSupport
+from statis.statistics_support import StatisticsSupport
 
 
 class CalculateDistributionUseCase:
@@ -13,4 +13,13 @@ class CalculateDistributionUseCase:
         result = StatisticsSupport.frequency_distribution(dataset[attribute_name])
         #print("calculate_frequency:", result)
         return result
+
+    def calculate_all_frequency_distributions(self, dataset_name):
+        dataset = self.dataset_repository.get_dataset_by_name(dataset_name)
+        distris = []
+        for col_name in dataset.columns:
+            distri = dataset[col_name].value_counts().sort_values(ascending=False)
+            distris.append(distri)
+        return distris
+
 

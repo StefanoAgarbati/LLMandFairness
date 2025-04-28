@@ -44,7 +44,19 @@
 					"dataset": "adult"
 				},
 				{
-					"attributo" : "sex",
+					"attributo" : "workclass",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "fnlwgt",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "education",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "marital-status",
 					"dataset": "adult"
 				},
 				{
@@ -52,7 +64,35 @@
 					"dataset": "adult"
 				},
 				{
-					"attributo" : "education",
+					"attributo" : "relationship",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "race",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "sex",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "capital-gain",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "capital-loss",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "hours-per-week",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "native-country",
+					"dataset": "adult"
+				},
+				{
+					"attributo" : "income",
 					"dataset": "adult"
 				}
 			]

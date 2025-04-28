@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from src.llm_and_fairness.tools.tool import Tool
 
 
 class ToolRepository(ABC):

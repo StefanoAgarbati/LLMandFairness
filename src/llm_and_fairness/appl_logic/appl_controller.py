@@ -1,6 +1,6 @@
 import time
 
-from src.llm_and_fairness.messages.user_message import UserMessage
+from messages.user_message import UserMessage
 
 
 class ApplController:
@@ -55,9 +55,20 @@ class ApplController:
 
     def init_messages(self):
         self.messages.append(UserMessage("Ciao, io sono Stefano", {}))
+        self.messages.append(UserMessage("puoi fare la somma fra 5 e 7?", {}))
         self.messages.append(UserMessage("Carica il dataset adult", {}))
-        self.messages.append(UserMessage("Calcola la matrice di correlazione del dataset adult", {}))
-        self.messages.append(UserMessage("Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset adult?", {}))
+        #self.messages.append(UserMessage("Pulisci il dataset adult", {}))
+        #self.messages.append(UserMessage("Puoi eseguire la codifica del mio dataset adult", {}))
+        #self.messages.append(UserMessage("Puoi valutare i modelli [random_forest,gradient_boosting] sul dataset adult e target income?", {}))
+        #self.messages.append(UserMessage("Quale modello è più appropriato secondo te per predire il reddito annuo income?", {}))
+        #self.messages.append(UserMessage("Puoi eseguire lo split del dataset adult in train test set usando come target income?", {}))
+        #self.messages.append(UserMessage("Puoi addestrare il modello per te più appropriato e fare una previsione relativa al dataset adult?", {}))
+        #self.messages.append(UserMessage("Puoi addestrare un modello e fare una previsione relativa al dataset adult?", {}))
+        #self.messages.append(UserMessage("Puoi calcolare la distribuzione di tutti gli attributi del dataset adult?", {}))
+        #self.messages.append(UserMessage("Noti qualche disproporzione, sbilanciamento negli attributi del dataset adult?", {}))
+        #self.messages.append(UserMessage("Puoi calcolare la distribuzione di tutti gli attributi del dataset adult?", {}))
+        #self.messages.append(UserMessage("Calcola la matrice di correlazione del dataset adult_encoded", {}))
+        #self.messages.append(UserMessage("Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset adult?", {}))
         #self.messages.append(UserMessage("Calcola la distribuzione dell'attributo sex del dataset adult", {}))
         #self.messages.append(UserMessage("Calcola la distribuzione dell'attributo income del dataset adult", {}))
         #self.messages.append(UserMessage("Calcola la distribuzione dell'attributo occupation del dataset adult", {}))

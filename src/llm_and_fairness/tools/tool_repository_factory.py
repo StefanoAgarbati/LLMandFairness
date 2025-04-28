@@ -1,4 +1,4 @@
-from src.llm_and_fairness.tools.tool_repository_langchain import ToolRepositoryLangchain
+from tools.tool_repository_langchain import ToolRepositoryLangchain
 
 class ToolRepositoryFactory:
 

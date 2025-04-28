@@ -1,4 +1,4 @@
-from src.llm_and_fairness.tools.tool_repository import ToolRepository
+from tools.tool_repository import ToolRepository
 
 class ToolRepositoryBase(ToolRepository):
 

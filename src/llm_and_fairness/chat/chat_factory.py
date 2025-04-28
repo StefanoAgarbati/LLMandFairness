@@ -1,4 +1,4 @@
-from src.llm_and_fairness.chat.chat_google_langchain import GoogleChatModelLangchain
+from chat.chat_google_langchain import GoogleChatModelLangchain
 
 
 class ChatFactory:

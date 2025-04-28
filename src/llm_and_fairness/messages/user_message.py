@@ -1,5 +1,5 @@
-from src.llm_and_fairness.messages.message import Message
-from src.llm_and_fairness.messages.prompt_support import PromptSupport
+from messages.message import Message
+from messages.prompt_support import PromptSupport
 
 
 class UserMessage(Message):

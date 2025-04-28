@@ -1,4 +1,5 @@
-from src.llm_and_fairness.ML.encoding.sk_learn_label_encoder import SkLearnNominalEncoder
+from ML.encoding.sk_learn_label_encoder import SkLearnNominalEncoder
+from ML.encoding.sk_learn_ordinal_encoder import SkLearnOrdinalEncoder
 
 
 class EncoderFactory:
@@ -19,7 +20,8 @@ class EncoderFactory:
 
     @staticmethod
     def create_ordinal_encoder(categories):
-        pass
+        #return SkLearnNominalEncoder()
+        return SkLearnOrdinalEncoder(categories)
 
 
 class EncoderType:

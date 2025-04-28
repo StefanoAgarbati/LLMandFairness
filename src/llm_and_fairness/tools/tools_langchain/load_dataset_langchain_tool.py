@@ -1,7 +1,7 @@
 import pandas as pd
 from langchain_core.tools import tool
 
-from src.llm_and_fairness.use_cases.use_case_repository import UseCaseRepository, UseCase
+from use_cases.use_case_repository import UseCaseRepository, UseCase
 
 
 class LoadDatasetLangchainTool:

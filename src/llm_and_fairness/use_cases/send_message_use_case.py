@@ -1,6 +1,3 @@
-from src.llm_and_fairness.chat.chat_model import ChatModel
-
-
 class SendMessageUseCase:
 
     def __init__(self, achat):

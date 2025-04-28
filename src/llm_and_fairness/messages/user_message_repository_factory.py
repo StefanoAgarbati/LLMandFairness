@@ -1,7 +1,7 @@
 import json
 
-from src.llm_and_fairness.messages.user_message import UserMessage
-from src.llm_and_fairness.messages.user_message_repository import UserMessageRepository
+from messages.user_message import UserMessage
+from messages.user_message_repository import UserMessageRepository
 
 
 class UserMessageRepositoryFiller:

@@ -1,6 +1,6 @@
-from src.llm_and_fairness.messages.tool_execution_message import ToolExecutionMessage
-from src.llm_and_fairness.messages.tool_execution_message_langchain import ToolExecutionMessageLangchain
-from src.llm_and_fairness.tools.tool import Tool
+from messages.tool_execution_message import ToolExecutionMessage
+from messages.tool_execution_message_langchain import ToolExecutionMessageLangchain
+from tools.tool import Tool
 
 
 class ToolLangchain(Tool):

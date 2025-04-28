@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from src.llm_and_fairness.messages.message import Message
+from messages.message import Message
 
 
 class ToolExecutionMessage(Message):

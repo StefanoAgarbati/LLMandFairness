@@ -1,4 +1,4 @@
-from src.llm_and_fairness.support import DatasetFactory
+from support import DatasetFactory
 
 
 class DatasetService:

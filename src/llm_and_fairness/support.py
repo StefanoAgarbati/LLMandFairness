@@ -25,7 +25,7 @@ class DatasetLoader:
         attributes_names = self.description['columns']
         self.frame.columns = attributes_names
 
-        if ((self.frame.columns == self.frame.loc[0,:])).all():
+        if (self.frame.columns == self.frame.loc[0, :]).all():
             self.frame = self.frame.drop(0)
 
     def get_data(self):
@@ -38,6 +38,7 @@ class DatasetLoader:
 
 
 class DatasetFactory:
+    #datapath = "src/llm_and_fairness/datasets/name/name.data"
     datapath = "datasets/name/name.data"
     columnspath = "datasets/name/namecolumns.json"
 

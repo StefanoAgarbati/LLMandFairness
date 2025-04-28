@@ -1,4 +1,4 @@
-from src.llm_and_fairness.ML.encoding.encoder_factory import EncoderFactory
+from ML.encoding.encoder_factory import EncoderFactory, EncoderType
 
 
 class DatasetEncoder:
@@ -13,7 +13,10 @@ class DatasetEncoder:
         for info in dataset_info:
             attribute_name = info['name']
             attribute_type = info['type']
-            encoder = EncoderFactory.create_encoder(attribute_type)
+            categories = None
+            if attribute_type == EncoderType.ORDINAL_ENCODER:
+                categories = info['values']
+            encoder = EncoderFactory.create_encoder(attribute_type, categories)
             encoders_map.append({"name": attribute_name, "encoder": encoder})
         return encoders_map
 
@@ -26,7 +29,7 @@ class DatasetEncoder:
         return ds
 
     def encode_attribute(self, dataset, attribute_name, encoder):
-        dataset[attribute_name] = encoder.encode(dataset[attribute_name])
+        dataset[attribute_name] = encoder.encode(dataset[[attribute_name]])
         return dataset
 
 

@@ -1,19 +1,18 @@
 class UseCaseRepository:
 
-    load_dataset_use_case = None
-    get_distribution_use_case = None
     use_cases = []
 
-    @staticmethod
+    """@staticmethod
     def get_use_case(uc_name):
         match uc_name:
             case UseCase.LOAD_DATASET:
                 return UseCaseRepository.load_dataset_use_case
             case UseCase.GET_DISTRIBUTION:
-                return UseCaseRepository.get_distribution_use_case
+                return UseCaseRepository.get_distribution_use_case"""
 
     @staticmethod
     def add_use_case(name, use_case):
+        #print(f"AddUseCase {name}, {use_case}")
         UseCaseRepository.use_cases.append({"name": name, "use_case": use_case})
 
     @staticmethod
@@ -24,6 +23,11 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    EVALUATE_MODELS = 'evaluate_models'
+    FIT_PREDICT_MODEL = 'fit_predict_model'
+    SPLIT_TRAIN_TEST = 'plit_train_test'
+    CLEAN_DATASET = 'clean_dataset'
+    ENCODE_DATASET = 'encode_dataset'
     GET_CORRELATION_MATRIX = 'get_correlation_matrix'
     LOAD_DATASET = 'load_dataset'
     GET_DISTRIBUTION = 'get_distribution'
