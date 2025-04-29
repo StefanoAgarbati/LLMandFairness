@@ -12,15 +12,18 @@ class DisplayUseCase:
     def display_request(self, request):
         if isinstance(request, UserMessage):
             msg = request.get_message()
-            self.output_device.out_markdown(MessageFormattingUtils.bold_markdown(msg))
+            self.display_markdown(MessageFormattingUtils.bold_markdown(msg))
 
     def display_response(self, response):
         if isinstance(response, ChatMessage):
             msg = response.get_message()
-            self.output_device.out_markdown(msg)
+            self.display_markdown(msg)
 
     def display_figure(self, figure):
         self.output_device.out_figure(figure)
+
+    def display_markdown(self, data):
+        self.output_device.out_markdown(data)
 
     def display(self, data):
         self.output_device.out(data)

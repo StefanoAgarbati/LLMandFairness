@@ -58,10 +58,12 @@ class ApplController:
 
     def init_messages(self):
         self.messages.append(UserMessage("Ciao, io sono Stefano", {}))
-        self.messages.append(UserMessage("puoi fare la somma fra 5 e 7?", {}))
+        self.messages.append(UserMessage("puoi fare la somma fra 9 e 5?", {}))
         self.messages.append(UserMessage("Carica il dataset adult", {}))
-        #self.messages.append(UserMessage("Pulisci il dataset adult", {}))
-        #self.messages.append(UserMessage("Puoi eseguire la codifica del mio dataset adult", {}))
+        self.messages.append(UserMessage("Pulisci il dataset adult", {}))
+        self.messages.append(UserMessage("Puoi disegnare i grafici delle distribuzioni di tutti gli attributi del dataset adult?", {}))
+        self.messages.append(UserMessage("Puoi eseguire la codifica del mio dataset adult", {}))
+        self.messages.append(UserMessage("Puoi disegnare la matrice di correlazione come heatmap del dataset adult_encoded?", {}))
         #self.messages.append(UserMessage("Puoi valutare i modelli [random_forest,gradient_boosting] sul dataset adult e target income?", {}))
         #self.messages.append(UserMessage("Quale modello è più appropriato secondo te per predire il reddito annuo income?", {}))
         #self.messages.append(UserMessage("Puoi eseguire lo split del dataset adult in train test set usando come target income?", {}))

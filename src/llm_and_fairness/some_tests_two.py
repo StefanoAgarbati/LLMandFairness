@@ -63,19 +63,18 @@ from tools.tool_repository_factory import ToolRepositoryType, ToolRepositoryFact
 from tools.tools_functions import clean_dataset
 
 
-
-
 class SystemConfig:
     chat_type = ChatModelType.GOOGLE
     model_name = 'gemini-2.0-flash'
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
-    out_dev_type = OutputDeviceType.Standard
+    out_dev_type = OutputDeviceType.Jupyter
     tool_repo_type = ToolRepositoryType.LANGCHAIN
     dataset_name = 'adult'
     classifier_config = {"model": ClassifierModel.RANDOM_FOREST}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
     models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]
     drawer = StatisticalDrawerType.SEABORN
+
 
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
@@ -84,63 +83,82 @@ def create_test_msg():
     }
     return UserMessage(msg, params)
 
+
 def create_chat(ctype, model_name, api_key):
     chat = ChatFactory.create_chat(ctype, model_name, api_key)
     return chat
+
 
 def create_send_message_use_case(achat):
     uc = SendMessageUseCase(achat)
     return uc
 
+
 def create_bind_tools_use_case(tool_repository, achat):
     return BindToolsToChatUseCase(tool_repository, achat)
+
 
 def create_load_dataset_use_case(dataset_repository):
     #print("create_load_dataset_use_case")
     return LoadDatasetUseCase(dataset_repository)
 
+
 def create_calculate_distr_use_case(dataset_repository):
     return CalculateDistributionUseCase(dataset_repository)
 
+
 def create_dataset_repository():
     return DatasetRepository()
+
 
 def create_tool_repository(repo_type):
     repo = ToolRepositoryFactory.create(repo_type)
     return repo
 
+
 def create_response_handler(tool_repository):
     return HandleResponseUseCase(tool_repository)
+
 
 def create_output_device(out_device_type):
     return OutputDeviceFactory.createOutputDevice(out_device_type)
 
-def create_memory_repository() :
+
+def create_memory_repository():
     return MemoryRepository()
+
 
 def create_add_memory_use_case(memory_repository):
     return AddMemoryUseCase(memory_repository)
 
+
 def create_get_memories_use_case(memory_repository):
     return GetMemoriesUseCase(memory_repository)
+
 
 def create_get_correlation_matrix_use_case(dataset_repository):
     return GetCorrelationMatrixUseCase(dataset_repository)
 
+
 def create_clean_dataset_use_case(dataset_repository):
     return CleanDatasetUseCase(dataset_repository)
+
 
 def create_train_test_split_use_case(split_repository, dataset_repository):
     return TrainTestSplitUseCase(split_repository, dataset_repository)
 
+
 def create_split_repository():
     return SplitRepository()
+
 
 def create_fit_predict_model_use_case(classifier, split_repository, prediction_repository):
     return FitPredictModelUseCase(classifier, split_repository, prediction_repository)
 
+
 def create_classifier(classifier_config):
     return ClassifierFactory.create_classifier(classifier_config)
+
 
 def create_models(models_names):
     models = []
@@ -149,35 +167,45 @@ def create_models(models_names):
         models.append(model)
     return models
 
+
 def create_prediction_repository():
     return PredictionRepository()
+
 
 def create_encode_dataset_use_case(dataset_repository, dataset_encode, dataset_info):
     return EncodeDatasetUseCase(dataset_repository, dataset_encode, dataset_info)
 
+
 def create_dataset_encoder():
     return DatasetEncoder()
+
 
 def create_dataset_info(dataset_name):
     return DatasetInfo.create(dataset_name)
 
+
 def create_evaluate_models_use_case(validator, models, scorings, dataset_repository):
     return ModelEvaluationUseCase(validator, models, scorings, dataset_repository)
+
 
 def create_cross_validator():
     return CrossValidationSklearn()
 
+
 def create_display_use_case(output_device):
     return DisplayUseCase(output_device)
+
 
 def create_draw_statistical_data_use_case(dataset_repository, drawer, get_correlation_matrix_uc):
     return DrawStatisticalDataUseCase(dataset_repository, drawer, get_correlation_matrix_uc)
 
+
 def create_drawer(name):
     return StatisticalDrawerFactory.create_statistical_drawer(name)
 
+
 def create_system():
-    chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name,SystemConfig.api_key)
+    chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
     output_device = create_output_device(SystemConfig.out_dev_type)
     dataset_repository = create_dataset_repository()
     load_dataset_uc = create_load_dataset_use_case(dataset_repository)
@@ -198,15 +226,15 @@ def create_system():
     train_test_split_uc = create_train_test_split_use_case(split_repository, dataset_repository)
     prediction_repository = create_prediction_repository()
     classifier = create_classifier(SystemConfig.classifier_config)
-    fit_predict_uc = create_fit_predict_model_use_case(classifier,split_repository,prediction_repository)
+    fit_predict_uc = create_fit_predict_model_use_case(classifier, split_repository, prediction_repository)
     evaluate_models_uc = create_evaluate_models_use_case(validator, models, SystemConfig.scorings, dataset_repository)
     display_uc = create_display_use_case(output_device)
     drawer = create_drawer(SystemConfig.drawer)
-    draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer, get_correlation_matrix_uc)
-
+    draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer,
+                                                                           get_correlation_matrix_uc)
 
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
-    UseCaseRepository.add_use_case(UseCase.GET_DISTRIBUTION,calculate_distr_uc)
+    UseCaseRepository.add_use_case(UseCase.GET_DISTRIBUTION, calculate_distr_uc)
     UseCaseRepository.add_use_case(UseCase.GET_CORRELATION_MATRIX, get_correlation_matrix_uc)
     UseCaseRepository.add_use_case(UseCase.ENCODE_DATASET, encode_dataset_uc)
     UseCaseRepository.add_use_case(UseCase.CLEAN_DATASET, clean_dataset_uc)
@@ -216,13 +244,12 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.DISPLAY, display_uc)
     UseCaseRepository.add_use_case(UseCase.DRAW_STATISTICAL_DATA, draw_statistical_data_use_case)
 
-
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)
 
     bind_tools_uc.bind_tools()
 
-    appl_logic = ApplController(add_memory_uc,get_memories_uc,output_device,response_handler,send_msg_uc)
+    appl_logic = ApplController(add_memory_uc, get_memories_uc, display_uc, response_handler, send_msg_uc)
     appl_logic.execute()
 
 

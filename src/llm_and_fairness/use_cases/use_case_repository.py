@@ -27,7 +27,7 @@ class UseCase:
     DISPLAY = 'display'
     EVALUATE_MODELS = 'evaluate_models'
     FIT_PREDICT_MODEL = 'fit_predict_model'
-    SPLIT_TRAIN_TEST = 'plit_train_test'
+    SPLIT_TRAIN_TEST = 'split_train_test'
     CLEAN_DATASET = 'clean_dataset'
     ENCODE_DATASET = 'encode_dataset'
     GET_CORRELATION_MATRIX = 'get_correlation_matrix'

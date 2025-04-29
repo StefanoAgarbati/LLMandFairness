@@ -55,12 +55,12 @@ def get_all_tools():
         tools.append(tool)
     return tools
 
-    """tools = [load_dataset, somma, get_distribution, get_correlation_matrix, encode_dataset,
-             clean_dataset, esegui_codifica_dataset, split_dataset_in_train_test_set,
-             addestra_un_modello_e_fai_una_previsione, calculate_the_distributions_of_all_attributes,
-             valuta_modelli_su_dataset_rispetto_a_target, disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi,
-             disegna_la_matrice_di_correlazione_come_heatmap]
-    return tools"""
+    # tools = [load_dataset, somma, get_distribution, get_correlation_matrix, encode_dataset,
+    #          clean_dataset, esegui_codifica_dataset, split_dataset_in_train_test_set,
+    #          addestra_un_modello_e_fai_una_previsione, calculate_the_distributions_of_all_attributes,
+    #          valuta_modelli_su_dataset_rispetto_a_target, disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi,
+    #          disegna_la_matrice_di_correlazione_come_heatmap]
+    # return tools
 
 
 @tool(response_format="content_and_artifact")
@@ -77,7 +77,7 @@ def load_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     print("Load dataset tool called")
     data = UseCaseRepository.get_use_case_by_name(UseCase.LOAD_DATASET).load_dataset(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(f"Il dataset {dataset_name} è stato caricato.")
+    display_uc.display_markdown(f"Il dataset {dataset_name} è stato caricato.")
     display_uc.display(data)
     content = f"Dataset {dataset_name} caricato con successo"
     return content, data
@@ -88,7 +88,7 @@ def clean_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Esegue operazioni di pulizia (cleaning) su di un dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.CLEAN_DATASET).clean_dataset(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(f"Ho eseguito la pulizia del dataset {dataset_name}")
+    display_uc.display_markdown(f"Ho eseguito la pulizia del dataset {dataset_name}")
     display_uc.display(data)
     content = f"Il dataset {dataset_name} è stato pulito"
     #print(f"Tool clean_dataset eseguito su {dataset_name}")
@@ -100,7 +100,7 @@ def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[st
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_all_frequency_distributions(
         dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(f"Quelle che seguono sono le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(f"Quelle che seguono sono le distribuzioni di tutti gli attributi del dataset {dataset_name}")
     for distri in data:
         display_uc.display(data)
 
@@ -122,7 +122,7 @@ def get_correlation_matrix(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Calcola la matrice di correlazione relativa ad un dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_CORRELATION_MATRIX).get_correlation_matrix(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name}")
     display_uc.display(data)
     content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n {data.to_json()}"
     return content, data
@@ -177,9 +177,9 @@ def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) 
 @tool(response_format="content_and_artifact")
 def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: str) -> tuple[str, list]:
     """Disegna i grafici delle distribuzione di tutti gli attributi di un dataset"""
-    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_all_distribution(dataset_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_all_distributions(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(f"Ecco i grafici che mostrano le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(f"Ecco i grafici che mostrano le distribuzioni di tutti gli attributi del dataset {dataset_name}")
     for figure in data:
         display_uc.display_figure(figure)
 
@@ -189,10 +189,10 @@ def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: s
 
 @tool(response_format="content_and_artifact")
 def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[str, list]:
-    """Disegna i grafici delle distribuzione di tutti gli attributi di un dataset"""
+    """Disegna la matrice di correlazione di un dataset come una heatmap"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_correlation_matrix(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display(
+    display_uc.display_markdown(
         f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name} in forma di heatmap")
     display_uc.display_figure(data)
 
@@ -203,5 +203,8 @@ def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[
 def somma(a: int, b: int) -> tuple[str, int]:
     """somma due numeri interi"""
     data = a + b
-    content = f"Somma -> {a} + {b} = {data}"
+    msg = f"Somma {a} + {b} = {data}"
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(msg)
+    content = msg
     return content, data

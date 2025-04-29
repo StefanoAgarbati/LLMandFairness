@@ -5,7 +5,7 @@ from cleaning.preprocessing import DatasetPreprocessingConfig, DatasetPreprocess
 
 class DatasetCleaner:
 
-    config_path = "src/llm_and_fairness/cleaning/preprocessingconfig.json"
+    config_path = "cleaning/preprocessingconfig.json"
 
     def __init__(self, dataset):
         self.dataset = dataset

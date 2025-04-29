@@ -1,4 +1,4 @@
-from drawing.statistical_drawer_seaborn import StatisticalDistributionDrawerSeaborn
+from drawing.statistical_drawer_seaborn import StatisticalDrawerSeaborn
 
 
 class StatisticalDrawerType:
@@ -7,9 +7,10 @@ class StatisticalDrawerType:
 
 class StatisticalDrawerFactory:
 
-    def create_statistical_drawer(self, name):
+    @staticmethod
+    def create_statistical_drawer(name):
         match name:
             case StatisticalDrawerType.SEABORN:
-                return StatisticalDistributionDrawerSeaborn
+                return StatisticalDrawerSeaborn()
             case _:
                 raise Exception(f"StatisticalDrawerFactory -> the drawer {name} doesn't exist")

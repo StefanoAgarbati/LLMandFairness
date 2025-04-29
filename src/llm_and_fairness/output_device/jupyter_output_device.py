@@ -4,10 +4,10 @@ from IPython.display import display, Markdown
 
 class JupyterOutputDevice(OutputDevice):
     def out_markdown(self, data):
-        pass
+        display(Markdown(data))
 
     def out_figure(self, figure):
-        pass
+        display(figure)
 
     def out(self, aMessage):
-        display(Markdown(aMessage))
+        display(aMessage)
