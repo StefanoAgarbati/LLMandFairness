@@ -90,6 +90,7 @@ L'artefatto software deve:
 * preparare il dataset suddividendolo in un insieme per il testing e un insieme per il training di un modello
 * addestramento del modello più appropriato e relativa previsione del target
 * fornire informazioni relative alla analisi delle prestazioni del modello
+* (valutazione della fairness relativamente alle decisioni prese da un modello(se ho tempo sarebbe bello))
 
 #### Analisi del problema
 L'applicazione invia ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati 
@@ -181,8 +182,53 @@ possibile di affrontare il problema è quello di utilizzare la tecnica della cro
 CrossValidation che fornisce un metodo per cross validare un modello ed ottenere una valutazione delle metriche passate in ingresso
 
 ##### Problema dell'addestramento di un modello
-Il problema dell'addestramento di un modello richiede la soluzione del 1) problema relativo alla codifica del dataset
-in forma numerica 2)problema relativo allo splitting del dataset negli insiemi di training e testing
+Il problema dell'addestramento di un modello richiede la soluzione del 
+* problema relativo alla codifica del dataset in forma numerica 
+* problema relativo allo splitting del dataset negli insiemi di training e testing descritti precedentemente
+* scelta del modello più appropriato alla soluzione del problema di learning.  
+Si tratta di un problema di classificazione binaria ed è possibile scegliere fra diversi modelli più o meno complessi. 
+Il problema è stato affrontato introducendo l'interfacccia classifier che mette a disposizione operazioni per
+l'addestramento e per la previsione.
+
+
+#### Progettazione della soluzione
+E' stata introdotta la classe ApplLogic che governa la logica dell'applicazione (rappresenta il componente di controllo
+dell'architettura generale del sistema). L'ApplLogic si appoggia sopra uno strato di use cases ciascuno dei quali realizza
+qualche funzionalità (logica) specifica. Lo strato degli use cases si appoggia al di sopra di uno strato di dominio composto
+da interfacce, modelli dati, interfacce di repository (astrazione di una base di dati). Sono stati definiti degli adapters
+per agganciare la tecnologia al modello del dominio. Il modello architetturale è clean architecture like.
+
+![generalHiLevArchitecture](docs/images/architecture2.jpg)
+
+* Comunicazione con un LLM - invio richieste e ricezione risposte
+  * Per ciò che concerne la comunicazione con un LLM fisico l'interfaccia ChatModel è stata implementata facendo uso del
+  framework LangChain. In particolare si è fatto uso del modello gemini di google poiché offre un livello gratuito (sebbene 
+  fortemente limitato). La classe astratta ChatModelLangChain usa internamente un metodo factory per delegare la creazione 
+  di un supporto specifico alle sue sottoclassi. Consente di inviare un messaggio in forma di stringa ad un LLM specifico.
+  Attende una risposta e crea un ChatMessageLangchain che rappresenta l'implementazione concreta basata su langchain dell'interfaccia
+  ChatMessage. Il ChatMessageLangchain incapsula un AIMessage del framework Langchain (un adapter).
+  
+![google_chat_model_langchain](docs/images/google_chat_model_langchain.jpg)
+
+* Binding dei tool
+  * Un LLM, perché sia in grado di invocare funzioni, necessita di un binding. Il binding è affidato al BindToolSUseCase.
+  Questo chiede ad un ToolRepository tutti i tool disponibili e poi chiama il metodo bind_tools() su un oggetto che
+  implementa l'interfaccia ChatModel. I tool langchain sono stati implementati come funzioni annotate con l'annotazione
+  @tool di langchain ed inserite tutte all'interno del modulo tool_functions. L'interfaccia ToolRepository del dominio
+  è stata realizzata dalla classe ToolRepositoryLangchain che altro non fa se non chiamare get_all_tools() del modulo 
+  tool_functions per riempire il repository (una lista in memory)
+
+![bind_tools_use_case](docs/images/bind_tools.jpg)
+
+* Elaborazione delle risposte ricevute
+  * l'elaborazione delle risposte ricevute da un LLM viene affidata ad un HandleResponseUseCase. Se il messaggio di risposta
+  ricevuto non contiene tool calls questo viene restituito al chimante così com'è senza ulteriori elaborazioni. Se invece fossero
+  presenti delle calls nella risposta allora l'handler le manda tutte in esecuzione. Le calls sono rappresentate dalla classe
+  ToolCall che incapsula il nome del tool da invocare e gli argomenti con i quali invocare il tool. Il tool è rappresentato
+  dalla classe ToolLangchain che implementa la classe astratta di dominio Tool e ne implementa il metodo execute() che va
+  creando un ToolExecutionMessageLangchain il quale incapsula il nome del tool invocato e il risultato dell'esecuzione del tool.
+  
+
 
 
 
