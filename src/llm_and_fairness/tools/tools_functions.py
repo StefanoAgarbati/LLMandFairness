@@ -11,7 +11,7 @@ def get_available_tools_names():
              'clean_dataset', 'esegui_codifica_dataset', 'split_dataset_in_train_test_set',
              'addestra_un_modello_e_fai_una_previsione', 'calculate_the_distributions_of_all_attributes',
              'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
-             'disegna_la_matrice_di_correlazione_come_heatmap']
+             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy']
     return names
 
 def get_tool_by_name(toolname):
@@ -40,6 +40,8 @@ def get_tool_by_name(toolname):
             return disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi
         case 'disegna_la_matrice_di_correlazione_come_heatmap':
             return disegna_la_matrice_di_correlazione_come_heatmap
+        case 'rileva_eventuali_variabili_proxy':
+            return rileva_eventuali_variabili_proxy
         case 'somma':
             return somma
         case 'load_dataset':
@@ -197,6 +199,23 @@ def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[
     display_uc.display_figure(data)
 
     content = f"Ho disegnato la heatmap rappresentativa della matrice di correlazione del dataset {dataset_name}"
+    return content, data
+
+@tool(response_format="content_and_artifact")
+def rileva_eventuali_variabili_proxy(dataset_name: str) -> tuple[str, list]:
+    """Rileva eventuali variabili proxy presenti nel dataset usando la mutual information"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DETECT_PROXY).detect_proxy_variables(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    content = ""
+    display_uc.display_markdown(
+        f"Ecco la mutual information di tutte le variabili del dataset {dataset_name}")
+    for detection in data:
+        variable = detection.get_data('variable_name')
+        msg = f"Mutual information per {variable}:\n"
+        display_uc.display_markdown(msg)
+        display_uc.display(detection.get_data('mutual_info'))
+        content = msg + detection.get_data('mutual_info').to_json()
+
     return content, data
 
 @tool(response_format="content_and_artifact")

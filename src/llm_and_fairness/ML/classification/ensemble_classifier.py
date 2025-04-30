@@ -11,7 +11,7 @@ class EnsembleClassifier(Classifier):
         self.features = None
 
     def get_feature_importances(self):
-        if self.features == None:
+        if self.features is None:
             raise Exception(self.name + " -> The classifier has not been trained yet")
         importances = self.get_importances(self.classifier.feature_importances_, self.features)
         return importances

@@ -33,6 +33,11 @@ from ML.classification.classifier_factory import ClassifierFactory, ClassifierMo
 from ML.encoding.dataset_encoder import DatasetEncoder
 from ML.prediction_repository import PredictionRepository
 from ML.split_repository import SplitRepository
+from ML.utils.performance_metric_factory import PerformanceMetricsFactory, PerformanceMetric
+from ML.utils.proxy_detector import ProxyDetector
+from ML.utils.proxy_detector_factory import ProxyDetectorFactory, ProxyDetectorType
+from ML.utils.proxy_detector_mutual_info_based import ProxyDetectorMutualInfoBased
+from ML.utils.train_test_split_factory import TrainTestSplitFactory, TrainTestSplitType
 from ML.validation.cross_validation import CrossValidation
 from ML.validation.cross_validation_sklearn import CrossValidationSklearn
 from appl_logic.appl_controller import ApplController
@@ -44,6 +49,7 @@ from use_cases.add_memory_use_case import AddMemoryUseCase
 from use_cases.bind_tools_use_case import BindToolsToChatUseCase
 from use_cases.calculate_distribution_use_case import CalculateDistributionUseCase
 from use_cases.clean_dataset_use_case import CleanDatasetUseCase
+from use_cases.detect_proxy_use_case import DetectProxyUseCase
 from use_cases.display_use_case import DisplayUseCase
 from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
@@ -67,14 +73,16 @@ class SystemConfig:
     chat_type = ChatModelType.GOOGLE
     model_name = 'gemini-2.0-flash'
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
-    out_dev_type = OutputDeviceType.Jupyter
+    out_dev_type = OutputDeviceType.Standard
     tool_repo_type = ToolRepositoryType.LANGCHAIN
     dataset_name = 'adult'
-    classifier_config = {"model": ClassifierModel.RANDOM_FOREST}
+    classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
     models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]
     drawer = StatisticalDrawerType.SEABORN
-
+    splitter = TrainTestSplitType.SKLEARN
+    performance_metrics = PerformanceMetric.SKLEARN
+    proxy_detector_config = {"type": ProxyDetectorType.MutualInfo, "metrics": performance_metrics}
 
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
@@ -203,6 +211,19 @@ def create_draw_statistical_data_use_case(dataset_repository, drawer, get_correl
 def create_drawer(name):
     return StatisticalDrawerFactory.create_statistical_drawer(name)
 
+def create_detect_proxy_use_case(dataset_repository, proxy_detector):
+    return DetectProxyUseCase(dataset_repository, proxy_detector)
+
+
+
+def create_proxy_detector(config):
+    return ProxyDetectorFactory.create(config)
+
+def create_splitter(type):
+    return TrainTestSplitFactory.create_train_test_splitter(type)
+
+def create_performance_metrics(type):
+    return PerformanceMetricsFactory.create_performance_metrics(type)
 
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
@@ -232,7 +253,12 @@ def create_system():
     drawer = create_drawer(SystemConfig.drawer)
     draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer,
                                                                            get_correlation_matrix_uc)
+    performance_metrics = create_performance_metrics(SystemConfig.performance_metrics)
+    splitter = create_splitter(SystemConfig.splitter)
+    proxy_detector = create_proxy_detector(SystemConfig.proxy_detector_config)
+    proxy_detector_uc = create_detect_proxy_use_case(dataset_repository, proxy_detector)
 
+    UseCaseRepository.add_use_case(UseCase.DETECT_PROXY, proxy_detector_uc)
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
     UseCaseRepository.add_use_case(UseCase.GET_DISTRIBUTION, calculate_distr_uc)
     UseCaseRepository.add_use_case(UseCase.GET_CORRELATION_MATRIX, get_correlation_matrix_uc)

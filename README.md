@@ -79,7 +79,7 @@ L'artefatto software deve:
 * visualizzare le metriche statistiche attraverso grafici
 * caricare un dataset
 * effettuare operazioni di data cleaning sul dataset
-* * trasformare il dataset in forma numerica per l'addestramento di modelli di ML
+* trasformare il dataset in forma numerica per l'addestramento di modelli di ML
 * fornire informazioni relative ad eventuali sbilanciamenti presenti nei dati
 * fornire informazioni relative a valori non non considerati nelle caratteristiche
 * fornire informazioni relative a caratteristiche non presenti nel dataset ma che potrebbero essere importanti nello specifico contesto
@@ -92,13 +92,71 @@ L'artefatto software deve:
 * fornire informazioni relative alla analisi delle prestazioni del modello
 
 #### Analisi del problema
-L'applicazione invia ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati all'interno di una base dati. Essi vengono inviati all'LLM una alla volta  
-seguendo un'interazione di tipo request-response sincrona. Successivamente all'invio di un messaggio l'LLM può rispondere con un semplice messaggio testuale il quale verrà semplicemente visualizzato  
-all'utente attraverso un dispositivo di output oppure può rispondere attraverso un messaggio che richiede l'esecuzione di un tool. In quest'ultimo caso il messaggio contiene i parametri da passare al  
-tool che deve essere eseguito. Il tool viene eseguito localmente ma i parametri vengono generati dall'LLM in base al messaggio di richiesta che esso ha ricevuto. L'esecuzione di un tool porta ad un  
-risultato parte del quale viene usato per arricchire la memoria dell'LLM. Infatti sorge il problema della memoria che può essere risolto passando, ad ogni richiesta fatta all'LLM,  
+L'applicazione invia ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati 
+all'interno di una base dati. Essi vengono inviati all'LLM una alla volta seguendo un'interazione di tipo request-response 
+sincrona. Successivamente all'invio di un messaggio l'LLM può rispondere con un semplice messaggio testuale il quale verrà 
+semplicemente visualizzato all'utente attraverso un dispositivo di output oppure può rispondere attraverso un messaggio 
+che richiede l'esecuzione di un tool. In quest'ultimo caso il messaggio contiene i parametri da passare al tool che deve 
+essere eseguito. Il tool viene eseguito localmente ma i parametri vengono generati dall'LLM in base al messaggio di 
+richiesta che esso ha ricevuto. L'esecuzione di un tool porta ad un risultato parte del quale viene usato per arricchire la 
+memoria dell'LLM. Infatti sorge il problema della memoria che può essere risolto passando, ad ogni richiesta fatta all'LLM,  
 tutti i messaggi inviati e ricevuti fino a quel momento. L'esecuzione di un tool porterà all'innesco di una specifica logica applicativa.  
-La descrizione a parole di cui sopra può essere espressa anche attraverso un disegno che mostra l'architettura generale del sistema software
+La descrizione a parole di cui sopra può essere espressa anche attraverso un disegno che mostra l'architettura generale del sistema software  
+
+![architectureHL](docs/images/architecture.jpg)   
+
+##### Modelli dell'LLM e dei messaggi - problema dell'invio e della ricezione dei messaggi da e verso un LLM
+L'LLM è stato modellato attraverso l'interfaccia ChatModel. Un ChatModel consente di inviare messaggi ad un LLM e ricevere risposte   
+da un LLM. Il messaggio utente è stato modellato come UserMessage mentre i messaggi di risposta sono stati modellati come ChatMessage.
+
+![chat_messages_model](docs/images/chat_messages_model.jpg)
+
+##### Elaborazione delle risposte ricevute dall'LLM (ChatModel)
+Il ChatModel risponde ad una richiesta attraverso un ChatMessage. Questo può essere un semplice messaggio testuale che non richiede
+alcuna elaborazione oppure può contere delle ToolCalls. L'interfaccia ToolCall modella una chiamata ad un tool richiesta dall'LLM
+in risposta ad una richiesta. In tal caso il messaggio di risposta deve essere elaborato al fine di invocare il tool (oppure i tools) 
+richiesto e restituirne il risultato. La gestione dell'elaborazione può essere affidata ad un ResponseHandlerUseCase. Tale interfaccia 
+contiene il metodo handle il quale prende in ingresso un messaggio di risposta ottenuto da un ChatModel (ChatMessage) e restituisce:
+* il messaggio ChatMessage nel caso in cui non dovesse essere invocato alcun tool
+* il messaggio ToolExecutionMessage nel caso in cui fosse necessario invocare tools e restituirne i risultati
+
+![handle_response_sequence](docs/images/handleResponseUseCase.jpg)
+
+##### Problema della visualizzazione delle richieste e delle risposte ricevute
+Tutte le richieste inoltrate all'LLM e le risposte da esso ricevute devono essere mostrate all'utente. La visualizzzione
+potrebbe avvenire attraverso un qualunque dispositivo di output. Il problema è stato affrontato introducendo l'interfaccia
+OutputDevice che mette a disposizione alcuni metodi per la visualizzazione di informazioni testuali e disegni
+
+##### Problema del calcolo delle metriche statistiche e della loro visualizzazione tramite grafici
+Le metriche statistiche sono moltissime ed esistono formule precise per il loro calcolo provenienti dal campo della
+statistica. Quindi è stata introdotta l'interfaccia StatisticsSupport che fornisce alcune funzioni che si occupano 
+del calcolo di alcune statistiche rilevanti per la nostra applicazione. Prima di poter visualizzare un grafico,
+è necessario costruirlo. Il problema della costruzione dei grafici è stato affrontato introducendo l'interfacccia
+StatisticalDrawer che mette a disposizione metodi per costruire alcuni grafici tipici della statistica come
+istogrammi e heatmap. Il problema della visualizzazione dei grafici è delegato sempre all'interfaccia OutputDevice
+
+##### Problema del caricamento di un dataset
+Un dataset è generalmente memorizzato all'interno di file secondo uno specifico formato. I formati più popolari sono
+csv, json ed xml. I dati contenuti all'interno del file, per poter essere manipolati più facilmente, devono essere 
+trasformati in rappresentazioni astratte interne (astratte nel senso che non dipendono dal formato logico usato per organizzare
+i dati all'interno del file). Attraverso tale rappresentazione interna sarà poi possibile eseguire operazioni di ricerca e modifica
+sui dati. Il problema del caricamento è stato affrontato introducendo l'interfaccia DatasetFactory. Va comunque rispettata una
+convenzione. La factory si aspetta che il dataset sia memorizzato all'interno della cartella dataset/{nomeDataset}/{nomeDataset}.data
+insieme ad un altro file json della forma {nomeDataset}columns.json. La factory restituisce una rappresentazione astratta
+del dataset nella forma di un oggetto di interfaccia DataFrame. 
+
+##### Problema del data cleaning del dataset
+Alcuni dataset possono presentare problemi come mancanza di dati, righe duplicate, errori di battitura........
+Prima di procedere oltre il dataset andrebbe quindi ripulito. L'interfaccia DataFrame permette operazioni che consentono
+di gestire queste anomalie. Il problema è stato affrontato introducendo l'interfaccia DatasetCleaner che espone il metodo
+clean_dataset() il quale restituisce una copia ripulita del dataset.
+
+##### Problema della trasformazione di un dataset in forma numerica
+La maggior parte dei modelli di machine learning supporta solo dati in forma numerica. Quindi si pone il problema della
+codifica in forma numerica di tutte le variabili categoriche eventualmente presenti all'interno del dataset. Il problema
+può essere affrontato introducendo l'interfaccia 
+
+  
 
 
 

@@ -1,5 +1,3 @@
-from sklearn.ensemble import GradientBoostingClassifier
-
 from ML.classification.gradient_boosting_classifier_sklearn import GradientBoostingClassifierSklearn
 from ML.classification.random_forest_classifier_sklearn import RandomForestClassifierSklearn
 
