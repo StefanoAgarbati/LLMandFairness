@@ -154,10 +154,35 @@ clean_dataset() il quale restituisce una copia ripulita del dataset.
 ##### Problema della trasformazione di un dataset in forma numerica
 La maggior parte dei modelli di machine learning supporta solo dati in forma numerica. Quindi si pone il problema della
 codifica in forma numerica di tutte le variabili categoriche eventualmente presenti all'interno del dataset. Il problema
-può essere affrontato introducendo l'interfaccia 
+può essere affrontato introducendo l'interfaccia DatasetEncoder.
 
-  
+##### Problema del rilevamento di variabili proxy
+Le variabili proxy potrebbero essere identificate usando 1) la mutua informazione fra ogni variabile del dataset e tutte le
+altre 2) usando un modello che predica ogni variabile a partire da tutte le altre e che fornisca informazioni sulla rilevanza
+di ogni variabile di input per la previsione della variabile considerata come target. Modelli di questo tipo sono Random Forest
+e Gradient boosting 3) possiamo provare anche con una matrice di correlazione. Il problema è stato affrontato 
+introducendo l'interfaccia ProxyDetector che restituisce informazioni sotto forma di ProxyDetection. Inoltre l'interfaccia
+StatisticsSupport fornisce una operazione per calcolare la matrice di correlazione 
 
+##### Problema della suddivisione del dataset in preparazione dell'addestramento di un modello e successiva previsione
+Un modello di ML dovrebbe essere addestrato usando un certo insieme di dati. Successivamente all'addestramento, al modello
+verrà chiesto di fare una previsione usando un insieme di dati (privato della variabile target) che il modella non abbia 
+mai visto. Potremmo, ad esempio, suddividere l'insieme dati a disposizione in due parti (nel senso orizzontale) andando
+così a creare un insieme di training e un insieme di test. Tale problema è stato affrontato introducendo l'interfaccia
+DatasetTrainTestSplitter che fornisce il metodo split() e restituisce un oggetto di interfaccia Split che rappresenta
+un insieme di 4 elementi: insieme X per il testing (il dataset meno la colonna della variabile target), 
+insieme y per il testing (colonna variabile target), insieme X per il training e insieme y per il training
+
+##### Problema della valutazione di un modello
+La bontà di un modello può essere valutata usando diverse metriche quali accuratezza, precisione, recall, f1-score (dipendente 
+da precisione e recall). L'importanza della metrica dipende dal problema. Inoltre un modello potrebbe essere bravo nel 
+predire dati già visti ma non altrettanto bravo con dati mai visti (non capace di generalizzare - overfitted). Un modo 
+possibile di affrontare il problema è quello di utilizzare la tecnica della cross validation. E' stata introdotta l'interfaccia
+CrossValidation che fornisce un metodo per cross validare un modello ed ottenere una valutazione delle metriche passate in ingresso
+
+##### Problema dell'addestramento di un modello
+Il problema dell'addestramento di un modello richiede la soluzione del 1) problema relativo alla codifica del dataset
+in forma numerica 2)problema relativo allo splitting del dataset negli insiemi di training e testing
 
 
 
