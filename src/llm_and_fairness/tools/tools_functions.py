@@ -104,7 +104,7 @@ def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[st
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(f"Quelle che seguono sono le distribuzioni di tutti gli attributi del dataset {dataset_name}")
     for distri in data:
-        display_uc.display(data)
+        display_uc.display(distri)
 
     content = f"Ecco le distribuzioni di tutti gli attributi presenti nel dataset {dataset_name}:\n"
     for item in data:

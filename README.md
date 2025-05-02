@@ -228,8 +228,66 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   dalla classe ToolLangchain che implementa la classe astratta di dominio Tool e ne implementa il metodo execute() che va
   creando un ToolExecutionMessageLangchain il quale incapsula il nome del tool invocato e il risultato dell'esecuzione del tool.
   
+![handle_response_use_case](docs/images/handle_response.jpg)
 
+* Visualizzazione delle richieste, delle risposte e dei grafici
+  * La visualizzazione è delegata ad un DisplayUseCase che esponse delle operazioni per la visualizzazione di richieste,
+  rispose, figure (grafici), testo semplice e markdown. Internamente, DisplayUseCase fa uso di un OutputDevice. DisplayUseCase
+  viene utilizzato sia all'interno dell'ApplLogic sia all'interno dei tool di basso livello langchain
 
+![display_use_case](docs/images/display_use_case.jpg)
+
+* Calcolo metriche statistiche e disegno dei grafici
+  * La funzionalità è stata realizzata per mezzo di CalculateDistributionUseCase, GetCorrelationMatrixUseCase e
+  DrawStatisticalDataUseCase. I 3 casi di uso vengono invocati dal tool langchain di basso livello. CalculateDistributionUseCase
+  e GetCorrelationMatrixUseCase fanno uso di un supporto StatisticsSupport per ottenere i valori delle statistiche.
+  Il DrawStatisticalDataUseCase usa internamente uno StatisticalDrawer per costruire i grafici.
+
+![draw_statistics_correlation](docs/images/draw_statistics_correlation.jpg)
+
+* Caricamento dataset
+  * I dataset sono generalmente memorizzati all'interno di file (oppure potrebbero essere scaricati direttamente dalla rete).
+  Del caricamento di un dataset se ne occupa un LoadDatasetUseCase. Internamente utilizza un DatasetFactory, che si occupa del
+  caricamento del dataset ovvero della sua trasformazione in una struttura dati interna quale DataFrame, e un DatasetRepository
+  che tiene memoria del dataset astratto caricato. Per convenzione, i dataset devono trovarsi all'interno di un file del tipo {nome_dataset}.data
+  situato all'interno di una cartella avente nome {nome_dataset} a sua volta inserita all'interno della cartella datasets. Il DatasetFactory
+  utilizza l'interfaccia DatasetLoader che si occupa del caricamento vero e proprio da file su disco(come da convenzione). Inoltre
+  all'interno della cartella dove è presente il file .data deve essere presente un file {nome_dataset}columns.json che fornisca
+  informazioni relative alle colonne del dataset. Questo per la gestione dell'intestazione del frame astratto poiché alcuni dataset vengono
+  già forniti con le intestazioni altri invece no.
+
+![load_dataset](docs/images/load_dataset.jpg)
+
+* Cleaning del dataset
+  * L'attività di pulizia del dataset viene affidata ad un CleanDatasetUseCase. Internamente utilizza un DatasetRepository ed un 
+  DatasetCleaner. Il DatasetCleaner utilizza il file preprocessingconfig.json che deve riportare il nome dgli step di cleaning da eseguire,
+  il nome del dataset sul quale eseguire gli steps e l'elenco dei simboli da rimpiazzare con valori NaN. Usando il file di configurazione
+  DatasetCleaner crea un DatasetPreprocessingConfig che viene passato ad un DatasetPreprocessingBuilder. Questi crea un DatasetPreprocessing
+  ed usa una ProcessingStepFactory per creare i diversi Step (azioni) di pulizia (quelli indicati nel file di config). Il builder ritorna 
+  al chiamante un oggetto di interfaccia DatasetPreprocessing che fornisce l'operazione preprocess_dataset() invocata da DatasetCleaner il quale,
+  a sua volta viene invocato dal CleanDatasetUseCase (invocazione del moetodo clean_dataset())
+
+![data_cleaning](docs/images/dataset_cleaning.jpg)
+  
+* Encoding dataset
+  * L'encoding è affidato ad un EncodeDatasetUseCase che internamente utilizza un DatasetRepository, per il recupero del dataset caricato
+  in precendeza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
+  alle variabili del dataset quali il nome della variabile, il tipo (nominale, ordinale, numerica) e l'insieme dei possibili valori
+  che la variabile può assumere (nel caso categorico). DatasetInfo prende queste informazioni a partire da un file che deve essere presente
+  nella cartella relativa al dataset e con nome {nome_dataset}columnsencoding.json. Il DatasetEncoder lascia le variabili numeriche inalterate operando
+  la codifica numerica delle sole variabili categoriche. Per ciascuna di essere, in base al tipo (ordinale o nominale) viene creata una mappa di encoder
+  del tipo 'nome_attributo': nome, 'encoder': encoder attraverso una EncoderFactory che crea oggetti di interfaccia Encoder. Quindi procede ad
+  invocare il metodo encode su ogni encoder della mappa. Viene restituito al chiamante (EncodeDatasetUseCase)il dataset codificato il
+  quale viene salvato all'interno del DatasetRepository con il nome {dataset_name}_encoded.
+
+![dataset_encoding](docs/images/encode_dataset.jpg)
+
+* Identificazione delle variabili proxy
+  * La soluzione che utilizza un modello per predire una variabile a partire da tutte le altre per poi verificare l'importanza di
+  ciascuna variabile nella determinazione della previsione non è stata possibile nel mio pc data la mancanza di risorse computazionali (memoria insufficiente).
+  Ho utilizzato la mutua informazione. L'identificazione è affidata al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
+  un ProxyDetector (che calcola la mutua informazione fra una variabile e tutte le altre presenti nel dataset). Il DetectProxyUseCase restituisce
+  una lista di ProxyDetection (memorizza un dizionario del tipo {'nome_variabile': nome,'mutua_informazione': mi})
 
 
 ## Conclusioni
