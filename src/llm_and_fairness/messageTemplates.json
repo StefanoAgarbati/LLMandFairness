@@ -86,6 +86,12 @@
 			}]
 		},
 		{
+			"message": "Puoi disegnare i grafici delle distribuzioni di tutti gli attributi del dataset {dataset}?",
+			"params": [{
+				"dataset": "adult"
+			}]
+		},
+		{
 			"message": "Noti qualche disproporzione, sbilanciamento negli attributi del dataset {dataset}?",
 			"params": [{
 				"dataset": "adult"
@@ -110,6 +116,12 @@
 			}]
 		},
 		{
+			"message": "Puoi disegnare la matrice di correlazione come heatmap del dataset {dataset}?",
+			"params": [{
+				"dataset": "adult_encoded"
+			}]
+		},
+		{
 			"message": "Come {ruolo}, devo {obiettivo}. Sai dirmi di quale problema di machine learning si tratta? (classificazione, regressione....)",
 			"params": [{
 				"ruolo": "data scientist",
@@ -125,7 +137,7 @@
 			}]
 		},
 		{
-			"message": "Quale modello è più appropriato secondo te per {obiettivo}?",
+			"message": "Dalle valutazioni fornite quale modello è più appropriato secondo te per {obiettivo}?",
 			"params": [{
 				"obiettivo": "predire il reddito annuo income"
 			}]

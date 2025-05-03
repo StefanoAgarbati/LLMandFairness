@@ -152,8 +152,8 @@ def create_clean_dataset_use_case(dataset_repository):
     return CleanDatasetUseCase(dataset_repository)
 
 
-def create_train_test_split_use_case(split_repository, dataset_repository):
-    return TrainTestSplitUseCase(split_repository, dataset_repository)
+def create_train_test_split_use_case(split_repository, dataset_repository, splitter):
+    return TrainTestSplitUseCase(split_repository, dataset_repository, splitter)
 
 
 def create_split_repository():
@@ -244,7 +244,8 @@ def create_system():
     encode_dataset_uc = create_encode_dataset_use_case(dataset_repository, dataset_encoder, dataset_info)
     clean_dataset_uc = create_clean_dataset_use_case(dataset_repository)
     split_repository = create_split_repository()
-    train_test_split_uc = create_train_test_split_use_case(split_repository, dataset_repository)
+    splitter = create_splitter(SystemConfig.splitter)
+    train_test_split_uc = create_train_test_split_use_case(split_repository, dataset_repository, splitter)
     prediction_repository = create_prediction_repository()
     classifier = create_classifier(SystemConfig.classifier_config)
     fit_predict_uc = create_fit_predict_model_use_case(classifier, split_repository, prediction_repository)
@@ -254,7 +255,7 @@ def create_system():
     draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer,
                                                                            get_correlation_matrix_uc)
     performance_metrics = create_performance_metrics(SystemConfig.performance_metrics)
-    splitter = create_splitter(SystemConfig.splitter)
+    #splitter = create_splitter(SystemConfig.splitter)
     proxy_detector = create_proxy_detector(SystemConfig.proxy_detector_config)
     proxy_detector_uc = create_detect_proxy_use_case(dataset_repository, proxy_detector)
 

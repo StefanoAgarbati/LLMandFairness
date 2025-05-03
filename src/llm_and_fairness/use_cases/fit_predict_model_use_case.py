@@ -5,7 +5,7 @@ from ML.prediction import Prediction
 class FitPredictModelUseCase:
 
     def __init__(self, classifier, split_repository, prediction_repository):
-        self.classifier = classifier #e se fosse un regressore o altro?
+        self.classifier = classifier #e se fosse un regressore o altro? Introdurre l'interfaccia Model
         self.split_repository = split_repository
         self.prediction_repository = prediction_repository
 

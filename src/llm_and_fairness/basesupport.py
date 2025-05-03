@@ -1,6 +1,7 @@
+from abc import ABC, abstractmethod
 from threading import Thread
 
-class ActiveObject(Thread):
+class ActiveObject(ABC,Thread):
 
     def __init__(self, name=''):
         super().__init__()
@@ -12,6 +13,7 @@ class ActiveObject(Thread):
     def activate(self):
         super().start()
 
+    @abstractmethod
     def doJob(self):
         pass
     

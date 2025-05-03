@@ -170,7 +170,7 @@ Un modello di ML dovrebbe essere addestrato usando un certo insieme di dati. Suc
 verrà chiesto di fare una previsione usando un insieme di dati (privato della variabile target) che il modella non abbia 
 mai visto. Potremmo, ad esempio, suddividere l'insieme dati a disposizione in due parti (nel senso orizzontale) andando
 così a creare un insieme di training e un insieme di test. Tale problema è stato affrontato introducendo l'interfaccia
-DatasetTrainTestSplitter che fornisce il metodo split() e restituisce un oggetto di interfaccia Split che rappresenta
+TrainTestSplitter che fornisce il metodo split() e restituisce una tupla-4 che rappresenta
 un insieme di 4 elementi: insieme X per il testing (il dataset meno la colonna della variabile target), 
 insieme y per il testing (colonna variabile target), insieme X per il training e insieme y per il training
 
@@ -287,7 +287,33 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   ciascuna variabile nella determinazione della previsione non è stata possibile nel mio pc data la mancanza di risorse computazionali (memoria insufficiente).
   Ho utilizzato la mutua informazione. L'identificazione è affidata al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
   un ProxyDetector (che calcola la mutua informazione fra una variabile e tutte le altre presenti nel dataset). Il DetectProxyUseCase restituisce
-  una lista di ProxyDetection (memorizza un dizionario del tipo {'nome_variabile': nome,'mutua_informazione': mi})
+  una lista di ProxyDetection (memorizza un dizionario del tipo {'nome_variabile': nome,'mutua_informazione': mi}) invocando il metodo detect_proxy()
+  per ogni variabile del dataset ed inserendo poi la ProxyDetection ottenuta all'interno di una lista detections retistuita poi al chiamante. 
+  L'interfaccia ProxyDetector è implementata dalle classi ProxyDetectorMutualInfoBased e ProxyDetectorTreeBased. Il ProxyDetectorMutulaInfoBased usa 
+  un MutualInfoUtils per ottenere la mutua informazione fra una variabile e tutte le altre. MutualInfoUtils è implementata usando la funzione mutual_info_classif()
+  della libreria scikit-learn.
+  
+![detect_proxy](docs/images/proxy_detection.jpg)
+
+* Suddivisione del dataset in training set e testing set
+  * La suddivisione del dataset è affidata ad un TrainTestSpliUseCase, sempre invocato dal corrispondente tool del framework Langchain.
+  Esso usa uno SplitRepository, un DatasetRepository ed un TrainTestSplitter. Il TrainTestSplitter offre il metodo split() che
+  a partire dal nome del dataset e dal nome della variabile target suddivide il dataset negli insiemi di training e testing. Questi vengono poi incapsulati all'interno
+  di uno Split (contiene il nome del dataset, X_train, X_test, y_train, y_test ed offre metodi per recuperare tali elementi). Lo split viene poi
+  memorizzato all'interno di uno SplitRepository per poter utilizzare lo Split nelle fasi successive. Lo Split viene restituito al chiamante TrainTestSplitUseCase
+  che a sua volta lo resituisce al tool di basso livello Langchain
+  
+![train_test_split](docs/images/train_test_split.jpg)
+
+* Addestramento di un modello
+  * Affidato a FitPredictModelUseCase che offre il metodo fit_predict() che a partire dal nome di uno split addestra un modello usando l'insieme
+  di training e poi procede facendo una previsione usando l'insieme di testing. Usa l'interfaccia Classifier (da modificare con Model, più generale)
+  per addestrare un modello e fare una previsione. Quindi la previsione viene incapsulata all'interno di una Prediction e salvata nel repository
+  PredictionRespository. La Prediction viene restituita al chiamante avvero il tool Langchain
+
+![fit_predict_model](docs/images/fit_predict_model.jpg)
+
+
 
 
 ## Conclusioni

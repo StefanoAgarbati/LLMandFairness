@@ -1,13 +1,15 @@
+from abc import abstractmethod, ABC
+
 from ML.split import Split
 from ML.utils.train_test_split_sklearn import TrainTestSplitterSkLearn
 
 
-class DatasetTrainTestSplitter:
+class DatasetTrainTestSplitter(ABC):
 
     def __init__(self, split_repository, dataset_repository):
         self.split_repository = split_repository
         self.dataset_repository = dataset_repository
-        self.splitter = None
+        self.splitter = self.create_low_level_splitter()
 
     def split(self, dataset_name, target):
         dataset = self.dataset_repository.get_dataset_by_name(dataset_name)
@@ -18,7 +20,7 @@ class DatasetTrainTestSplitter:
         return split
 
     def execute_split(self, dataset_name, X, y):
-        X_train, X_test, y_train, y_test = TrainTestSplitterSkLearn.split(X, y)
+        X_train, X_test, y_train, y_test = self.splitter.split(X, y)
         split = Split(dataset_name, X_train, X_test, y_train, y_test)
         return split
 
@@ -31,3 +33,6 @@ class DatasetTrainTestSplitter:
             return dataset[target[0]]
         return dataset[target]
 
+    @abstractmethod
+    def create_low_level_splitter(self):
+        pass

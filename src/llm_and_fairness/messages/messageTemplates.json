@@ -1,7 +1,7 @@
 {
 	"templates": [
 		{
-			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.Hai compreso? Rispondi si oppure no.",
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.",
 			"params": [ {
 				"ruolo" : "un esperto di data science e analisi dei dati",
 				"contesto": "quello delle scienze sociali con attenzione alle questioni di bias e fairness"
@@ -24,7 +24,7 @@
 			}]
 		},
 		{
-			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Rispondi nella forma [n1,n2,...]",
+			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Mostrami solo l'elenco",
 			"params" : [
 				{
 					"nome" : "race",

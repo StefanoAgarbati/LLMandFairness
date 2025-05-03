@@ -1,0 +1,24 @@
+from ML.classification.classifier_factory import ClassifierModel
+from ML.utils.performance_metric_factory import PerformanceMetric
+from ML.utils.proxy_detector_factory import ProxyDetectorType
+from ML.utils.train_test_split_factory import TrainTestSplitType
+from chat.chat_factory import ChatModelType
+from drawing.statistical_drawer_factory import StatisticalDrawerType
+from output_device.output_device_factory import OutputDeviceType
+from tools.tool_repository_factory import ToolRepositoryType
+
+
+class SystemConfig:
+    chat_type = ChatModelType.GOOGLE
+    model_name = 'gemini-2.0-flash'
+    api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
+    out_dev_type = OutputDeviceType.Standard
+    tool_repo_type = ToolRepositoryType.LANGCHAIN
+    dataset_name = 'adult'
+    classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
+    scorings = ['accuracy', 'precision', 'recall', 'f1']
+    models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]
+    drawer = StatisticalDrawerType.SEABORN
+    splitter = TrainTestSplitType.SKLEARN
+    performance_metrics = PerformanceMetric.SKLEARN
+    proxy_detector_config = {"type": ProxyDetectorType.MutualInfo, "metrics": performance_metrics}
