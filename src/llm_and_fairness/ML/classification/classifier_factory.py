@@ -3,8 +3,8 @@ from ML.classification.random_forest_classifier_sklearn import RandomForestClass
 
 
 class ClassifierModel:
-    RANDOM_FOREST = 'random_forest'
-    GRADIENT_BOOSTING = 'gradient_boosting'
+    RANDOM_FOREST = 'random_forest_classifier'
+    GRADIENT_BOOSTING = 'gradient_boosting_classifier'
 
 class ClassifierFactory:
 

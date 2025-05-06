@@ -11,7 +11,8 @@ def get_available_tools_names():
              'clean_dataset', 'esegui_codifica_dataset', 'split_dataset_in_train_test_set',
              'addestra_un_modello_e_fai_una_previsione_usando_uno_split', 'calculate_the_distributions_of_all_attributes',
              'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
-             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy', 'available_models_for']
+             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy', 'available_models_for',
+             'evaluate_models', 'metriche_disponibili_per', 'esegui_trasformazione_inversa']
     return names
 
 def get_tool_by_name(toolname):
@@ -44,6 +45,12 @@ def get_tool_by_name(toolname):
             return rileva_eventuali_variabili_proxy
         case 'available_models_for':
             return available_models_for
+        case 'evaluate_models':
+            return evaluate_models
+        case 'metriche_disponibili_per':
+            return metriche_disponibili_per
+        case 'esegui_trasformazione_inversa':
+            return esegui_trasformazione_inversa
         case 'somma':
             return somma
         case 'load_dataset':
@@ -143,6 +150,18 @@ def esegui_codifica_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     #print(f"Tool encode_dataset eseguito su {dataset_name}")
     return content, data
 
+@tool(response_format="content_and_artifact")
+def esegui_trasformazione_inversa(dataset_name: str) -> tuple[str, pd.DataFrame]:
+    """esegue la decodifica di un dataset"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.ENCODE_DATASET).decode_dataset(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(
+        f"Il tuo dataset {dataset_name} è stato decodificato wowowow")
+    display_uc.display(data)
+    content = f"Il dataset {dataset_name} è stato decodificato (decoded)\n"
+    #print(f"Tool encode_dataset eseguito su {dataset_name}")
+    return content, data
+
 
 @tool(response_format="content_and_artifact")
 def encode_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
@@ -198,6 +217,24 @@ def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) 
         content += f"{item['score'].mean().to_json()}\n"
     return content, data
 
+
+@tool(response_format="content_and_artifact")
+def evaluate_models(models:str, metrics:str, dataset_name: str, target: str) -> tuple[str, list[dict]]:
+    """valuta alcuni modelli di machine learning"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.MODELS_EVALUATION).evaluate_models(models, metrics, dataset_name, target)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(f"Ecco la valutazione dei modelli:\n")
+    msg = ''
+    for item in data:
+        display_uc.display_markdown(f"Modello {item['model_name']}:\n")
+        display_uc.display(f"{item['score'].mean()}\n")
+    content =  f"Ecco la valutazione dei modelli:\n"
+    for item in data:
+        content += f"Modello {item['model_name']}\n"
+        content += f"{item['score'].mean().to_json()}\n"
+    return content, data
+
+
 @tool(response_format="content_and_artifact")
 def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: str) -> tuple[str, list]:
     """Disegna i grafici delle distribuzione di tutti gli attributi di un dataset"""
@@ -247,6 +284,16 @@ def available_models_for(problem_type: str) -> tuple[str, str]:
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_MODELS).get_available_models_for(problem_type)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Modelli disponibili per problemi di {problem_type} sono: " + data
+    display_uc.display_markdown(msg)
+    content = msg
+    return content, data
+
+@tool(response_format="content_and_artifact")
+def metriche_disponibili_per(problem_type: str) -> tuple[str, str]:
+    """Restituisce l'elenco delle metriche disponibili per uno specifico problema di learning"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_METRICS).get_available_metrics_for(problem_type)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    msg = f"Ecco le metriche disponibili per problemi di {problem_type} : {data}\n"
     display_uc.display_markdown(msg)
     content = msg
     return content, data

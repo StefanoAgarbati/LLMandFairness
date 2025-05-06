@@ -1,5 +1,6 @@
 from ML.encoding.encoder import Encoder
 from sklearn.preprocessing import LabelEncoder
+import pandas as pd
 
 class SkLearnNominalEncoder(Encoder):
 

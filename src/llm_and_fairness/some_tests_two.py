@@ -28,6 +28,7 @@ from src.llm_and_fairness.use_cases.model_evaluation_use_case import ModelEvalua
 from src.llm_and_fairness.use_cases.send_message_use_case import SendMessageUseCase
 from src.llm_and_fairness.use_cases.train_test_split_use_case import TrainTestSplitUseCase
 from src.llm_and_fairness.use_cases.use_case_repository import UseCaseRepository, UseCase"""
+from ML.MLProblemType import MLProblemType
 from ML.classification.classifier_factory import ClassifierFactory, ClassifierModel
 from ML.classification.classifier_factory import ClassifierFactory, ClassifierModel
 from ML.encoding.dataset_encoder import DatasetEncoder
@@ -54,7 +55,9 @@ from use_cases.detect_proxy_use_case import DetectProxyUseCase
 from use_cases.display_use_case import DisplayUseCase
 from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
+from use_cases.evaluate_model_use_case import EvaluateModelUseCase
 from use_cases.fit_predict_model_use_case import FitPredictModelUseCase
+from use_cases.get_available_metrics_use_case import GetAvailableMetricsUseCase
 from use_cases.get_available_models_use_case import GetAvailableModelsUseCase, GetAvailableModelsUseCase
 from use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
 from use_cases.get_memories_use_case import GetMemoriesUseCase
@@ -87,6 +90,7 @@ class SystemConfig:
     proxy_detector_config = {"type": ProxyDetectorType.MutualInfo, "metrics": performance_metrics}
     available_models = [{"name":ClassifierModel.RANDOM_FOREST, "problem": "classificazione"},
                         {"name": ClassifierModel.GRADIENT_BOOSTING, "problem": "classificazione"}]
+    available_metrics = [{"problem": MLProblemType.CLASSIFICATION, "metrics": "accuracy, precision, recall, f1"}]
 
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
@@ -199,6 +203,8 @@ def create_dataset_info(dataset_name):
 def create_evaluate_models_use_case(validator, models, scorings, dataset_repository):
     return ModelEvaluationUseCase(validator, models, scorings, dataset_repository)
 
+def create_models_evaluation_use_case(validator, dataset_repository):
+    return EvaluateModelUseCase(validator, dataset_repository)
 
 def create_cross_validator():
     return CrossValidationSklearn()
@@ -231,6 +237,9 @@ def create_performance_metrics(type):
 
 def create_get_available_models_use_case(available_models):
     return GetAvailableModelsUseCase(available_models)
+
+def create_get_available_metrics_use_case(metrics):
+    return GetAvailableMetricsUseCase(metrics)
 
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
@@ -266,7 +275,8 @@ def create_system():
     proxy_detector = create_proxy_detector(SystemConfig.proxy_detector_config)
     proxy_detector_uc = create_detect_proxy_use_case(dataset_repository, proxy_detector)
     get_available_models_use_case = create_get_available_models_use_case(SystemConfig.available_models)
-
+    models_evaluation_uc = create_models_evaluation_use_case(validator, dataset_repository)
+    get_available_metrics_uc = create_get_available_metrics_use_case(SystemConfig.available_metrics)
 
     UseCaseRepository.add_use_case(UseCase.DETECT_PROXY, proxy_detector_uc)
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
@@ -280,6 +290,8 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.DISPLAY, display_uc)
     UseCaseRepository.add_use_case(UseCase.DRAW_STATISTICAL_DATA, draw_statistical_data_use_case)
     UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_MODELS, get_available_models_use_case)
+    UseCaseRepository.add_use_case(UseCase.MODELS_EVALUATION, models_evaluation_uc)
+    UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_METRICS, get_available_metrics_uc)
 
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)

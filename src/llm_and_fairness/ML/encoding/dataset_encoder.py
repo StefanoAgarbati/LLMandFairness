@@ -31,7 +31,7 @@ class DatasetEncoder:
     def get_encoder_for_attribute(self, attribute_name):
         for encoder in self.encoders_map:
             if encoder['name'] == attribute_name:
-                return encoder
+                return encoder['encoder']
         raise Exception(f"The encoder for {attribute_name} doesn't exist")
 
     def get_encoders_map(self, dataset_info):
@@ -51,11 +51,11 @@ class DatasetEncoder:
         for item in encoders_map:
             attribute_name = item['name']
             encoder = item['encoder']
-            ds = self.encode_attribute(ds, attribute_name, encoder)
+            ds[attribute_name] = self.encode_attribute(ds, attribute_name, encoder)
         return ds
 
     def encode_attribute(self, dataset, attribute_name, encoder):
-        dataset[attribute_name] = encoder.encode(dataset[[attribute_name]])
-        return dataset
+        column_encoded = encoder.encode(dataset[attribute_name])
+        return column_encoded
 
 
