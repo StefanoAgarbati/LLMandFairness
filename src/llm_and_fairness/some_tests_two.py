@@ -41,6 +41,7 @@ from ML.utils.train_test_split_factory import TrainTestSplitFactory, TrainTestSp
 from ML.validation.cross_validation import CrossValidation
 from ML.validation.cross_validation_sklearn import CrossValidationSklearn
 from appl_logic.appl_controller import ApplController
+from appl_logic.appl_controller_test import ApplControllerTest
 from chat.chat_factory import ChatModelType, ChatFactory
 from datasets.dataset_info import DatasetInfo
 from datasets.dataset_repository import DatasetRepository
@@ -54,6 +55,7 @@ from use_cases.display_use_case import DisplayUseCase
 from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
 from use_cases.fit_predict_model_use_case import FitPredictModelUseCase
+from use_cases.get_available_models_use_case import GetAvailableModelsUseCase, GetAvailableModelsUseCase
 from use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
 from use_cases.get_memories_use_case import GetMemoriesUseCase
 from use_cases.handle_response_use_case import HandleResponseUseCase
@@ -83,6 +85,8 @@ class SystemConfig:
     splitter = TrainTestSplitType.SKLEARN
     performance_metrics = PerformanceMetric.SKLEARN
     proxy_detector_config = {"type": ProxyDetectorType.MutualInfo, "metrics": performance_metrics}
+    available_models = [{"name":ClassifierModel.RANDOM_FOREST, "problem": "classificazione"},
+                        {"name": ClassifierModel.GRADIENT_BOOSTING, "problem": "classificazione"}]
 
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
@@ -225,6 +229,9 @@ def create_splitter(type):
 def create_performance_metrics(type):
     return PerformanceMetricsFactory.create_performance_metrics(type)
 
+def create_get_available_models_use_case(available_models):
+    return GetAvailableModelsUseCase(available_models)
+
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
     output_device = create_output_device(SystemConfig.out_dev_type)
@@ -258,6 +265,8 @@ def create_system():
     #splitter = create_splitter(SystemConfig.splitter)
     proxy_detector = create_proxy_detector(SystemConfig.proxy_detector_config)
     proxy_detector_uc = create_detect_proxy_use_case(dataset_repository, proxy_detector)
+    get_available_models_use_case = create_get_available_models_use_case(SystemConfig.available_models)
+
 
     UseCaseRepository.add_use_case(UseCase.DETECT_PROXY, proxy_detector_uc)
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
@@ -270,13 +279,14 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.EVALUATE_MODELS, evaluate_models_uc)
     UseCaseRepository.add_use_case(UseCase.DISPLAY, display_uc)
     UseCaseRepository.add_use_case(UseCase.DRAW_STATISTICAL_DATA, draw_statistical_data_use_case)
+    UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_MODELS, get_available_models_use_case)
 
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)
 
     bind_tools_uc.bind_tools()
 
-    appl_logic = ApplController(add_memory_uc, get_memories_uc, display_uc, response_handler, send_msg_uc)
+    appl_logic = ApplControllerTest(add_memory_uc, get_memories_uc, display_uc, response_handler, send_msg_uc)
     appl_logic.execute()
 
 

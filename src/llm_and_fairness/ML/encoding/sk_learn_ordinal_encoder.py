@@ -11,3 +11,6 @@ class SkLearnOrdinalEncoder(Encoder):
     def encode(self, attribute):
         attribute_encoded = self.encoder.fit_transform(attribute)
         return attribute_encoded
+
+    def decode(self, column):
+        return self.encoder.inverse_transform(column)

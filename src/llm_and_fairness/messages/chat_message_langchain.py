@@ -20,7 +20,7 @@ class ChatMessageLangchain(ChatMessage):
 
     def get_tool_calls(self) -> list[ToolCall]:
         calls = self.ai_message.tool_calls
-        print(f"ChatMessageLangchein tool calls: -> {calls}")
+        #print(f"ChatMessageLangchain tool calls: -> {calls}")
         tool_calls = []
         for call in calls:
             tc = ToolCall(call)

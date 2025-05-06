@@ -23,6 +23,7 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    GET_AVAILABLE_MODELS = 'available_models'
     DETECT_PROXY = 'detect_proxy'
     DRAW_STATISTICAL_DATA = 'draw_statistical_data'
     DISPLAY = 'display'

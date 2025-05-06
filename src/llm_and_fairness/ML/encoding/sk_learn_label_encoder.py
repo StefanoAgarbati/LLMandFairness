@@ -9,3 +9,6 @@ class SkLearnNominalEncoder(Encoder):
     def encode(self, attribute):
         attribute_encoded = self.nominal_encoder.fit_transform(attribute)
         return attribute_encoded
+
+    def decode(self, column):
+        return self.nominal_encoder.inverse_transform(column)

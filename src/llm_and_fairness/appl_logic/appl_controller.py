@@ -9,6 +9,7 @@ class ApplController(ActiveObject):
     def __init__(self, add_memory_use_case, get_memories_use_case, display_use_case, handle_response_use_case,
                  send_message_use_case, get_user_message_use_case
                  ):
+        super().__init__('ApplLogic')
         self.send_message_uc = send_message_use_case
         self.handle_response_uc = handle_response_use_case
         self.display_use_case = display_use_case
@@ -24,7 +25,7 @@ class ApplController(ActiveObject):
 
     def execute_step(self, message):
         self.process_message(message)
-        time.sleep(5)
+        time.sleep(15)
 
     def process_message(self, message):
         self.add_memory(message.get_message())

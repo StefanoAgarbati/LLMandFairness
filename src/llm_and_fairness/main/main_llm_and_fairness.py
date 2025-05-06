@@ -33,14 +33,14 @@ from use_cases.use_case_repository import UseCaseRepository, UseCase
 from memory.memory_repository import MemoryRepository
 from output_device.output_device_factory import OutputDeviceFactory
 from tools.tool_repository_factory import ToolRepositoryFactory
-from system_config import SystemConfig
+from main.system_config import SystemConfig
 
 
 class MainLLMAndFairness:
 
     def __init__(self):
         self.create_system()
-        self.start_the_system()
+        #self.start_the_system()
 
     def create_chat(self, ctype, model_name, api_key):
         chat = ChatFactory.create_chat(ctype, model_name, api_key)

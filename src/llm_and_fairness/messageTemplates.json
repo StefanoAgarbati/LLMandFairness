@@ -24,7 +24,7 @@
 			}]
 		},
 		{
-			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Rispondi nella forma [n1,n2,...]",
+			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Rispondi fornendo solo l'elenco",
 			"params" : [
 				{
 					"nome" : "workclass",
@@ -80,13 +80,13 @@
 			}]
 		},
 		{
-			"message": "Puoi calcolare la distribuzione di tutti gli attributi del dataset {dataset}?",
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}?",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Puoi disegnare i grafici delle distribuzioni di tutti gli attributi del dataset {dataset}?",
+			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del dataset {dataset}?",
 			"params": [{
 				"dataset": "adult"
 			}]
@@ -98,7 +98,7 @@
 			}]
 		},
 		{
-			"message": "Puoi eseguire la codfica del mio dataset {dataset}?",
+			"message": "Puoi eseguire la codifica del mio dataset {dataset}?",
 			"params": [{
 				"dataset": "adult"
 			}]
@@ -106,19 +106,30 @@
 		{
 			"message": "Calcola la matrice di correlazione del dataset {dataset}?",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "adult_encoded"
 			}]
 		},
 		{
 			"message": "Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset {dataset}?",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "adult_encoded"
 			}]
 		},
 		{
-			"message": "Puoi disegnare la matrice di correlazione come heatmap del dataset {dataset}?",
+			"message": "Disegna la matrice di correlazione come heatmap del dataset {dataset}?",
 			"params": [{
 				"dataset": "adult_encoded"
+			}]
+		},
+		{
+			"message": "Puoi rilevare eventuali variabili proxy presenti nel dataset {dataset}?",
+			"params": [{
+				"dataset": "adult_encoded"
+			}]
+		},
+		{
+			"message": "Dai dati ottenuti puoi dirmi se esistono possibli variabili proxy?",
+			"params": [{
 			}]
 		},
 		{
@@ -132,7 +143,7 @@
 			"message": "Puoi valutare i modelli {modelli} sul dataset {dataset} e target {target}?",
 			"params": [{
 				"modelli": "random_forest, gradient_boosting",
-				"dataset": "adult",
+				"dataset": "adult_encoded",
 				"target": "income"
 			}]
 		},
@@ -145,14 +156,14 @@
 		{
 			"message": "Puoi eseguire lo split del dataset {dataset} in train test set usando come target {target}?",
 			"params": [{
-				"dataset": "adult",
+				"dataset": "adult_encoded",
 				"target": "income"
 			}]
 		},
 		{
-			"message": "Puoi addestrare il modello per te più appropriato e fare una previsione relativa al dataset {dataset}?",
+			"message": "Puoi addestrare un modello e fare una previsione usando lo split {split_name}?",
 			"params": [{
-				"dataset": "adult"
+				"split_name": "adult_encoded"
 			}]
 		}
 	]

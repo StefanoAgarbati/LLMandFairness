@@ -4,7 +4,7 @@ from ML.classification.random_forest_classifier_sklearn import RandomForestClass
 
 class ClassifierModel:
     RANDOM_FOREST = 'random_forest'
-    GRADIENT_BOOSTING = 'gradient_boostin'
+    GRADIENT_BOOSTING = 'gradient_boosting'
 
 class ClassifierFactory:
 

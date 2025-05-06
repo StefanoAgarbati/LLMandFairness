@@ -9,9 +9,9 @@ from use_cases.use_case_repository import UseCaseRepository, UseCase
 def get_available_tools_names():
     names = ['somma', 'load_dataset', 'get_distribution', 'get_correlation_matrix', 'encode_dataset',
              'clean_dataset', 'esegui_codifica_dataset', 'split_dataset_in_train_test_set',
-             'addestra_un_modello_e_fai_una_previsione', 'calculate_the_distributions_of_all_attributes',
+             'addestra_un_modello_e_fai_una_previsione_usando_uno_split', 'calculate_the_distributions_of_all_attributes',
              'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
-             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy']
+             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy', 'available_models_for']
     return names
 
 def get_tool_by_name(toolname):
@@ -32,8 +32,8 @@ def get_tool_by_name(toolname):
             return clean_dataset
         case 'split_dataset_in_train_test_set':
             return split_dataset_in_train_test_set
-        case 'addestra_un_modello_e_fai_una_previsione':
-            return addestra_un_modello_e_fai_una_previsione
+        case 'addestra_un_modello_e_fai_una_previsione_usando_uno_split':
+            return addestra_un_modello_e_fai_una_previsione_usando_uno_split
         case 'valuta_modelli_su_dataset_rispetto_a_target':
             return valuta_modelli_su_dataset_rispetto_a_target
         case 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi':
@@ -42,6 +42,8 @@ def get_tool_by_name(toolname):
             return disegna_la_matrice_di_correlazione_come_heatmap
         case 'rileva_eventuali_variabili_proxy':
             return rileva_eventuali_variabili_proxy
+        case 'available_models_for':
+            return available_models_for
         case 'somma':
             return somma
         case 'load_dataset':
@@ -76,7 +78,7 @@ def loadDataset(pathname: str, columnspath: str) -> tuple[str, pd.DataFrame]:
 @tool(response_format="content_and_artifact")
 def load_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Load a csv dataset from its name"""
-    print("Load dataset tool called")
+    #print("Load dataset tool called")
     data = UseCaseRepository.get_use_case_by_name(UseCase.LOAD_DATASET).load_dataset(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(f"Il dataset {dataset_name} è stato caricato.")
@@ -126,15 +128,19 @@ def get_correlation_matrix(dataset_name: str) -> tuple[str, pd.DataFrame]:
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name}")
     display_uc.display(data)
-    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n {data.to_json()}"
+    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n{data.to_json()}"
     return content, data
 
 @tool(response_format="content_and_artifact")
 def esegui_codifica_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
-    """trasforma un dataset in forma numerica"""
+    """esegue la codifica un dataset in forma numerica"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.ENCODE_DATASET).encode_dataset(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(
+        f"Il tuo dataset {dataset_name} è stato codificato")
+    display_uc.display(data)
     content = f"Il dataset {dataset_name} è stato codificato (encoded)\n"
-    print(f"Tool encode_dataset eseguito su {dataset_name}")
+    #print(f"Tool encode_dataset eseguito su {dataset_name}")
     return content, data
 
 
@@ -142,27 +148,37 @@ def esegui_codifica_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
 def encode_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """trasforma un dataset in forma numerica"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.ENCODE_DATASET).encode_dataset(dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(
+        f"Il tuo dataset {dataset_name} è stato codificato")
+    display_uc.display(data)
     content = f"Il dataset {dataset_name} è stato codificato (encoded)\n"
-    print(f"Tool encode_dataset eseguito su {dataset_name}")
+    #print(f"Tool encode_dataset eseguito su {dataset_name}")
     return content, data
 
 @tool(response_format="content_and_artifact")
 def split_dataset_in_train_test_set(dataset_name:str, target: list | str) -> tuple[str, Split]:
     """suddivide un dataset in due parti: una parte per il training e l'altra per il testing di un modello"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.SPLIT_TRAIN_TEST).split(dataset_name, target)
-    content = (f"Il dataset {dataset_name} è stato suddiviso negli insiemi train e test."
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(f"Ho eseguito lo split del dataset {dataset_name}")
+    content = (f"Il dataset {dataset_name} è stato suddiviso negli insiemi train e test rappresentati dallo split {dataset_name}."
                f"Ora è possibile addestrare un modello")
-    print(f"SplitDatasetTool:\n"
+    """print(f"SplitDatasetTool:\n"
           f"y_test:\n"
-          f"{data.get_y_test()}")
+          f"{data.get_y_test()}")"""
     return content, data
 
 
 @tool(response_format="content_and_artifact")
-def addestra_un_modello_e_fai_una_previsione(test_set_name:str) -> tuple[str, Prediction]:
-    """addestra un modello su di un training set e tenta una previsione usando un test set"""
-    data = UseCaseRepository.get_use_case_by_name(UseCase.FIT_PREDICT_MODEL).fit_predict(test_set_name)
-    content = f"Il modello è stato addestrato sul test set {test_set_name} e ha prodotto una previsione"
+def addestra_un_modello_e_fai_una_previsione_usando_uno_split(split_name:str) -> tuple[str, Prediction]:
+    """addestra un modello e fa una previsione utilizzando uno split"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.FIT_PREDICT_MODEL).fit_predict(split_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(f"Il modello è stato addestrato ed ha prodotto una previsione")
+    display_uc.display_markdown(f"Prediction:\n{data.get_y_pred()}")
+    content = f"Il modello è stato addestrato sul test set {split_name} e ha prodotto una previsione:\n"
+    content += f"Predictions:\n{data.get_y_pred()}"
     print(f"Predictions:\n{data.get_y_pred()}")
     return content, data
 
@@ -170,10 +186,16 @@ def addestra_un_modello_e_fai_una_previsione(test_set_name:str) -> tuple[str, Pr
 def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) -> tuple[str, list[dict]]:
     """valuta alcuni modelli di machine learning"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.EVALUATE_MODELS).evaluate_models(dataset_name, target)
-    content = f"Ecco la valutazione dei modelli:\n"
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(f"Ecco la valutazione dei modelli:\n")
+    msg = ''
+    for item in data:
+        display_uc.display_markdown(f"Modello {item['model_name']}\n")
+        display_uc.display(f"{item['score'].mean()}\n")
+    content =  f"Ecco la valutazione dei modelli:\n"
     for item in data:
         content += f"Modello {item['model_name']}\n"
-        content += f"{item['score'].mean()}\n"
+        content += f"{item['score'].mean().to_json()}\n"
     return content, data
 
 @tool(response_format="content_and_artifact")
@@ -217,6 +239,18 @@ def rileva_eventuali_variabili_proxy(dataset_name: str) -> tuple[str, list]:
         content = msg + detection.get_data('mutual_info').to_json()
 
     return content, data
+
+
+@tool(response_format="content_and_artifact")
+def available_models_for(problem_type: str) -> tuple[str, str]:
+    """Restituisce l'elenco dei modelli disponibili per uno specifico problema di learning"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_MODELS).get_available_models_for(problem_type)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    msg = f"Modelli disponibili per problemi di {problem_type} sono: " + data
+    display_uc.display_markdown(msg)
+    content = msg
+    return content, data
+
 
 @tool(response_format="content_and_artifact")
 def somma(a: int, b: int) -> tuple[str, int]:

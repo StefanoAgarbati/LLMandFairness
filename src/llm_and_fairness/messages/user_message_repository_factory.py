@@ -17,7 +17,7 @@ class UserMessageRepositoryFiller:
             params = template['params']
             for param in params:
                 userMessage = UserMessage(message, param)
-                self.repository.addUserMessage(userMessage)
+                self.repository.add_user_message(userMessage)
 
 class UserMessageRepositoryFactory:
 

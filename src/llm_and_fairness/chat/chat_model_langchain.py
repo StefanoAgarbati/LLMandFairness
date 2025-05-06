@@ -24,7 +24,7 @@ class ChatModelLangchain(ChatModel):
         return chat_message
 
     def send_tool_message(self, message):
-        print("send_tool_message: ",message.get_messages())
+        #print("send_tool_message: ",message.get_messages())
         response = self.chat.invoke(message.get_messages())
         return ChatMessageLangchain.create_message(response)
 

@@ -12,7 +12,7 @@ class SystemConfig:
     chat_type = ChatModelType.GOOGLE
     model_name = 'gemini-2.0-flash'
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
-    out_dev_type = OutputDeviceType.Standard
+    out_dev_type = OutputDeviceType.Jupyter
     tool_repo_type = ToolRepositoryType.LANGCHAIN
     dataset_name = 'adult'
     classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
