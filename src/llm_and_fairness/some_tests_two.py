@@ -65,6 +65,7 @@ from use_cases.handle_response_use_case import HandleResponseUseCase
 from use_cases.load_dataset_use_case import LoadDatasetUseCase
 from use_cases.model_evaluation_use_case import ModelEvaluationUseCase
 from use_cases.send_message_use_case import SendMessageUseCase
+from use_cases.train_model_and_make_prediction import TrainModelAndMakePrediction
 from use_cases.train_test_split_use_case import TrainTestSplitUseCase
 from use_cases.use_case_repository import UseCaseRepository, UseCase
 from memory.memory_repository import MemoryRepository
@@ -78,7 +79,7 @@ class SystemConfig:
     chat_type = ChatModelType.GOOGLE
     model_name = 'gemini-2.0-flash'
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
-    out_dev_type = OutputDeviceType.Standard
+    out_dev_type = OutputDeviceType.Jupyter
     tool_repo_type = ToolRepositoryType.LANGCHAIN
     dataset_name = 'adult'
     classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
@@ -241,6 +242,9 @@ def create_get_available_models_use_case(available_models):
 def create_get_available_metrics_use_case(metrics):
     return GetAvailableMetricsUseCase(metrics)
 
+def create_train_model_and_make_prediction_use_case(split_repository, prediction_repository):
+    return TrainModelAndMakePrediction(split_repository, prediction_repository)
+
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
     output_device = create_output_device(SystemConfig.out_dev_type)
@@ -277,6 +281,7 @@ def create_system():
     get_available_models_use_case = create_get_available_models_use_case(SystemConfig.available_models)
     models_evaluation_uc = create_models_evaluation_use_case(validator, dataset_repository)
     get_available_metrics_uc = create_get_available_metrics_use_case(SystemConfig.available_metrics)
+    train_model_and_make_prediction_uc = create_train_model_and_make_prediction_use_case(split_repository, prediction_repository)
 
     UseCaseRepository.add_use_case(UseCase.DETECT_PROXY, proxy_detector_uc)
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
@@ -292,6 +297,7 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_MODELS, get_available_models_use_case)
     UseCaseRepository.add_use_case(UseCase.MODELS_EVALUATION, models_evaluation_uc)
     UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_METRICS, get_available_metrics_uc)
+    UseCaseRepository.add_use_case(UseCase.TRAIN_MODEL_MAKE_PREDICTION, train_model_and_make_prediction_uc)
 
     send_msg_uc = create_send_message_use_case(chat)
     bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)

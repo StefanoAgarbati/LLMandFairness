@@ -12,7 +12,8 @@ def get_available_tools_names():
              'addestra_un_modello_e_fai_una_previsione_usando_uno_split', 'calculate_the_distributions_of_all_attributes',
              'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
              'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy', 'available_models_for',
-             'evaluate_models', 'metriche_disponibili_per', 'esegui_trasformazione_inversa']
+             'evaluate_models', 'metriche_disponibili_per', 'esegui_trasformazione_inversa',
+             'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target']
     return names
 
 def get_tool_by_name(toolname):
@@ -51,6 +52,8 @@ def get_tool_by_name(toolname):
             return metriche_disponibili_per
         case 'esegui_trasformazione_inversa':
             return esegui_trasformazione_inversa
+        case 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target':
+            return addestra_un_modello_e_fai_una_previsione_su_dataset_e_target
         case 'somma':
             return somma
         case 'load_dataset':
@@ -190,6 +193,19 @@ def split_dataset_in_train_test_set(dataset_name:str, target: list | str) -> tup
 
 
 @tool(response_format="content_and_artifact")
+def addestra_un_modello_e_fai_una_previsione_su_dataset_e_target(model_name: str, dataset_name:str) -> tuple[str, Prediction]:
+    """addestra un modello e fa una previsione utilizzando un dataset e una variabile target"""
+    data = UseCaseRepository.get_use_case_by_name(UseCase.TRAIN_MODEL_MAKE_PREDICTION).fit_predict(model_name, dataset_name)
+    display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
+    display_uc.display_markdown(f"Il modello {model_name} è stato addestrato ed ha prodotto una previsione")
+    display_uc.display_markdown(f"Prediction:\n{data.get_y_pred()}")
+    content = f"Il modello è stato addestrato sul test set {dataset_name} e ha prodotto una previsione:\n"
+    content += f"Predictions:\n{data.get_y_pred()}"
+    #print(f"Predictions:\n{data.get_y_pred()}")
+    return content, data
+
+
+@tool(response_format="content_and_artifact")
 def addestra_un_modello_e_fai_una_previsione_usando_uno_split(split_name:str) -> tuple[str, Prediction]:
     """addestra un modello e fa una previsione utilizzando uno split"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.FIT_PREDICT_MODEL).fit_predict(split_name)
@@ -226,12 +242,12 @@ def evaluate_models(models:str, metrics:str, dataset_name: str, target: str) -> 
     display_uc.display_markdown(f"Ecco la valutazione dei modelli:\n")
     msg = ''
     for item in data:
-        display_uc.display_markdown(f"Modello {item['model_name']}:\n")
-        display_uc.display(f"{item['score'].mean()}\n")
-    content =  f"Ecco la valutazione dei modelli:\n"
+        display_uc.display_markdown("Modello "  + item['model_name'] + ":")
+        display_uc.display(item['score'].mean())
+    content =  "Ecco la valutazione dei modelli:\n"
     for item in data:
-        content += f"Modello {item['model_name']}\n"
-        content += f"{item['score'].mean().to_json()}\n"
+        content += "Modello" + " {item['model_name']}\n"
+        content += item['score'].mean().to_json() + "\n"
     return content, data
 
 

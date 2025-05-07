@@ -23,6 +23,7 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    TRAIN_MODEL_MAKE_PREDICTION = 'train_model_and_make_prediction'
     GET_AVAILABLE_METRICS = 'available_metrics'
     MODELS_EVALUATION = 'models_evaluation'
     GET_AVAILABLE_MODELS = 'available_models'
