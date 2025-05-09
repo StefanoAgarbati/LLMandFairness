@@ -3,9 +3,10 @@ from messages.prompt_support import PromptSupport
 
 
 class UserMessage(Message):
-    def __init__(self, messageTemplate, parameters):
+    def __init__(self, messageTemplate, parameters, tool=''):
         self.messageTemplate = messageTemplate
         self.parameters = parameters
+        self.tool = tool
 
     def getMessageTemplate(self):
         return self.messageTemplate
@@ -20,3 +21,9 @@ class UserMessage(Message):
 
     def get_message(self):
         return PromptSupport.get_resolved_message(self)
+
+    def has_tool(self):
+        return self.tool != ''
+
+    def get_tool(self):
+        return self.tool

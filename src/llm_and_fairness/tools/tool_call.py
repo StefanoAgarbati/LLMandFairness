@@ -7,3 +7,6 @@ class ToolCall:
 
     def get_name(self):
         return self.data['name']
+
+    def get_args(self):
+        return self.data['args']

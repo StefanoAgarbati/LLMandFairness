@@ -32,6 +32,7 @@ from ML.MLProblemType import MLProblemType
 from ML.classification.classifier_factory import ClassifierFactory, ClassifierModel
 from ML.classification.classifier_factory import ClassifierFactory, ClassifierModel
 from ML.encoding.dataset_encoder import DatasetEncoder
+from ML.fairness.fairness_metrics_factory import FairnessMetricsFactory
 from ML.prediction_repository import PredictionRepository
 from ML.split_repository import SplitRepository
 from ML.utils.performance_metric_factory import PerformanceMetricsFactory, PerformanceMetric
@@ -50,6 +51,7 @@ from drawing.statistical_drawer_factory import StatisticalDrawerFactory, Statist
 from use_cases.add_memory_use_case import AddMemoryUseCase
 from use_cases.bind_tools_use_case import BindToolsToChatUseCase
 from use_cases.calculate_distribution_use_case import CalculateDistributionUseCase
+from use_cases.calculate_fairness_metrics_use_case import CalculateFairnessMetricsUseCase
 from use_cases.clean_dataset_use_case import CleanDatasetUseCase
 from use_cases.detect_proxy_use_case import DetectProxyUseCase
 from use_cases.display_use_case import DisplayUseCase
@@ -57,6 +59,7 @@ from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
 from use_cases.evaluate_model_use_case import EvaluateModelUseCase
 from use_cases.fit_predict_model_use_case import FitPredictModelUseCase
+from use_cases.get_available_fairness_metrics_use_case import GetAvailableFairnessMetricsUseCase
 from use_cases.get_available_metrics_use_case import GetAvailableMetricsUseCase
 from use_cases.get_available_models_use_case import GetAvailableModelsUseCase, GetAvailableModelsUseCase
 from use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
@@ -79,8 +82,8 @@ class SystemConfig:
     chat_type = ChatModelType.GOOGLE
     model_name = 'gemini-2.0-flash'
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
-    out_dev_type = OutputDeviceType.Jupyter
-    tool_repo_type = ToolRepositoryType.LANGCHAIN
+    out_dev_type = OutputDeviceType.Standard
+    tool_repo_type = ToolRepositoryType.STANDARD
     dataset_name = 'adult'
     classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
@@ -92,6 +95,10 @@ class SystemConfig:
     available_models = [{"name":ClassifierModel.RANDOM_FOREST, "problem": "classificazione"},
                         {"name": ClassifierModel.GRADIENT_BOOSTING, "problem": "classificazione"}]
     available_metrics = [{"problem": MLProblemType.CLASSIFICATION, "metrics": "accuracy, precision, recall, f1"}]
+    fairness_available_metrics = [{"problem": MLProblemType.CLASSIFICATION,
+                                   "disaggregated_metrics": "accuracy, selection_rate",
+                                   "aggregated_metrics": "demographic_parity_difference, demographic_parity_ratio"}]
+    fairness_metrics_name = 'fairlearn'
 
 def create_test_msg():
     msg = "Carica il dataset {dataset}"
@@ -123,59 +130,45 @@ def create_load_dataset_use_case(dataset_repository):
 def create_calculate_distr_use_case(dataset_repository):
     return CalculateDistributionUseCase(dataset_repository)
 
-
 def create_dataset_repository():
     return DatasetRepository()
-
 
 def create_tool_repository(repo_type):
     repo = ToolRepositoryFactory.create(repo_type)
     return repo
 
-
 def create_response_handler(tool_repository):
     return HandleResponseUseCase(tool_repository)
-
 
 def create_output_device(out_device_type):
     return OutputDeviceFactory.createOutputDevice(out_device_type)
 
-
 def create_memory_repository():
     return MemoryRepository()
-
 
 def create_add_memory_use_case(memory_repository):
     return AddMemoryUseCase(memory_repository)
 
-
 def create_get_memories_use_case(memory_repository):
     return GetMemoriesUseCase(memory_repository)
-
 
 def create_get_correlation_matrix_use_case(dataset_repository):
     return GetCorrelationMatrixUseCase(dataset_repository)
 
-
 def create_clean_dataset_use_case(dataset_repository):
     return CleanDatasetUseCase(dataset_repository)
-
 
 def create_train_test_split_use_case(split_repository, dataset_repository, splitter):
     return TrainTestSplitUseCase(split_repository, dataset_repository, splitter)
 
-
 def create_split_repository():
     return SplitRepository()
-
 
 def create_fit_predict_model_use_case(classifier, split_repository, prediction_repository):
     return FitPredictModelUseCase(classifier, split_repository, prediction_repository)
 
-
 def create_classifier(classifier_config):
     return ClassifierFactory.create_classifier(classifier_config)
-
 
 def create_models(models_names):
     models = []
@@ -184,22 +177,17 @@ def create_models(models_names):
         models.append(model)
     return models
 
-
 def create_prediction_repository():
     return PredictionRepository()
-
 
 def create_encode_dataset_use_case(dataset_repository, dataset_encode, dataset_info):
     return EncodeDatasetUseCase(dataset_repository, dataset_encode, dataset_info)
 
-
 def create_dataset_encoder():
     return DatasetEncoder()
 
-
 def create_dataset_info(dataset_name):
     return DatasetInfo.create(dataset_name)
-
 
 def create_evaluate_models_use_case(validator, models, scorings, dataset_repository):
     return ModelEvaluationUseCase(validator, models, scorings, dataset_repository)
@@ -210,22 +198,17 @@ def create_models_evaluation_use_case(validator, dataset_repository):
 def create_cross_validator():
     return CrossValidationSklearn()
 
-
 def create_display_use_case(output_device):
     return DisplayUseCase(output_device)
 
-
 def create_draw_statistical_data_use_case(dataset_repository, drawer, get_correlation_matrix_uc):
     return DrawStatisticalDataUseCase(dataset_repository, drawer, get_correlation_matrix_uc)
-
 
 def create_drawer(name):
     return StatisticalDrawerFactory.create_statistical_drawer(name)
 
 def create_detect_proxy_use_case(dataset_repository, proxy_detector):
     return DetectProxyUseCase(dataset_repository, proxy_detector)
-
-
 
 def create_proxy_detector(config):
     return ProxyDetectorFactory.create(config)
@@ -244,6 +227,15 @@ def create_get_available_metrics_use_case(metrics):
 
 def create_train_model_and_make_prediction_use_case(split_repository, prediction_repository):
     return TrainModelAndMakePrediction(split_repository, prediction_repository)
+
+def create_get_available_fairness_metrics_use_case(metrics):
+    return GetAvailableFairnessMetricsUseCase(metrics)
+
+def create_calculate_fairness_metrics_use_case(fairness_metrics, split_repository, prediction_repository, encoder):
+    return CalculateFairnessMetricsUseCase(fairness_metrics,split_repository,prediction_repository, encoder)
+
+def create_fairness_metrics(fairness_metrics_name):
+    return FairnessMetricsFactory.create_fairness_metrics(fairness_metrics_name)
 
 def create_system():
     chat = create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
@@ -275,6 +267,7 @@ def create_system():
     draw_statistical_data_use_case = create_draw_statistical_data_use_case(dataset_repository, drawer,
                                                                            get_correlation_matrix_uc)
     performance_metrics = create_performance_metrics(SystemConfig.performance_metrics)
+    fairness_metrics = create_fairness_metrics(SystemConfig.fairness_metrics_name)
     #splitter = create_splitter(SystemConfig.splitter)
     proxy_detector = create_proxy_detector(SystemConfig.proxy_detector_config)
     proxy_detector_uc = create_detect_proxy_use_case(dataset_repository, proxy_detector)
@@ -282,6 +275,8 @@ def create_system():
     models_evaluation_uc = create_models_evaluation_use_case(validator, dataset_repository)
     get_available_metrics_uc = create_get_available_metrics_use_case(SystemConfig.available_metrics)
     train_model_and_make_prediction_uc = create_train_model_and_make_prediction_use_case(split_repository, prediction_repository)
+    get_available_fairness_metrics_uc = create_get_available_fairness_metrics_use_case(SystemConfig.fairness_available_metrics)
+    calculate_fairness_metrics_uc = create_calculate_fairness_metrics_use_case(fairness_metrics, split_repository,prediction_repository,dataset_encoder)
 
     UseCaseRepository.add_use_case(UseCase.DETECT_PROXY, proxy_detector_uc)
     UseCaseRepository.add_use_case(UseCase.LOAD_DATASET, load_dataset_uc)
@@ -298,11 +293,13 @@ def create_system():
     UseCaseRepository.add_use_case(UseCase.MODELS_EVALUATION, models_evaluation_uc)
     UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_METRICS, get_available_metrics_uc)
     UseCaseRepository.add_use_case(UseCase.TRAIN_MODEL_MAKE_PREDICTION, train_model_and_make_prediction_uc)
+    UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_FAIRNESS_METRICS, get_available_fairness_metrics_uc)
+    UseCaseRepository.add_use_case(UseCase.COMPUTE_FAIRNESS_METRICS, calculate_fairness_metrics_uc)
 
     send_msg_uc = create_send_message_use_case(chat)
-    bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)
+    #bind_tools_uc = create_bind_tools_use_case(tool_repository, chat)
 
-    bind_tools_uc.bind_tools()
+    #bind_tools_uc.bind_tools()
 
     appl_logic = ApplControllerTest(add_memory_uc, get_memories_uc, display_uc, response_handler, send_msg_uc)
     appl_logic.execute()

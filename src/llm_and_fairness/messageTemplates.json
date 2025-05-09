@@ -1,170 +1,144 @@
 {
 	"templates": [
 		{
-			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.Hai compreso? Rispondi si oppure no.",
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.",
+			"tool": "",
 			"params": [ {
 				"ruolo" : "un esperto di data science e analisi dei dati",
 				"contesto": "quello delle scienze sociali con attenzione alle questioni di bias e fairness"
 			}]
 		},
 		{
-			"message": "Sono un {ruolo}. Devo {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possone essere critici per ciò che riguarda la fairness? Solo elenco.",
-			"params": [{
-				"ruolo" : "data scientist",
-				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
-				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
-			}]
+			"message": "La mia variabile target è income. Non rispondere",
+			"tool": "",
+			"params": [{}]
 		},
 		{
-			"message": "Sono un {ruolo}. Devo {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali altri attributi potrebbero essere necessari a raggiungere l'obiettivo ma non presenti nell'elenco che ti ho fornito?",
-			"params": [{
-				"ruolo" : "data scientist",
-				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
-				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
-			}]
-		},
-		{
-			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori sono mancanti? Rispondi fornendo solo l'elenco",
-			"params" : [
-				{
-					"nome" : "workclass",
-					"valori": "Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked"
-				},
-				{
-					"nome" : "education",
-					"valori": "Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool"
-				},
-				{
-					"nome" : "marital-status",
-					"valori": "Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse"
-				},
-				{
-					"nome" : "occupation",
-					"valori": "Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces"
-				},
-				{
-					"nome" : "relationship",
-					"valori": "Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried"
-				},
-				{
-					"nome" : "race",
-					"valori": "White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black"
-				},
-				{
-					"nome" : "sex",
-					"valori": "Female, Male"
-				},
-				{
-					"nome" : "native-country",
-					"valori": "United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands"
-				}
-			]
-		},
-		{
-			"message": "Il mio dataset contiene i seguenti attributi {attributi}. Devo raggiungere il seguente obiettivo: {obiettivo}. Quale fra gli attributi individui come variabile target?",
-			"params": [{
-				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
-				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
-			}]
-		},
-		{
-			"message": "Carica il dataset {dataset}",
+			"message": "Carica il mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset adult. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "load_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Pulisci il dataset {dataset}",
+			"message": "Pulisci il dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "clean_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}?",
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset} Rispondi con il testo json {json}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "calculate_the_distributions_of_all_attributes",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "adult",
+				"json": "{'tool_calls': [{'name': 'calculate_the_distributions_of_all_attributes', 'args': {'dataset_name': 'dset'}}]}"
 			}]
 		},
 		{
-			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del dataset {dataset}?",
+			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione.",
+			"tool": "disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
 			"message": "Noti qualche disproporzione, sbilanciamento negli attributi del dataset {dataset}?",
+			"tool": "",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Puoi eseguire la codifica del mio dataset {dataset}?",
+			"message": "Esegui la codifica del mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "esegui_codifica_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Calcola la matrice di correlazione del dataset {dataset}?",
+			"message": "Calcola la matrice di correlazione del dataset {dataset}.  Rispondi con il testo json {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "get_correlation_matrix",
 			"params": [{
-				"dataset": "adult_encoded"
+				"dataset": "adult"
 			}]
 		},
 		{
 			"message": "Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset {dataset}?",
+			"tool": "",
 			"params": [{
-				"dataset": "adult_encoded"
+				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Disegna la matrice di correlazione come heatmap del dataset {dataset}?",
+			"message": "Puoi disegnare la matrice di correlazione come heatmap del dataset {dataset}?. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'disegna_la_matrice_di_correlazione_come_heatmap', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con {dataset}. Restituisci solo la stringa json pura. Non aggiungere altro testo o formattazione Markdown.",
+			"tool": "disegna_la_matrice_di_correlazione_come_heatmap",
 			"params": [{
-				"dataset": "adult_encoded"
+				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Puoi rilevare eventuali variabili proxy presenti nel dataset {dataset}?",
-			"params": [{
-				"dataset": "adult_encoded"
-			}]
-		},
-		{
-			"message": "Dai dati ottenuti puoi dirmi se esistono possibli variabili proxy?",
-			"params": [{
-			}]
-		},
-		{
-			"message": "Come {ruolo}, devo {obiettivo}. Sai dirmi di quale problema di machine learning si tratta? (classificazione, regressione....)",
+			"message": "Come {ruolo}, devo {obiettivo}. Di quale problema di learning si tratta (classificazione, regressione, clustering.....)? Rispondi nella forma: 'Si tratta di un problema di learning di [tipo_di_problema]'",
+			"tool": "",
 			"params": [{
 				"ruolo": "data scientist",
 				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore od uguale a 50000 dollari oppure maggiore di 50000 dollari"
 			}]
 		},
 		{
-			"message": "Puoi valutare i modelli {modelli} sul dataset {dataset} e target {target}?",
+			"message": "Quali modelli sono disponibili per risolvere il mio problema di learning? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'available_models_for', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json pura. Non aggiungere altro testo o formattazione (markdown...).",
+			"tool": "available_models_for",
+			"params": [{}]
+		},
+		{
+			"message": "Mostra le metriche di performance disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'metriche_di_performance_disponibili_per', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json senza alcuna formattazione ed altro testo",
+			"tool": "metriche_di_performance_disponibili_per",
+			"params": [{}]
+		},
+		{
+			"message": "Valuta i modelli usando il dataset {dataset}, variable target {target}, le metriche di performance disponibili e i modelli disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'evaluate_models', 'args': {{'models': 'available_models', 'metrics': 'available_metrics', 'dataset_name': 'dset', 'target': 'target_variable'}}}}]}}. Sostituisci available_models con una stringa composta dall'elenco dei modelli disponibili per il mio problema di learning. Sostituisci available_metrics con le metriche di performance disponibili per il mio tipo di problema di learning. Sostituisci dset con il nome del mio dataset. Sostituisci target_variable con il nome della mia variabile target. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "evaluate_models",
 			"params": [{
-				"modelli": "random_forest, gradient_boosting",
-				"dataset": "adult_encoded",
+				"dataset": "adult",
 				"target": "income"
 			}]
 		},
 		{
-			"message": "Dalle valutazioni fornite quale modello è più appropriato secondo te per {obiettivo}?",
+			"message": "Da un'analisi delle valutazioni ottenute qual'è, secondo te, il modello più appropriato per {obiettivo}?",
+			"tool": "",
 			"params": [{
 				"obiettivo": "predire il reddito annuo income"
 			}]
 		},
 		{
-			"message": "Puoi eseguire lo split del dataset {dataset} in train test set usando come target {target}?",
+			"message": "Puoi eseguire lo split del mio dataset in train test set usando come target {target}? Restituisci esattamente la seguente stringa json con i parametri sostituiti :  {{'tool_calls': [{{'name': 'split_dataset_in_train_test_set', 'args': {{'dataset_name': 'dset', 'target': 'target_variable'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci target_variable con il nome della mia variabile target. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "split_dataset_in_train_test_set",
 			"params": [{
-				"dataset": "adult_encoded",
 				"target": "income"
 			}]
 		},
 		{
-			"message": "Puoi addestrare un modello e fare una previsione usando lo split {split_name}?",
+			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
 			"params": [{
-				"split_name": "adult_encoded"
+				"dataset": "adult",
+				"target": "income"
 			}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness di gruppo per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_di_gruppo_disponibili', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del tipo del mio problema di learning. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"tool": "mostra_metriche_di_fairness_di_gruppo_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness aggregate per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_aggregate_disponibili', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del tipo del mio problema di learning. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"tool": "mostra_metriche_di_fairness_aggregate_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Calcola le metriche di fairness di gruppo. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'calcola_le_metriche_di_fairness_di_gruppo', 'args': {{'metriche': 'metriche_disponibili', 'sensible': 'variabili_sensibili', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci variabili_sensibili con una stringa composta dall'elenco delle variabili, secondo te, sensibili.Sostituisci metriche_disponibili con una stringa composta dall'elenco delle metriche di fairness di gruppo disponibili. Restituisci solo la stringa json pura. Non aggiungere altro testo e formattazione (markdown...).",
+			"tool": "calcola_le_metriche_di_fairness_di_gruppo",
+			"params": [{}]
 		}
 	]
 }

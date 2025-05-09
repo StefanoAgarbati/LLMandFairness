@@ -32,7 +32,7 @@ class ApplController(ActiveObject):
         self.show_request(message)
         memories = self.get_memories()
         #print("Memories:" , memories)
-        response = self.send_memory_to_chat(memories)
+        response = self.send_memory_to_chat(memories, message)
         responses = self.handle_response(response)
         self.show_response(responses)
         self.add_memories(responses)
@@ -50,8 +50,12 @@ class ApplController(ActiveObject):
     def get_memories(self):
         return self.get_memories_uc.get_memories()
 
-    def send_memory_to_chat(self, memories):
-        return self.send_message_uc.send_string_message(memories)
+    def send_memory_to_chat(self, memories, message):
+        #return self.send_message_uc.send_string_message(memories)
+        if message.has_tool():
+            return self.send_message_uc.send_tool_message(memories, message.get_tool())
+        else:
+            return self.send_message_uc.send_string_message(memories)
 
     def handle_response(self, response):
         return self.handle_response_uc.handle(response)

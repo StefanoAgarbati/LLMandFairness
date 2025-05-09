@@ -5,8 +5,8 @@ import pandas as pd
 
 class RandomForestClassifierSklearn(EnsembleClassifier):
 
-    def __init__(self):
-        self.name = "RandomForestClassifier"
+    def __init__(self, name):
+        self.name = name
         self.classifier = ske.RandomForestClassifier(random_state=35)
         self.features = None
         super().__init__(self.classifier, self.name)

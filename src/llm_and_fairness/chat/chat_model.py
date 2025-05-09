@@ -15,7 +15,11 @@ class ChatModel(ABC):
         pass
 
     @abstractmethod
-    def send_tool_message(self, message):
+    def send_a_message(self, message):
+        pass
+
+    @abstractmethod
+    def send_tool_message(self, message, tool):
         pass
 
     @abstractmethod

@@ -1,4 +1,5 @@
-from langchain_core.tools import tool
+from collections import namedtuple
+
 import pandas as pd
 
 from ML.prediction import Prediction
@@ -6,14 +7,19 @@ from ML.split import Split
 from support import DatasetLoader
 from use_cases.use_case_repository import UseCaseRepository, UseCase
 
+
 def get_available_tools_names():
     names = ['somma', 'load_dataset', 'get_distribution', 'get_correlation_matrix', 'encode_dataset',
              'clean_dataset', 'esegui_codifica_dataset', 'split_dataset_in_train_test_set',
-             'addestra_un_modello_e_fai_una_previsione_usando_uno_split', 'calculate_the_distributions_of_all_attributes',
-             'valuta_modelli_su_dataset_rispetto_a_target', 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
-             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy', 'available_models_for',
+             'addestra_un_modello_e_fai_una_previsione_usando_uno_split',
+             'calculate_the_distributions_of_all_attributes',
+             'valuta_modelli_su_dataset_rispetto_a_target',
+             'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
+             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy',
+             'available_models_for',
              'evaluate_models', 'metriche_di_performance_disponibili_per', 'esegui_trasformazione_inversa',
-             'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'mostra_metriche_di_fairness_di_gruppo_disponibili',
+             'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target',
+             'mostra_metriche_di_fairness_di_gruppo_disponibili',
              'mostra_metriche_di_fairness_aggregate_disponibili', 'calcola_le_metriche_di_fairness_di_gruppo']
     return names
 
@@ -68,9 +74,8 @@ def get_tool_by_name(toolname):
         case _:
             return None
 
-
 def get_all_tools():
-    tools =[]
+    tools = []
     for name in get_available_tools_names():
         tool = get_tool_by_name(name)
         tools.append(tool)
@@ -83,75 +88,70 @@ def get_all_tools():
     #          disegna_la_matrice_di_correlazione_come_heatmap]
     # return tools
 
-
-@tool(response_format="content_and_artifact")
 def loadDataset(pathname: str, columnspath: str) -> tuple[str, pd.DataFrame]:
     """Load a csv dataset from a file using file's path name"""
     data = DatasetLoader.create_dataset(pathname, columnspath)
     content = "Dataset caricato con successo"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-
-@tool(response_format="content_and_artifact")
 def load_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Load a csv dataset from its name"""
-    #print("Load dataset tool called")
+    # print("Load dataset tool called")
     data = UseCaseRepository.get_use_case_by_name(UseCase.LOAD_DATASET).load_dataset(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Il dataset {dataset_name} è stato caricato.")
+    display_uc.display_markdown(f"Il tuo dataset {dataset_name} è stato caricato.")
     display_uc.display(data)
-    content = f"Dataset {dataset_name} caricato con successo"
-    return content, data
+    content = f"Il tuo dataset {dataset_name} è stato caricato con successo"
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-
-@tool(response_format="content_and_artifact")
 def clean_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """Esegue operazioni di pulizia (cleaning) su di un dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.CLEAN_DATASET).clean_dataset(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Ho eseguito la pulizia del dataset {dataset_name}")
+    display_uc.display_markdown(f"Ho eseguito la pulizia del tuo dataset {dataset_name}")
     display_uc.display(data)
-    content = f"Il dataset {dataset_name} è stato pulito"
-    #print(f"Tool clean_dataset eseguito su {dataset_name}")
-    return content, data
+    content = f"Il tuo dataset {dataset_name} è stato pulito"
+    # print(f"Tool clean_dataset eseguito su {dataset_name}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
 def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[str, list[pd.Series]]:
     """Calcola la distribuzione di frequenza di tutti gli attributi presenti nel dataset"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_all_frequency_distributions(
         dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Quelle che seguono sono le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(
+        f"Quelle che seguono sono le distribuzioni di tutti gli attributi del tuo dataset {dataset_name}")
     for distri in data:
         display_uc.display(distri)
 
-    content = f"Ecco le distribuzioni di tutti gli attributi presenti nel dataset {dataset_name}:\n"
+    content = f"Ecco le distribuzioni di tutti gli attributi presenti nel tuo dataset {dataset_name}:\n"
     for item in data:
         content += item.to_json() + "\n"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
 def get_distribution(attribute_name: str, dataset_name: str) -> tuple[str, pd.Series]:
     """Calcola la distribuzione di frequenza di un attributo presente nel dataset"""
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_frequency_distribution(dataset_name, attribute_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_frequency_distribution(
+        dataset_name, attribute_name)
     content = f"Ecco la distribuzione relativa all'attributo {attribute_name}:\n {data.to_json()}"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
 def get_correlation_matrix(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """
     Calcola la matrice di correlazione relativa ad un dataset
     Richiede il nome del dataset come paramentro
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_CORRELATION_MATRIX).get_correlation_matrix(dataset_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_CORRELATION_MATRIX).get_correlation_matrix(
+        dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(
+        f"Questa è la matrice di correlazione relativa agli attributi del tuo dataset {dataset_name}")
     display_uc.display(data)
-    content = f"Ecco la matrice di correlazione relativa al dataset {dataset_name}\n{data.to_json()}"
-    return content, data
+    content = f"Ecco la matrice di correlazione relativa al tuo dataset {dataset_name}\n{data.to_json()}"
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def esegui_codifica_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """
     Esegue la codifica di un dataset
@@ -162,11 +162,11 @@ def esegui_codifica_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     display_uc.display_markdown(
         f"Il tuo dataset {dataset_name} è stato codificato")
     display_uc.display(data)
-    content = f"Il dataset {dataset_name} è stato codificato (encoded)\n"
-    #print(f"Tool encode_dataset eseguito su {dataset_name}")
-    return content, data
+    content = f"Il tuo dataset {dataset_name} è stato codificato (encoded)\n"
+    # print(f"Tool encode_dataset eseguito su {dataset_name}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def esegui_trasformazione_inversa(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """
     esegue la decodifica di un dataset
@@ -176,12 +176,11 @@ def esegui_trasformazione_inversa(dataset_name: str) -> tuple[str, pd.DataFrame]
     display_uc.display_markdown(
         f"Il tuo dataset {dataset_name} è stato decodificato wowowow")
     display_uc.display(data)
-    content = f"Il dataset {dataset_name} è stato decodificato (decoded)\n"
-    #print(f"Tool encode_dataset eseguito su {dataset_name}")
-    return content, data
+    content = f"Il tuo dataset {dataset_name} è stato decodificato (decoded)\n"
+    # print(f"Tool encode_dataset eseguito su {dataset_name}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
 def encode_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     """trasforma un dataset in forma numerica"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.ENCODE_DATASET).encode_dataset(dataset_name)
@@ -189,12 +188,12 @@ def encode_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
     display_uc.display_markdown(
         f"Il tuo dataset {dataset_name} è stato codificato")
     display_uc.display(data)
-    content = f"Il dataset {dataset_name} è stato codificato (encoded)\n"
-    #print(f"Tool encode_dataset eseguito su {dataset_name}")
-    return content, data
+    content = f"Il tuo dataset {dataset_name} è stato codificato (encoded)\n"
+    # print(f"Tool encode_dataset eseguito su {dataset_name}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
-def split_dataset_in_train_test_set(dataset_name:str, target: list | str) -> tuple[str, Split]:
+
+def split_dataset_in_train_test_set(dataset_name: str, target: list | str) -> tuple[str, Split]:
     """
     suddivide un dataset in due parti: una parte per il training e l'altra per il testing di un modello
     Esegue lo split di un dataset in train e test set.
@@ -202,33 +201,34 @@ def split_dataset_in_train_test_set(dataset_name:str, target: list | str) -> tup
     """
     data = UseCaseRepository.get_use_case_by_name(UseCase.SPLIT_TRAIN_TEST).split(dataset_name, target)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Ho eseguito lo split del dataset {dataset_name}")
-    content = (f"Il dataset {dataset_name} è stato suddiviso negli insiemi train e test rappresentati dallo split {dataset_name}."
-               f"Ora è possibile addestrare un modello")
+    display_uc.display_markdown(f"Ho eseguito lo split del tuo dataset {dataset_name}")
+    content = (
+        f"Il tuo dataset {dataset_name} è stato suddiviso negli insiemi train e test rappresentati dallo split {dataset_name}."
+        f"Ora è possibile addestrare un modello")
     """print(f"SplitDatasetTool:\n"
           f"y_test:\n"
           f"{data.get_y_test()}")"""
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
-def addestra_un_modello_e_fai_una_previsione_su_dataset_e_target(model_name: str, dataset_name:str) -> tuple[str, Prediction]:
+def addestra_un_modello_e_fai_una_previsione_su_dataset_e_target(model_name: str, dataset_name: str) -> tuple[
+    str, Prediction]:
     """
     addestra un modello e fa una previsione utilizzando un dataset e una variabile target.
     Richiede il nome di un modello e il nome di un dataset
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.TRAIN_MODEL_MAKE_PREDICTION).fit_predict(model_name, dataset_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.TRAIN_MODEL_MAKE_PREDICTION).fit_predict(model_name,
+                                                                                                   dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(f"Il modello {model_name} è stato addestrato ed ha prodotto una previsione")
     display_uc.display_markdown(f"Prediction:\n{data.get_y_pred()}")
-    content = f"Il modello è stato addestrato sul test set {dataset_name} e ha prodotto una previsione:\n"
+    content = f"Il modello {model_name} è stato addestrato sul test set {dataset_name} e ha prodotto una previsione:\n"
     content += f"Predictions:\n{data.get_y_pred()}"
-    #print(f"Predictions:\n{data.get_y_pred()}")
-    return content, data
+    # print(f"Predictions:\n{data.get_y_pred()}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
-def addestra_un_modello_e_fai_una_previsione_usando_uno_split(split_name:str) -> tuple[str, Prediction]:
+def addestra_un_modello_e_fai_una_previsione_usando_uno_split(split_name: str) -> tuple[str, Prediction]:
     """addestra un modello e fa una previsione utilizzando uno split"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.FIT_PREDICT_MODEL).fit_predict(split_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
@@ -236,10 +236,10 @@ def addestra_un_modello_e_fai_una_previsione_usando_uno_split(split_name:str) ->
     display_uc.display_markdown(f"Prediction:\n{data.get_y_pred()}")
     content = f"Il modello è stato addestrato sul test set {split_name} e ha prodotto una previsione:\n"
     content += f"Predictions:\n{data.get_y_pred()}"
-    #print(f"Predictions:\n{data.get_y_pred()}")
-    return content, data
+    # print(f"Predictions:\n{data.get_y_pred()}")
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) -> tuple[str, list[dict]]:
     """
     Valuta alcuni modelli di machine learning.
@@ -252,73 +252,74 @@ def valuta_modelli_su_dataset_rispetto_a_target(dataset_name: str, target: str) 
     for item in data:
         display_uc.display_markdown(f"Modello {item['model_name']}\n")
         display_uc.display(f"{item['score'].mean()}\n")
-    content =  f"Ecco la valutazione dei modelli:\n"
+    content = f"Ecco la valutazione dei modelli:\n"
     for item in data:
         content += f"Modello {item['model_name']}\n"
         content += f"{item['score'].mean().to_json()}\n"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
-def evaluate_models(models:str, metrics:str, dataset_name: str, target: str) -> tuple[str, list[dict]]:
+def evaluate_models(models: str, metrics: str, dataset_name: str, target: str) -> tuple[str, list[dict]]:
     """
     Valuta alcuni modelli di machine learning.
     Richiede una stringa che riporta i nomi dei modelli, una stringa che riporta le metriche, il nome di un dataset
     e il nome della variabile target
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.MODELS_EVALUATION).evaluate_models(models, metrics, dataset_name, target)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.MODELS_EVALUATION).evaluate_models(models, metrics,
+                                                                                             dataset_name, target)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(f"Ecco la valutazione dei modelli:\n")
     msg = ''
     for item in data:
-        display_uc.display_markdown("Modello "  + item['model_name'] + ":")
+        display_uc.display_markdown("Modello " + item['model_name'] + ":")
         display_uc.display(item['score'].mean())
-    content =  "Ecco la valutazione dei modelli:\n"
+    content = "Ecco la valutazione dei modelli:\n"
     for item in data:
         content += "Modello" + " {item['model_name']}\n"
         content += item['score'].mean().to_json() + "\n"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
 def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: str) -> tuple[str, list]:
     """
     Disegna i grafici delle distribuzioni di tutti gli attributi di un dataset
     Richiede come parametro il nome del dataset
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_all_distributions(dataset_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_all_distributions(
+        dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
-    display_uc.display_markdown(f"Ecco i grafici che mostrano le distribuzioni di tutti gli attributi del dataset {dataset_name}")
+    display_uc.display_markdown(
+        f"Ecco i grafici che mostrano le distribuzioni di tutti gli attributi del tuo dataset {dataset_name}")
     for figure in data:
         display_uc.display_figure(figure)
 
-    content = f"Ecco i grafici che mostrano le distribuzioni di tutte le variabili del dataset {dataset_name}"
-    return content, data
+    content = f"Ecco i grafici che mostrano le distribuzioni di tutte le variabili, attributi del tuo dataset {dataset_name}"
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
 def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[str, list]:
     """
     Disegna la matrice di correlazione come una heatmap di un dataset
     Richiede il nome del dataset come parametro
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_correlation_matrix(dataset_name)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.DRAW_STATISTICAL_DATA).draw_correlation_matrix(
+        dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(
-        f"Questa è la matrice di correlazione relativa agli attributi del dataset {dataset_name} in forma di heatmap")
+        f"Questa è la matrice di correlazione relativa agli attributi del tuo dataset {dataset_name} in forma di heatmap")
     display_uc.display_figure(data)
 
-    content = f"Ho disegnato la heatmap rappresentativa della matrice di correlazione del dataset {dataset_name}"
-    return content, data
+    content = f"Ho disegnato la heatmap rappresentativa della matrice di correlazione del tuo dataset {dataset_name}"
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def rileva_eventuali_variabili_proxy(dataset_name: str) -> tuple[str, list]:
     """Rileva eventuali variabili proxy presenti nel dataset usando la mutual information"""
     data = UseCaseRepository.get_use_case_by_name(UseCase.DETECT_PROXY).detect_proxy_variables(dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     content = ""
     display_uc.display_markdown(
-        f"Ecco la mutual information di tutte le variabili del dataset {dataset_name}")
+        f"Ecco la mutual information di tutte le variabili del tuo dataset {dataset_name}")
     for detection in data:
         variable = detection.get_data('variable_name')
         msg = f"Mutual information per {variable}:\n"
@@ -326,50 +327,51 @@ def rileva_eventuali_variabili_proxy(dataset_name: str) -> tuple[str, list]:
         display_uc.display(detection.get_data('mutual_info'))
         content = msg + detection.get_data('mutual_info').to_json()
 
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-@tool(response_format="content_and_artifact")
 def available_models_for(problem_type: str) -> tuple[str, str]:
     """
     Restituisce l'elenco dei modelli disponibili per uno specifico problema di learning
     Fornisci come parametro il tipo di problema di learning specifico
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_MODELS).get_available_models_for(problem_type)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_MODELS).get_available_models_for(
+        problem_type)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Modelli disponibili per problemi di {problem_type} sono: " + data
     display_uc.display_markdown(msg)
     content = msg
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def metriche_di_performance_disponibili_per(problema_di_learning: str) -> tuple[str, str]:
     """
     Restituisce l'elenco delle metriche di performance disponibili per uno specifico problema di learning.
     Richiede il nome del tipo di problema di learning
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_METRICS).get_available_metrics_for(problema_di_learning)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_METRICS).get_available_metrics_for(
+        problema_di_learning)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Ecco le metriche disponibili per problemi di {problema_di_learning} : {data}\n"
     display_uc.display_markdown(msg)
     content = msg
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
+
 def mostra_metriche_di_fairness_di_gruppo_disponibili(problem_type: str) -> tuple[str, str]:
     """
     Restituisce l'elenco delle metriche di fairness di gruppo disponibili per uno specifico problema di learning
     Richiede il nome del tipo di problema di learning
     """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_FAIRNESS_METRICS).get_group_metrics(problem_type)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_FAIRNESS_METRICS).get_group_metrics(
+        problem_type)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Ecco le metriche di fairness di gruppo disponibili per problemi di {problem_type} : {data}"
     display_uc.display_markdown(msg)
-    #print("Tool metricheDiGruppo -> invoked with " + problem_type)
+    # print("Tool metricheDiGruppo -> invoked with " + problem_type)
     content = msg
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
 def mostra_metriche_di_fairness_aggregate_disponibili(problem_type: str) -> tuple[str, str]:
     """
     Restituisce l'elenco delle metriche di fairness aggregate disponibili per uno specifico problema di learning.
@@ -378,16 +380,15 @@ def mostra_metriche_di_fairness_aggregate_disponibili(problem_type: str) -> tupl
     oppure regressione o clustering ecc....
     Richiede come parametro un corretto tipo di problema di learning
         """
-    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_FAIRNESS_METRICS).get_aggregated_metrics(problem_type)
+    data = UseCaseRepository.get_use_case_by_name(UseCase.GET_AVAILABLE_FAIRNESS_METRICS).get_aggregated_metrics(
+        problem_type)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Ecco le metriche di fairness aggregate disponibili per problemi di {problem_type} : {data}"
     display_uc.display_markdown(msg)
     content = msg
-    #print("Tool metricheAggregate -> invoked with " + problem_type)
-    return content, data
+    # print("Tool metricheAggregate -> invoked with " + problem_type)
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-
-@tool(response_format="content_and_artifact")
 def calcola_le_metriche_di_fairness_di_gruppo(metriche: str, sensible: str, dataset_name: str) -> tuple[str, list]:
     """
     Calcola le metriche di fairness di gruppo fornite attraverso il paramentro metriche.
@@ -396,8 +397,9 @@ def calcola_le_metriche_di_fairness_di_gruppo(metriche: str, sensible: str, data
     Per il parametro sensible fornisci una stringa composta da nomi di attributi separati da virgole
     Per il parametro dataset_name fornisci il nome di un dataset
     """
-    #print(f"calcola metriche di fairness di gruppo tool -> metriche: {metriche}, sensible: {sensible}, dataset: {dataset_name}")
-    data = UseCaseRepository.get_use_case_by_name(UseCase.COMPUTE_FAIRNESS_METRICS).get_fairness_group_metrics(dataset_name, metriche, sensible)
+    # print(f"calcola metriche di fairness di gruppo tool -> metriche: {metriche}, sensible: {sensible}, dataset: {dataset_name}")
+    data = UseCaseRepository.get_use_case_by_name(UseCase.COMPUTE_FAIRNESS_METRICS).get_fairness_group_metrics(
+        dataset_name, metriche, sensible)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = "Ecco il calcolo delle metriche di fairness di gruppo per le variabili sensibili " + sensible + ":\n"
     content = msg
@@ -405,9 +407,8 @@ def calcola_le_metriche_di_fairness_di_gruppo(metriche: str, sensible: str, data
     for item in data:
         display_uc.display(item)
         content += item.to_json() + "\n"
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
-@tool(response_format="content_and_artifact")
 def somma(a: int, b: int) -> tuple[str, int]:
     """somma due numeri interi"""
     data = a + b
@@ -415,4 +416,4 @@ def somma(a: int, b: int) -> tuple[str, int]:
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     display_uc.display_markdown(msg)
     content = msg
-    return content, data
+    return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)

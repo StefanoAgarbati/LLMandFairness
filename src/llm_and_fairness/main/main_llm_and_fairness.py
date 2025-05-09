@@ -1,5 +1,6 @@
 from ML.classification.classifier_factory import ClassifierFactory
 from ML.encoding.dataset_encoder import DatasetEncoder
+from ML.fairness.fairness_metrics_factory import FairnessMetricsFactory
 from ML.prediction_repository import PredictionRepository
 from ML.split_repository import SplitRepository
 from ML.utils.performance_metric_factory import PerformanceMetricsFactory
@@ -15,12 +16,17 @@ from messages.user_message_repository_factory import UserMessageRepositoryFactor
 from use_cases.add_memory_use_case import AddMemoryUseCase
 from use_cases.bind_tools_use_case import BindToolsToChatUseCase
 from use_cases.calculate_distribution_use_case import CalculateDistributionUseCase
+from use_cases.calculate_fairness_metrics_use_case import CalculateFairnessMetricsUseCase
 from use_cases.clean_dataset_use_case import CleanDatasetUseCase
 from use_cases.detect_proxy_use_case import DetectProxyUseCase
 from use_cases.display_use_case import DisplayUseCase
 from use_cases.draw_statistical_data import DrawStatisticalDataUseCase
 from use_cases.encode_dataset_use_case import EncodeDatasetUseCase
+from use_cases.evaluate_model_use_case import EvaluateModelUseCase
 from use_cases.fit_predict_model_use_case import FitPredictModelUseCase
+from use_cases.get_available_fairness_metrics_use_case import GetAvailableFairnessMetricsUseCase
+from use_cases.get_available_metrics_use_case import GetAvailableMetricsUseCase
+from use_cases.get_available_models_use_case import GetAvailableModelsUseCase
 from use_cases.get_correlation_matrix_use_case import GetCorrelationMatrixUseCase
 from use_cases.get_memories_use_case import GetMemoriesUseCase
 from use_cases.get_user_messages_use_case import GetUserMessagesUseCase
@@ -28,6 +34,7 @@ from use_cases.handle_response_use_case import HandleResponseUseCase
 from use_cases.load_dataset_use_case import LoadDatasetUseCase
 from use_cases.model_evaluation_use_case import ModelEvaluationUseCase
 from use_cases.send_message_use_case import SendMessageUseCase
+from use_cases.train_model_and_make_prediction import TrainModelAndMakePrediction
 from use_cases.train_test_split_use_case import TrainTestSplitUseCase
 from use_cases.use_case_repository import UseCaseRepository, UseCase
 from memory.memory_repository import MemoryRepository
@@ -145,6 +152,8 @@ class MainLLMAndFairness:
     def create_evaluate_models_use_case(self, validator, models, scorings, dataset_repository):
         return ModelEvaluationUseCase(validator, models, scorings, dataset_repository)
 
+    def create_models_evaluation_use_case(self,validator, dataset_repository):
+        return EvaluateModelUseCase(validator, dataset_repository)
 
     def create_cross_validator(self):
         return CrossValidationSklearn()
@@ -176,6 +185,24 @@ class MainLLMAndFairness:
 
     def create_performance_metrics(self, type):
         return PerformanceMetricsFactory.create_performance_metrics(type)
+
+    def create_get_available_models_use_case(self, available_models):
+        return GetAvailableModelsUseCase(available_models)
+
+    def create_get_available_metrics_use_case(self, metrics):
+        return GetAvailableMetricsUseCase(metrics)
+
+    def create_train_model_and_make_prediction_use_case(self,split_repository, prediction_repository):
+        return TrainModelAndMakePrediction(split_repository, prediction_repository)
+
+    def create_get_available_fairness_metrics_use_case(self, metrics):
+        return GetAvailableFairnessMetricsUseCase(metrics)
+
+    def create_calculate_fairness_metrics_use_case(self, fairness_metrics, split_repository, prediction_repository, encoder):
+        return CalculateFairnessMetricsUseCase(fairness_metrics, split_repository, prediction_repository, encoder)
+
+    def create_fairness_metrics(self, fairness_metrics_name):
+        return FairnessMetricsFactory.create_fairness_metrics(fairness_metrics_name)
 
     def create_get_user_message_use_case(self, user_message_repository):
         return GetUserMessagesUseCase(user_message_repository)
@@ -213,9 +240,20 @@ class MainLLMAndFairness:
         self.draw_statistical_data_use_case = self.create_draw_statistical_data_use_case(self.dataset_repository, self.drawer,
                                                                            self.get_correlation_matrix_uc)
         self.performance_metrics = self.create_performance_metrics(SystemConfig.performance_metrics)
+        fairness_metrics = self.create_fairness_metrics(SystemConfig.fairness_metrics_name)
         # self.splitter = self.create_splitter(SystemConfig.splitter)
         self.proxy_detector = self.create_proxy_detector(SystemConfig.proxy_detector_config)
         self.proxy_detector_uc = self.create_detect_proxy_use_case(self.dataset_repository, self.proxy_detector)
+        get_available_models_use_case = self.create_get_available_models_use_case(SystemConfig.available_models)
+        models_evaluation_uc = self.create_models_evaluation_use_case(self.validator, self.dataset_repository)
+        get_available_metrics_uc = self.create_get_available_metrics_use_case(SystemConfig.available_metrics)
+        train_model_and_make_prediction_uc = self.create_train_model_and_make_prediction_use_case(self.split_repository,
+                                                                                             self.prediction_repository)
+        get_available_fairness_metrics_uc = self.create_get_available_fairness_metrics_use_case(
+            SystemConfig.fairness_available_metrics)
+        calculate_fairness_metrics_uc = self.create_calculate_fairness_metrics_use_case(fairness_metrics, self.split_repository,
+                                                                                   self.prediction_repository,
+                                                                                   self.dataset_encoder)
         self.user_message_repository = self.create_user_message_repository()
         self.get_user_message_uc = self.create_get_user_message_use_case(self.user_message_repository)
 
@@ -231,6 +269,12 @@ class MainLLMAndFairness:
         UseCaseRepository.add_use_case(UseCase.EVALUATE_MODELS, self.evaluate_models_uc)
         UseCaseRepository.add_use_case(UseCase.DISPLAY, self.display_uc)
         UseCaseRepository.add_use_case(UseCase.DRAW_STATISTICAL_DATA, self.draw_statistical_data_use_case)
+        UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_MODELS, get_available_models_use_case)
+        UseCaseRepository.add_use_case(UseCase.MODELS_EVALUATION, models_evaluation_uc)
+        UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_METRICS, get_available_metrics_uc)
+        UseCaseRepository.add_use_case(UseCase.TRAIN_MODEL_MAKE_PREDICTION, train_model_and_make_prediction_uc)
+        UseCaseRepository.add_use_case(UseCase.GET_AVAILABLE_FAIRNESS_METRICS, get_available_fairness_metrics_uc)
+        UseCaseRepository.add_use_case(UseCase.COMPUTE_FAIRNESS_METRICS, calculate_fairness_metrics_uc)
 
         self.send_msg_uc = self.create_send_message_use_case(self.chat)
         self.bind_tools_uc = self.create_bind_tools_use_case(self.tool_repository, self.chat)

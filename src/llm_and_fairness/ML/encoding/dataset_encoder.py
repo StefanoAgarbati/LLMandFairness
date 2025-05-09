@@ -58,4 +58,9 @@ class DatasetEncoder:
         column_encoded = encoder.encode(dataset[attribute_name])
         return column_encoded
 
+    def has_encoder_for(self, attribute):
+        for item in self.encoders_map:
+            if item['name'] == attribute:
+                return True
+        return False
 

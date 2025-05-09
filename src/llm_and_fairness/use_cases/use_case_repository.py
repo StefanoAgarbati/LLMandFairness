@@ -23,6 +23,8 @@ class UseCaseRepository:
         raise Exception("the use case doesn't exist")
 
 class UseCase:
+    COMPUTE_FAIRNESS_METRICS = 'compute_fairness_metrics'
+    GET_AVAILABLE_FAIRNESS_METRICS = 'available_fairness_metrics'
     TRAIN_MODEL_MAKE_PREDICTION = 'train_model_and_make_prediction'
     GET_AVAILABLE_METRICS = 'available_metrics'
     MODELS_EVALUATION = 'models_evaluation'

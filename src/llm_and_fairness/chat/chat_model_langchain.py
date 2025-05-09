@@ -6,6 +6,7 @@ from chat.chat_model import ChatModel
 from messages.chat_message_langchain import ChatMessageLangchain
 
 
+
 class ChatModelLangchain(ChatModel):
     @abstractmethod
     def __init__(self, name ,model_name, apikey):
@@ -20,13 +21,19 @@ class ChatModelLangchain(ChatModel):
 
     def send_message(self, message):
         response = self.chat.invoke(message)
+        #print("ChatModelLangchain->response->",response.text())
         chat_message = ChatMessageLangchain.create_message(response)
         return chat_message
 
-    def send_tool_message(self, message):
-        #print("send_tool_message: ",message.get_messages())
-        response = self.chat.invoke(message.get_messages())
-        return ChatMessageLangchain.create_message(response)
+    def send_a_message(self, message):
+        return self.send_tool_message(message, '')
+
+    def send_tool_message(self, message, tool):
+        #print(f"send_tool_message with tool {tool}")
+        response = self.chat.invoke(message, config={"tool_choice": tool})
+        print("ChatModelLangchain->response->", response.text())
+        chat_message = ChatMessageLangchain.create_message(response, tool)
+        return chat_message
 
     def getStream(self, aMessage):
         pass

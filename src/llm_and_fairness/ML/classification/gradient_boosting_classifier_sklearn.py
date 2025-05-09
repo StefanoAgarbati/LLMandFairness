@@ -7,8 +7,8 @@ from ML.classification.ensemble_classifier import EnsembleClassifier
 
 class GradientBoostingClassifierSklearn(EnsembleClassifier):
 
-    def __init__(self):
-        self.name = "GradientBoostingClassifier"
+    def __init__(self, name):
+        self.name = name
         self.classifier = ske.GradientBoostingClassifier(random_state=42)
         self.features = None
         super().__init__(self.classifier, self.name)
