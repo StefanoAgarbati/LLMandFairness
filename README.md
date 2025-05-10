@@ -380,9 +380,7 @@ Tecnologie per me nuove e mai trattate se non in questa attività di tirocinio.
 Ringrazio infine il Prof. Giovanni Ciatto per avermi dato questa opportunità e per la sua disponibilità.
 
 ## Bibliografia
-***Questa sezione, opzionale, include i riferimenti a manuali, testi e
-articoli scientifici eventualmente consultati durante il lavoro, ordinati per cognome del
-primo autore***
+
 1. Tutorial su Python. https://docs.python.org/it/3.13/tutorial/index.html
 2. Pandas User Guide. https://pandas.pydata.org/docs/user_guide/index.html
 3. LangChain documentation. https://python.langchain.com/docs/introduction/
