@@ -22,7 +22,7 @@ Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'ana
   * come ad esempio il genere non binario per la caratteristica 'genere'
 * identificazione di caratteristiche proxy, di nicchie ed eventuali disproporzioni presenti nei dati di cui si dispone
   * una variabile proxy è una variabile strettamente correlata ad un'altra e che può essere sostituita ad essa (porta con se molta informazione  
-    sull'altra variabile). I proxy possono portare a distorsioni nei dati ed avere un impatto significati sulla decisione presa da un modello  
+    sull'altra variabile). I proxy possono portare a distorsioni nei dati ed avere un impatto significativo sulla decisione presa da un modello  
       
   * (**spiegare cosa si intende per proxy, nicchia e disproporzione e perché è importante la loro identificazione**)
 * identificare la caratteristica target
