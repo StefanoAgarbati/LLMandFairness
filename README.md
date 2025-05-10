@@ -368,8 +368,8 @@ determinate risposte.
 Ho appreso anche le principali metriche usate per valutare la fairness di un modello come
 * le metriche di prestazione calcolate per gruppo come selection rate, il true positive rate, il true negative rate, il false positive rate,
   il false negative rate
-  * le metriche aggregate come disparità demografica ovvero il fatto che la probabilità di appartenenza ad una determinata classe secondo previsione di un modello
-    non deve dipendere dall'appartenenza ad un determinato gruppo 
+* le metriche aggregate come disparità demografica ovvero il fatto che la probabilità di appartenenza ad una determinata classe secondo previsione di un modello
+  non deve dipendere dall'appartenenza ad un determinato gruppo 
 
 Si è cercato di automatizzare il più possibile il processo di analisi con l'aiuto di un LLM. Durante i vari esprimenti effettuati ho potuto riscontrare
 la non sempre correttezza nelle risposte fornite dall'LLM , la non predicibilità delle risposte stesse(risposte diverse in run diverse) e la difficoltà nel
