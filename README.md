@@ -23,12 +23,14 @@ Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'ana
 * identificazione di caratteristiche proxy, di nicchie ed eventuali disproporzioni presenti nei dati di cui si dispone
   * una variabile proxy è una variabile strettamente correlata ad un'altra e che può essere sostituita ad essa (porta con se molta informazione  
     sull'altra variabile). I proxy possono portare a distorsioni nei dati ed avere un impatto significativo sulla decisione presa da un modello  
-      
-  * (**spiegare cosa si intende per proxy, nicchia e disproporzione e perché è importante la loro identificazione**)
+  * l'identificazione di proxy, nicchie e disproporzioni nei dati è importante perché possono influenzare, distorcere la decisione presa da un modello e  
+    portare a fenomeni di unfairness e situazioni di svantaggio per alcuni gruppi.
+  * (**spiegare cosa si intende per nicchia e disproporzione e perché è importante la loro identificazione**)
 * identificare la caratteristica target
   * cioè la caratteristica sulla quale il modello dovrà fare una previsione usando come input le altre caratteristiche del dataset
 * individuare il modello di problema di learning più 'appropriato' per il problema in esame
-  * capire se è più 'consono' trattare il problema come problema di classificazione o regressione o clustering o ranking .....
+  * capire se è più 'consono' trattare il problema come problema di classificazione o regressione o clustering o ranking ..... in base al contesto applicativo
+
 L'obiettivo principale del progetto è quello di riuscire ad automatizzare, attraverso il supporto di un LLM, almeno i punti descritti precedentemente.
 
 ## Tecnologie
@@ -45,10 +47,16 @@ per la loro manipolazione e selezione.
 LancgChain è un framework che fornisce supporto allo sviluppo di applicazioni che fanno uso di LLM (large language model). Fornisce un'iterfaccia uniforme verso le diverse api fornite dai
 diversi vendor è produttori di LLM. Implementa omogeneità al di sopra dell'eterogeità derivante dalle diverse api
 ### Libreria Scikit-learn
-Scikit-learn è una libreria python di supporto allo sviluppo di applicazioni che utilizzano il machine learning.
+Scikit-learn è una libreria python di supporto allo sviluppo di applicazioni che utilizzano il machine learning. 
 ### Libreria Seaborn
 Seaborn è una libreria python che fornisce funzioni per la visualizzazione di dati statistici come istogrammi, heatmap, diagrammi di dispersione.......
+### Libreria Fairlearn
+Fairlearn è una libreria che fornisce supporto alla valutazione della fairness nella decisione presa da un modello. Mette a disposizione classi e  
+funzioni per calcolare le principali metriche, per gruppi, usate per valutare la fairness di un modello (selection_rate, parità demografica...). Offre
+anche funzionalità di mitigazione di eventuali distorsioni.
 ### Jupyter Lab
+E' un ambiente web-based che consente di produrre documenti interattivi contenti codice, testo normale, grafici vari e controlli interattivi (come bottoni, slider....)
+E' utile per prototyping, per spiegare codice, per visualizzare dati di varia natura e condividere informazioni con altri
 
 
 ## Attività
@@ -58,6 +66,9 @@ necessariamente cronologico) le attività svolte durante il tirocinio. A eccezio
 eventuali esempi, non deve includere il codice sviluppato; per descrivere algoritmi si
 usino piuttosto pseudo-codice e/o diagrammi di vario tipo. Per lavori di tipo progettuale
 è utile includere una sintetica documentazione formale di progetto***
+
+#### Spiegazione breve di ciò che hai fatto durante questa attività di tirocinio
+
 #### Requisiti del software
 Scopo del progetto software è quello di cercare di automatizzare il più possibile certe azioni che un data scientist esegue durante il processo di analisi di un dataset.  
 Alcune di queste azioni sono state descritte nella sezione [Introduzione](#introduzione) di questo documento:
@@ -72,7 +83,8 @@ Alcune di queste azioni sono state descritte nella sezione [Introduzione](#intro
 * identificazione del modello di problema di learning più 'appropriato' per il problema in esame
   * capire se è più 'consono' trattare il problema come problema di classificazione o regressione o clustering o ranking .....
 
-Si richiede che il software da sviluppare, per poter soddisfare tali requisiti, faccia uso di un LLM come supporto all'attività di analisi  
+Si richiede che il software da sviluppare, per poter soddisfare tali requisiti, faccia uso di un LLM come supporto all'attività di analisi 
+
 #### Analisi dei requisiti
 L'artefatto software deve:  
 * inviare richieste ad un LLM
@@ -84,7 +96,7 @@ L'artefatto software deve:
 * effettuare operazioni di data cleaning sul dataset
 * trasformare il dataset in forma numerica per l'addestramento di modelli di ML
 * fornire informazioni relative ad eventuali sbilanciamenti presenti nei dati
-* fornire informazioni relative a valori non non considerati nelle caratteristiche
+* fornire informazioni relative a valori non considerati nelle caratteristiche
 * fornire informazioni relative a caratteristiche non presenti nel dataset ma che potrebbero essere importanti nello specifico contesto
 * fornire informazioni in merito alla presenza di caratteristiche proxy
 * fornire informazioni su quale potrebbe essere la caratteristica target in relazione al contesto
@@ -93,17 +105,18 @@ L'artefatto software deve:
 * preparare il dataset suddividendolo in un insieme per il testing e un insieme per il training di un modello
 * addestramento del modello più appropriato e relativa previsione del target
 * fornire informazioni relative alla analisi delle prestazioni del modello
-* (valutazione della fairness relativamente alle decisioni prese da un modello(se ho tempo sarebbe bello))
+* calcolo di alcune metriche di gruppo legate alla fairness della decisione presa dal modello
+* valutazione della fairness relativamente alle decisioni prese da un modello
 
 #### Analisi del problema
-L'applicazione invia ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati 
+L'applicazione deve inviare ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati 
 all'interno di una base dati. Essi vengono inviati all'LLM una alla volta seguendo un'interazione di tipo request-response 
 sincrona. Successivamente all'invio di un messaggio l'LLM può rispondere con un semplice messaggio testuale il quale verrà 
 semplicemente visualizzato all'utente attraverso un dispositivo di output oppure può rispondere attraverso un messaggio 
-che richiede l'esecuzione di un tool. In quest'ultimo caso il messaggio contiene i parametri da passare al tool che deve 
-essere eseguito. Il tool viene eseguito localmente ma i parametri vengono generati dall'LLM in base al messaggio di 
-richiesta che esso ha ricevuto. L'esecuzione di un tool porta ad un risultato parte del quale viene usato per arricchire la 
-memoria dell'LLM. Infatti sorge il problema della memoria che può essere risolto passando, ad ogni richiesta fatta all'LLM,  
+che richiede l'esecuzione di un tool specifico. In quest'ultimo caso il messaggio contiene il nome del tool che deve essere eseguito e i parametri da passare ad esso.  
+Il tool viene eseguito localmente ma alcuni dei parametri vengono generati dall'LLM in base al messaggio di 
+richiesta che esso ha ricevuto e in base alla cronologia delle interazioni. L'esecuzione di un tool porta ad un risultato parte del quale viene usato per arricchire la 
+memoria dell'LLM. Infatti sorge il problema della memoria che può essere risolto tenendo traccia di tutte le interazioni e passando, ad ogni richiesta fatta all'LLM,  
 tutti i messaggi inviati e ricevuti fino a quel momento. L'esecuzione di un tool porterà all'innesco di una specifica logica applicativa.  
 La descrizione a parole di cui sopra può essere espressa anche attraverso un disegno che mostra l'architettura generale del sistema software  
 
