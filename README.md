@@ -20,7 +20,10 @@ Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'ana
 * caratteristiche non presenti nel dataset ma che ci si aspetterebbe di trovare nello specifico conteste applicativo
 * valori non considerati nelle caratteristiche presenti
   * come ad esempio il genere non binario per la caratteristica 'genere'
-* identificazione di caratteristiche proxy, nicchie e disproporzioni presenti nei dati di cui si dispone
+* identificazione di caratteristiche proxy, di nicchie ed eventuali disproporzioni presenti nei dati di cui si dispone
+  * una variabile proxy è una variabile strettamente correlata ad un'altra e che può essere sostituita ad essa (porta con se molta informazione  
+    sull'altra variabile). I proxy possono portare a distorsioni nei dati ed acere un impatto significati sulla decisione presa da un modello  
+      
   * (**spiegare cosa si intende per proxy, nicchia e disproporzione e perché è importante la loro identificazione**)
 * identificare la caratteristica target
   * cioè la caratteristica sulla quale il modello dovrà fare una previsione usando come input le altre caratteristiche del dataset

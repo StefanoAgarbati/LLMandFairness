@@ -14,21 +14,21 @@
 			"params": [{}]
 		},
 		{
-			"message": "Carica il mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset adult. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Carica il mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset adult. Restituisci solo la stringa json pura.",
 			"tool": "load_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Pulisci il dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Pulisci il dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
 			"tool": "clean_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset} Rispondi con il testo json {json}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {json}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
 			"tool": "calculate_the_distributions_of_all_attributes",
 			"params": [{
 				"dataset": "adult",
@@ -36,10 +36,11 @@
 			}]
 		},
 		{
-			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione.",
+			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {json} . Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
 			"tool": "disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "adult",
+				"json": "{'tool_calls': [{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {'dataset_name': 'dset'}}]}"
 			}]
 		},
 		{
@@ -50,14 +51,14 @@
 			}]
 		},
 		{
-			"message": "Esegui la codifica del mio dataset {dataset}. Rispondi con il testo json {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Esegui la codifica del mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
 			"tool": "esegui_codifica_dataset",
 			"params": [{
 				"dataset": "adult"
 			}]
 		},
 		{
-			"message": "Calcola la matrice di correlazione del dataset {dataset}.  Rispondi con il testo json {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Calcola la matrice di correlazione del dataset {dataset}.  Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
 			"tool": "get_correlation_matrix",
 			"params": [{
 				"dataset": "adult"
@@ -118,7 +119,7 @@
 			}]
 		},
 		{
-			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
 			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
 			"params": [{
 				"dataset": "adult",
