@@ -5,10 +5,11 @@ from cleaning.preprocessing import DatasetPreprocessingConfig, DatasetPreprocess
 
 class DatasetCleaner:
 
-    config_path = "cleaning/preprocessingconfig.json"
+    #config_path = "cleaning/preprocessingconfig.json"
 
-    def __init__(self, dataset):
+    def __init__(self, dataset, config_path='cleaning/preprocessingconfig.json'):
         self.dataset = dataset
+        self.config_path = config_path
         self.processor = self.init_processor()
 
     def clean_dataset(self):
@@ -21,7 +22,7 @@ class DatasetCleaner:
         return processor
 
     def create_config(self):
-        json_obj = json.load(open(DatasetCleaner.config_path, "r"))
+        json_obj = json.load(open(self.config_path, "r"))
         steps = json_obj['steps']
         values_to_replace = json_obj['values_to_replace']
         config = DatasetPreprocessingConfig(steps, self.dataset, values_to_replace)

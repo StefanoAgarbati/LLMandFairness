@@ -1,0 +1,56 @@
+{
+  "dataset_name": "bank",
+  "features": [
+    {
+      "name": "job",
+      "type": "nominal",
+      "values": ["admin.","unknown","unemployed","management","housemaid","entrepreneur","student",
+                                       "blue-collar","self-employed","retired","technician","services"]
+    },
+    {
+      "name": "marital",
+      "type": "nominal",
+      "values": ["married","divorced","single"]
+    },
+    {
+      "name": "education",
+      "type": "nominal",
+      "values": ["unknown","secondary","primary","tertiary"]
+    },
+    {
+      "name": "default",
+      "type": "nominal",
+      "values": ["yes", "no"]
+    },
+    {
+      "name": "housing",
+      "type": "nominal",
+      "values": ["no", "yes"]
+    },
+    {
+      "name": "loan",
+      "type": "nominal",
+      "values": ["yes", "no"]
+    },
+    {
+      "name": "contact",
+      "type": "nominal",
+      "values": ["unknown","telephone","cellular"]
+    },
+    {
+      "name": "month",
+      "type": "ordinal",
+      "values": ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    },
+    {
+      "name": "poutcome",
+      "type": "nominal",
+      "values": ["unknown","other","failure","success"]
+    },
+    {
+      "name": "y",
+      "type": "nominal",
+      "values": ["yes", "no"]
+    }
+  ]
+}

@@ -47,7 +47,9 @@ class DatasetPreprocessing:
 
     def preprocess_dataset(self):
         processing_data = self.data
+        ds = processing_data.get_dataset()
         for step in self.steps:
+            print(f"preprocessing->preprocess_dataset->step->{step}")
             ds = step.execute(processing_data)
             processing_data = ProcessingData(ds, processing_data.get_values())
         return ds

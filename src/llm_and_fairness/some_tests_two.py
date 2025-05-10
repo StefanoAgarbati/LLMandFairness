@@ -85,6 +85,7 @@ class SystemConfig:
     out_dev_type = OutputDeviceType.Standard
     tool_repo_type = ToolRepositoryType.STANDARD
     dataset_name = 'adult'
+    cleaning_config_path = 'datasets/adult/preprocessingconfig.json'
     classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
     models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]
@@ -155,8 +156,8 @@ def create_get_memories_use_case(memory_repository):
 def create_get_correlation_matrix_use_case(dataset_repository):
     return GetCorrelationMatrixUseCase(dataset_repository)
 
-def create_clean_dataset_use_case(dataset_repository):
-    return CleanDatasetUseCase(dataset_repository)
+def create_clean_dataset_use_case(dataset_repository, config_path):
+    return CleanDatasetUseCase(dataset_repository, config_path)
 
 def create_train_test_split_use_case(split_repository, dataset_repository, splitter):
     return TrainTestSplitUseCase(split_repository, dataset_repository, splitter)
@@ -254,7 +255,7 @@ def create_system():
     validator = create_cross_validator()
     models = create_models(SystemConfig.models)
     encode_dataset_uc = create_encode_dataset_use_case(dataset_repository, dataset_encoder, dataset_info)
-    clean_dataset_uc = create_clean_dataset_use_case(dataset_repository)
+    clean_dataset_uc = create_clean_dataset_use_case(dataset_repository, SystemConfig.cleaning_config_path)
     split_repository = create_split_repository()
     splitter = create_splitter(SystemConfig.splitter)
     train_test_split_uc = create_train_test_split_use_case(split_repository, dataset_repository, splitter)

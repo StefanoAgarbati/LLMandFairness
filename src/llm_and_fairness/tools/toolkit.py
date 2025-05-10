@@ -116,6 +116,7 @@ def clean_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
 
 def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[str, list[pd.Series]]:
     """Calcola la distribuzione di frequenza di tutti gli attributi presenti nel dataset"""
+    print(f"calculate_distributions_tool->invoked with dataset->{dataset_name}")
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_all_frequency_distributions(
         dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)

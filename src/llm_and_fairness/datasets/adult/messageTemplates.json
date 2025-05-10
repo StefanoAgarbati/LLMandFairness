@@ -9,7 +9,7 @@
 			}]
 		},
 		{
-			"message": "Sono un {ruolo}. Il mio obiettivo è {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possone essere critici (sensibili) per ciò che riguarda la fairness?",
+			"message": "Sono un {ruolo}. Il mio obiettivo è {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possono essere critici (sensibili) per ciò che riguarda la fairness?",
 			"tool": "",
 			"params": [{
 				"ruolo" : "data scientist",

@@ -105,8 +105,8 @@ class MainLLMAndFairness:
         return GetCorrelationMatrixUseCase(dataset_repository)
 
 
-    def create_clean_dataset_use_case(self, dataset_repository):
-        return CleanDatasetUseCase(dataset_repository)
+    def create_clean_dataset_use_case(self, dataset_repository, cleaning_config_path):
+        return CleanDatasetUseCase(dataset_repository, cleaning_config_path)
 
 
     def create_train_test_split_use_case(self, split_repository, dataset_repository, splitter):
@@ -207,8 +207,8 @@ class MainLLMAndFairness:
     def create_get_user_message_use_case(self, user_message_repository):
         return GetUserMessagesUseCase(user_message_repository)
 
-    def create_user_message_repository(self):
-        return UserMessageRepositoryFactory.createUserMessageRepository()
+    def create_user_message_repository(self, messages_path):
+        return UserMessageRepositoryFactory.createUserMessageRepository(messages_path)
 
     def create_system(self):
         self.chat = self.create_chat(SystemConfig.chat_type, SystemConfig.model_name, SystemConfig.api_key)
@@ -227,7 +227,7 @@ class MainLLMAndFairness:
         self.validator = self.create_cross_validator()
         self.models = self.create_models(SystemConfig.models)
         self.encode_dataset_uc = self.create_encode_dataset_use_case(self.dataset_repository, self.dataset_encoder, self.dataset_info)
-        self.clean_dataset_uc = self.create_clean_dataset_use_case(self.dataset_repository)
+        self.clean_dataset_uc = self.create_clean_dataset_use_case(self.dataset_repository, SystemConfig.cleaning_config_path)
         self.split_repository = self.create_split_repository()
         self.splitter = self.create_splitter(SystemConfig.splitter)
         self.train_test_split_uc = self.create_train_test_split_use_case(self.split_repository, self.dataset_repository, self.splitter)
@@ -254,7 +254,7 @@ class MainLLMAndFairness:
         calculate_fairness_metrics_uc = self.create_calculate_fairness_metrics_use_case(fairness_metrics, self.split_repository,
                                                                                    self.prediction_repository,
                                                                                    self.dataset_encoder)
-        self.user_message_repository = self.create_user_message_repository()
+        self.user_message_repository = self.create_user_message_repository(SystemConfig.user_message_path)
         self.get_user_message_uc = self.create_get_user_message_use_case(self.user_message_repository)
 
 
@@ -277,9 +277,9 @@ class MainLLMAndFairness:
         UseCaseRepository.add_use_case(UseCase.COMPUTE_FAIRNESS_METRICS, calculate_fairness_metrics_uc)
 
         self.send_msg_uc = self.create_send_message_use_case(self.chat)
-        self.bind_tools_uc = self.create_bind_tools_use_case(self.tool_repository, self.chat)
+        #self.bind_tools_uc = self.create_bind_tools_use_case(self.tool_repository, self.chat)
 
-        self.bind_tools_uc.bind_tools()
+        #self.bind_tools_uc.bind_tools()
 
         self.appl_logic = ApplController(self.add_memory_uc, self.get_memories_uc, self.display_uc, self.response_handler,
                                     self.send_msg_uc, self.get_user_message_uc)

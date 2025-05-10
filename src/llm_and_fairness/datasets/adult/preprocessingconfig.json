@@ -1,0 +1,5 @@
+{
+  "steps": ["remove_whitespaces", "replace_missing_values", "drop_missing_values"],
+  "dataset" : "adult",
+  "values_to_replace": ["?"]
+}

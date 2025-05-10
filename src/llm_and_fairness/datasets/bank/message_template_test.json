@@ -1,0 +1,145 @@
+{
+	"templates": [
+		{
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.",
+			"tool": "",
+			"params": [ {
+				"ruolo" : "un esperto di data science e analisi dei dati",
+				"contesto": "quello delle scienze sociali con attenzione alle questioni di bias e fairness"
+			}]
+		},
+		{
+			"message": "La mia variabile target è y. Non rispondere",
+			"tool": "",
+			"params": [{}]
+		},
+		{
+			"message": "Carica il mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset {dataset}. Restituisci solo la stringa json pura.",
+			"tool": "load_dataset",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Pulisci il dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
+			"tool": "clean_dataset",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {json}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
+			"tool": "calculate_the_distributions_of_all_attributes",
+			"params": [{
+				"dataset": "bank",
+				"json": "{'tool_calls': [{'name': 'calculate_the_distributions_of_all_attributes', 'args': {'dataset_name': 'dset'}}]}"
+			}]
+		},
+		{
+			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {json} . Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
+			"tool": "disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi",
+			"params": [{
+				"dataset": "bank",
+				"json": "{'tool_calls': [{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {'dataset_name': 'dset'}}]}"
+			}]
+		},
+		{
+			"message": "Noti qualche disproporzione, sbilanciamento negli attributi del dataset {dataset}?",
+			"tool": "",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Esegui la codifica del mio dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
+			"tool": "esegui_codifica_dataset",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Calcola la matrice di correlazione del dataset {dataset}.  Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "get_correlation_matrix",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset {dataset}?",
+			"tool": "",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Puoi disegnare la matrice di correlazione come heatmap del dataset {dataset}?. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'disegna_la_matrice_di_correlazione_come_heatmap', 'args': {{'dataset_name': 'dset'}}}}]}}. Sostituisci dset con {dataset}. Restituisci solo la stringa json pura. Non aggiungere altro testo o formattazione Markdown.",
+			"tool": "disegna_la_matrice_di_correlazione_come_heatmap",
+			"params": [{
+				"dataset": "bank"
+			}]
+		},
+		{
+			"message": "Come {ruolo}, devo {obiettivo}. Di quale problema di learning si tratta (classificazione, regressione, clustering.....)? Rispondi nella forma: 'Si tratta di un problema di learning di [tipo_di_problema]'",
+			"tool": "",
+			"params": [{
+				"ruolo": "data scientist",
+				"obiettivo": "predire se un cliente sottoscriverà oppure no un deposito bancario"
+			}]
+		},
+		{
+			"message": "Quali modelli sono disponibili per risolvere il mio problema di learning? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'available_models_for', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json pura. Non aggiungere altro testo o formattazione (markdown...).",
+			"tool": "available_models_for",
+			"params": [{}]
+		},
+		{
+			"message": "Mostra le metriche di performance disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'metriche_di_performance_disponibili_per', 'args': {{'problema_di_learning': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json senza alcuna formattazione ed altro testo",
+			"tool": "metriche_di_performance_disponibili_per",
+			"params": [{}]
+		},
+		{
+			"message": "Valuta i modelli usando il dataset {dataset}, variable target {target}, le metriche di performance disponibili e i modelli disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'evaluate_models', 'args': {{'models': 'available_models', 'metrics': 'available_metrics', 'dataset_name': 'dset', 'target': 'target_variable'}}}}]}}. Sostituisci available_models con una stringa composta dall'elenco dei modelli disponibili per il mio problema di learning. Sostituisci available_metrics con le metriche di performance disponibili per il mio tipo di problema di learning. Sostituisci dset con il nome del mio dataset. Sostituisci target_variable con il nome della mia variabile target. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "evaluate_models",
+			"params": [{
+				"dataset": "bank",
+				"target": "y"
+			}]
+		},
+		{
+			"message": "Da un'analisi delle valutazioni ottenute qual'è, secondo te, il modello più appropriato per {obiettivo}?",
+			"tool": "",
+			"params": [{
+				"obiettivo": "predire se un cliente sottoscriverà o no un deposito bancario"
+			}]
+		},
+		{
+			"message": "Puoi eseguire lo split del mio dataset in train test set usando come target {target}? Restituisci esattamente la seguente stringa json con i parametri sostituiti :  {{'tool_calls': [{{'name': 'split_dataset_in_train_test_set', 'args': {{'dataset_name': 'dset', 'target': 'target_variable'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci target_variable con il nome della mia variabile target. Restituisci solo la stringa json senza alcuna formattazione ed altro testo.",
+			"tool": "split_dataset_in_train_test_set",
+			"params": [{
+				"target": "y"
+			}]
+		},
+		{
+			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
+			"params": [{
+				"dataset": "bank",
+				"target": "y"
+			}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness di gruppo per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_di_gruppo_disponibili', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del tipo del mio problema di learning. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"tool": "mostra_metriche_di_fairness_di_gruppo_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness aggregate per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_aggregate_disponibili', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il nome del tipo del mio problema di learning. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"tool": "mostra_metriche_di_fairness_aggregate_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Calcola le metriche di fairness di gruppo. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'calcola_le_metriche_di_fairness_di_gruppo', 'args': {{'metriche': 'metriche_disponibili', 'sensible': 'variabili_sensibili', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci variabili_sensibili con una stringa composta dall'elenco delle variabili, secondo te, sensibili.Sostituisci metriche_disponibili con una stringa composta dall'elenco delle metriche di fairness di gruppo disponibili. Restituisci solo la stringa json pura. Non aggiungere altro testo e formattazione (markdown...).",
+			"tool": "calcola_le_metriche_di_fairness_di_gruppo",
+			"params": [{}]
+		}
+	]
+}

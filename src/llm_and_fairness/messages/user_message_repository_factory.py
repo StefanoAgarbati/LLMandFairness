@@ -23,8 +23,8 @@ class UserMessageRepositoryFiller:
 class UserMessageRepositoryFactory:
 
     @staticmethod
-    def createUserMessageRepository():
+    def createUserMessageRepository(pathname=".\messageTemplates.json"):
         repository = UserMessageRepository()
-        filler = UserMessageRepositoryFiller(repository)
+        filler = UserMessageRepositoryFiller(repository, pathname)
         filler.initRepository()
         return repository

@@ -206,6 +206,7 @@ Si tratta di un problema di classificazione binaria ed è possibile scegliere fr
 Il problema è stato affrontato introducendo l'interfacccia classifier che mette a disposizione operazioni per
 l'addestramento e per la previsione.
 
+##### Problema della valutazione della fairness di un modello
 
 #### Progettazione della soluzione
 E' stata introdotta la classe ApplLogic che governa la logica dell'applicazione (rappresenta il componente di controllo
@@ -329,15 +330,66 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 
 ![fit_predict_model](docs/images/fit_predict_model.jpg)
 
-
-
+* Valutazione della fairness di un modello (scrivi qualcosa e fai i disegni di ciò che hai fatto)
+  *
 
 ## Conclusioni
 ***In questa parte lo studente trae le conclusioni del lavoro svolto,
 valutando pregi e difetti dell’esperienza e, più specificamente, riassumendo quanto
 appreso.***
+Questa attività di tirocinio è stata, a mio avviso, molto formativa. Ho avuto l'opportunità di apprendere cose nuove ed attuali
+non trattate in nessuno dei corsi inclusi del mio corso di studi. In particolare ho potuto apprendere le basi dell'analisi di un insieme di dati come 
+* il preprocessing dell'insieme dati (consistente nella pulizia, l'identificazione di errori, duplicazioni e dati mancanti)
+* la valutazione delle feature principali presenti nel dataset e della possibile mancanza di alcune di esse per la specifica applicazione
+* la valutazione dell'insieme dei valori delle singole feature e della possible mancanza di alcuni di essi per la specifica applicazione
+* il calcolo di alcune statistiche descrittive utili ad estrarre informazioni dai dati e valutare alcuni aspetti legati alla fairness
+  come sbilanciamenti
+* creazione di alcuni grafici principalmente a barre come istogrammi che forniscono un punto di vista diverso sull'insieme di dati
+* la valutazione attraverso tecniche come la cross-validation di modelli di machine learning usando diverse metriche quali accuratezza,
+  precisione, recall, score f1
+* la preparazione del dataset all'addestramento di un modello ovvero la sua codifica numerica e la sua suddivisione in insieme di training ed
+  insieme di test
+* l'addestramento di un modello sul training set e successiva previsione usando il test set
+* la valutazione delle prestazioni del modello usando le stesse metriche descritte sopra per capire se il modello riesce a generalizzare
+  abbastanza bene su dati che non ha mai visto prima
+* calcolo di alcune metriche di fairness di gruppo per la valutazione della decisione presa dal modello per capire se questa risulti
+  biased verso certi gruppi a svantaggio di altri gruppi
+Ho potuto familiarizzare anche con i principali concetti del dominio del machine learning come
+* le principali tipologie di apprendimento (supervisionato, non supervisionato)
+* i principali tipi di problemi di apprendimento come classificazione (binaria, multiclasse, multilabel)
+* i principali modelli di apprendimento automatico come alberi decisionali, regressione lineare e logistica, gradient descent,
+  i modelli ensemble come random forest, la tecnica del boosting
+* le principali metriche usate per valutare le perfomance di un modello
+Ho dovuto familiarizzare con il "prompt engineering" ovvero la capacità di generare richieste ben formulate ad un LLM al fine di ottenere
+determinate risposte.
+Ho appreso anche le principali metriche usate per valutare la fairness di un modello come
+* le metriche di prestazione calcolate per gruppo come selection rate, il true positive rate, il true negative rate, il false positive rate,
+  il false negative rate
+  * le metriche aggregate come disparità demografica ovvero il fatto che la probabilità di appartenenza ad una determinata classe secondo previsione di un modello
+    non deve dipendere dall'appartenenza ad un determinato gruppo 
+Si è cercato di automatizzare il più possibile il processo di analisi con l'aiuto di un LLM. Durante i vari esprimenti effettuati ho potuto riscontrare
+la non sempre correttezza nelle risposte fornite dall'LLM , la non predicibilità delle risposte stesse(risposte diverse in run diverse) e la difficoltà nel
+guidare l'LLM verso un determinato comportamento (cioè nel fornire risposte deterministiche che siano poi facilmente interpretabili).
+
+Il progetto software è stato applicato al dataset Adult prima, poi è stato testato su di un nuovo dataset, Bank Marketing. Questo per valutare
+la capacità di generalizzazione dell'applicativo.
+
+Il tutto è stato svolto con il supporto delle tecnologie descritte sopra quali python, pandas, langchain, scikit-learn, fairlearn, jupyter lab.
+Tecnologie per me nuove e mai trattate se non in questa attività di tirocinio. 
+    
+Ringrazio infine il Prof. Giovanni Ciatto per avermi dato questa opportunità e per la sua disponibilità.
 
 ## Bibliografia
 ***Questa sezione, opzionale, include i riferimenti a manuali, testi e
 articoli scientifici eventualmente consultati durante il lavoro, ordinati per cognome del
 primo autore***
+1. Tutorial su Python. https://docs.python.org/it/3.13/tutorial/index.html
+2. Pandas User Guide. https://pandas.pydata.org/docs/user_guide/index.html
+3. LangChain documentation. https://python.langchain.com/docs/introduction/
+4. Scikit-learn User Guide. https://scikit-learn.org/stable/user_guide.html
+5. Fairlearn User Guide. https://fairlearn.org/main/user_guide/index.html
+6. Jupyter Lab Documentation. https://jupyterlab.readthedocs.io/en/stable/index.html
+7. GitHub Docs. https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax 
+8. Russell, Norvig. Artificial Intelligence: A Modern Approach (4th ed.)
+9. Pang-Ning Tan, Michael Steinbach, Vipin Kumar. Introduction to Data Mining
+10. Aurélien Géron. Hands-On Machine Learning with Scikit-Learn, Keras & TensorFlow: Concepts, Tools and Techniques to Build Intelligent Systems

@@ -21,12 +21,13 @@ class DatasetLoader:
         self.pathname = pathname
         self.description = json.load(open(description, 'r'))
 
-        self.frame = pd.read_csv(pathname, header=None)
+        self.frame = pd.read_csv(pathname, sep=self.description['separator'], header=None)
         attributes_names = self.description['columns']
         self.frame.columns = attributes_names
 
         if (self.frame.columns == self.frame.loc[0, :]).all():
             self.frame = self.frame.drop(0)
+            self.frame.index = range(0, self.frame.shape[0])
 
     def get_data(self):
         return self.frame
