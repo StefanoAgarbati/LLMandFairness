@@ -354,19 +354,23 @@ non trattate in nessuno dei corsi inclusi del mio corso di studi. In particolare
   abbastanza bene su dati che non ha mai visto prima
 * calcolo di alcune metriche di fairness di gruppo per la valutazione della decisione presa dal modello per capire se questa risulti
   biased verso certi gruppi a svantaggio di altri gruppi
+
 Ho potuto familiarizzare anche con i principali concetti del dominio del machine learning come
 * le principali tipologie di apprendimento (supervisionato, non supervisionato)
 * i principali tipi di problemi di apprendimento come classificazione (binaria, multiclasse, multilabel)
 * i principali modelli di apprendimento automatico come alberi decisionali, regressione lineare e logistica, gradient descent,
   i modelli ensemble come random forest, la tecnica del boosting
 * le principali metriche usate per valutare le perfomance di un modello
+
 Ho dovuto familiarizzare con il "prompt engineering" ovvero la capacità di generare richieste ben formulate ad un LLM al fine di ottenere
 determinate risposte.
+
 Ho appreso anche le principali metriche usate per valutare la fairness di un modello come
 * le metriche di prestazione calcolate per gruppo come selection rate, il true positive rate, il true negative rate, il false positive rate,
   il false negative rate
   * le metriche aggregate come disparità demografica ovvero il fatto che la probabilità di appartenenza ad una determinata classe secondo previsione di un modello
     non deve dipendere dall'appartenenza ad un determinato gruppo 
+
 Si è cercato di automatizzare il più possibile il processo di analisi con l'aiuto di un LLM. Durante i vari esprimenti effettuati ho potuto riscontrare
 la non sempre correttezza nelle risposte fornite dall'LLM , la non predicibilità delle risposte stesse(risposte diverse in run diverse) e la difficoltà nel
 guidare l'LLM verso un determinato comportamento (cioè nel fornire risposte deterministiche che siano poi facilmente interpretabili).
