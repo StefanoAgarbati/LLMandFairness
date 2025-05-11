@@ -4,12 +4,13 @@
 ## Introduzione
 Scopo di questo progetto è quello di provare ad automatizzare, con l'ausilio di un LLM (large language model), alcuni dei passi compiuti da un data scientist nel processo di analisi di un insieme di dati.
 Quando si opera nel campo delle scienze sociali, una delle prime cose che un analista cerca di capire, è se l'insieme di dati di cui dispone mostra dei difetti, delle distorsioni che possano portare
-a fenomeni di bias edd unfaireness nelle fasi successive del processo di analisi.
+a fenomeni di bias ed unfaireness nelle fasi successive del processo di analisi.
 Questa prima fase di ricerca viene svolta, di norma, manualmente e richiede:
 * la capacità, di natura tecnica, del saper gestire, manipolare i dati presenti in un dataset
 * la conoscenza del contesto applicativo per capire come selezionare le caratteristiche e le variabili target (ad es. se si operasse nel campo bancario l'analista dovrebbe conoscere i concetti e 
   processi utilizzati dalle persone che operano in tale campo come mutuo, reddito ecc..... se volesse definire un modello che consenta di decidere se assegnare o meno un mutuo ad un determinato soggetto) 
 * un po' di buonsenso (comunque soggettivo).
+
 Ogni problema da risolvere è inquadrabile in uno specifico contesto. La questione del contesto è importante perché alcuni attributi possono essere considerati biased in certi contesti e non biased
 in altri rendendo difficoltoso il processo di automatione del processo di analisi: una macchina così com'è, non è in grado di capire questa cosa.
 L'utilizzo di un LLM addestrato consente, in qualche modo, di affrontare questa questione del contesto e fornire supporto all'automazione del processo di analisi.
@@ -68,6 +69,9 @@ usino piuttosto pseudo-codice e/o diagrammi di vario tipo. Per lavori di tipo pr
 è utile includere una sintetica documentazione formale di progetto***
 
 #### Spiegazione breve di ciò che hai fatto durante questa attività di tirocinio
+Durante l'attività di tirocinio è stata sviluppata un'applicazione software per capire se fosse o meno possibile l'utilizzo di LLM
+per automatizzare alcune delle fasi di un processo di analisi di un insieme di dati sfruttando la conoscenza ed il "buon senso" acquisiti da esso
+durante l'addestramento. 
 
 #### Requisiti del software
 Scopo del progetto software è quello di cercare di automatizzare il più possibile certe azioni che un data scientist esegue durante il processo di analisi di un dataset.  
@@ -144,6 +148,8 @@ Tutte le richieste inoltrate all'LLM e le risposte da esso ricevute devono esser
 potrebbe avvenire attraverso un qualunque dispositivo di output. Il problema è stato affrontato introducendo l'interfaccia
 OutputDevice che mette a disposizione alcuni metodi per la visualizzazione di informazioni testuali e disegni
 
+![output_device_model](docs/images/output_device.jpg)
+
 ##### Problema del calcolo delle metriche statistiche e della loro visualizzazione tramite grafici
 Le metriche statistiche sono moltissime ed esistono formule precise per il loro calcolo provenienti dal campo della
 statistica. Quindi è stata introdotta l'interfaccia StatisticsSupport che fornisce alcune funzioni che si occupano 
@@ -152,15 +158,19 @@ del calcolo di alcune statistiche rilevanti per la nostra applicazione. Prima di
 StatisticalDrawer che mette a disposizione metodi per costruire alcuni grafici tipici della statistica come
 istogrammi e heatmap. Il problema della visualizzazione dei grafici è delegato sempre all'interfaccia OutputDevice
 
+![statistics_support_drawer_model](docs/images/statistics_support_drawer.jpg)
+
 ##### Problema del caricamento di un dataset
 Un dataset è generalmente memorizzato all'interno di file secondo uno specifico formato. I formati più popolari sono
 csv, json ed xml. I dati contenuti all'interno del file, per poter essere manipolati più facilmente, devono essere 
 trasformati in rappresentazioni astratte interne (astratte nel senso che non dipendono dal formato logico usato per organizzare
 i dati all'interno del file). Attraverso tale rappresentazione interna sarà poi possibile eseguire operazioni di ricerca e modifica
-sui dati. Il problema del caricamento è stato affrontato introducendo l'interfaccia DatasetFactory. Va comunque rispettata una
+sui dati. Il problema del caricamento è stato affrontato introducendo l'interfaccia DatasetLoader. (**Va comunque rispettata una
 convenzione. La factory si aspetta che il dataset sia memorizzato all'interno della cartella dataset/{nomeDataset}/{nomeDataset}.data
 insieme ad un altro file json della forma {nomeDataset}columns.json. La factory restituisce una rappresentazione astratta
-del dataset nella forma di un oggetto di interfaccia DataFrame. 
+del dataset nella forma di un oggetto di interfaccia DataFrame**). 
+
+![dataset_loader](docs/images/dataset_loader.jpg)
 
 ##### Problema del data cleaning del dataset
 Alcuni dataset possono presentare problemi come mancanza di dati, righe duplicate, errori di battitura........
@@ -168,10 +178,14 @@ Prima di procedere oltre il dataset andrebbe quindi ripulito. L'interfaccia Data
 di gestire queste anomalie. Il problema è stato affrontato introducendo l'interfaccia DatasetCleaner che espone il metodo
 clean_dataset() il quale restituisce una copia ripulita del dataset.
 
+![dataset_cleaner](docs/images/dataset_cleaner.jpg)
+
 ##### Problema della trasformazione di un dataset in forma numerica
 La maggior parte dei modelli di machine learning supporta solo dati in forma numerica. Quindi si pone il problema della
 codifica in forma numerica di tutte le variabili categoriche eventualmente presenti all'interno del dataset. Il problema
-può essere affrontato introducendo l'interfaccia DatasetEncoder.
+può essere affrontato introducendo le interfacce DatasetEncoder ed Encoder.
+
+![dataset_encoding](docs/images/dataset_encoding.jpg)
 
 ##### Problema del rilevamento di variabili proxy
 Le variabili proxy potrebbero essere identificate usando 1) la mutua informazione fra ogni variabile del dataset e tutte le
@@ -180,6 +194,8 @@ di ogni variabile di input per la previsione della variabile considerata come ta
 e Gradient boosting 3) possiamo provare anche con una matrice di correlazione. Il problema è stato affrontato 
 introducendo l'interfaccia ProxyDetector che restituisce informazioni sotto forma di ProxyDetection. Inoltre l'interfaccia
 StatisticsSupport fornisce una operazione per calcolare la matrice di correlazione 
+
+![proxy_detector](docs/images/proxy_detector.jpg)
 
 ##### Problema della suddivisione del dataset in preparazione dell'addestramento di un modello e successiva previsione
 Un modello di ML dovrebbe essere addestrato usando un certo insieme di dati. Successivamente all'addestramento, al modello
@@ -190,6 +206,8 @@ TrainTestSplitter che fornisce il metodo split() e restituisce una tupla-4 che r
 un insieme di 4 elementi: insieme X per il testing (il dataset meno la colonna della variabile target), 
 insieme y per il testing (colonna variabile target), insieme X per il training e insieme y per il training
 
+![splitting_train_test](docs/images/train_test_split_model.jpg)
+
 ##### Problema della valutazione di un modello
 La bontà di un modello può essere valutata usando diverse metriche quali accuratezza, precisione, recall, f1-score (dipendente 
 da precisione e recall). L'importanza della metrica dipende dal problema. Inoltre un modello potrebbe essere bravo nel 
@@ -197,16 +215,28 @@ predire dati già visti ma non altrettanto bravo con dati mai visti (non capace 
 possibile di affrontare il problema è quello di utilizzare la tecnica della cross validation. E' stata introdotta l'interfaccia
 CrossValidation che fornisce un metodo per cross validare un modello ed ottenere una valutazione delle metriche passate in ingresso
 
+![model_evaluation_model](docs/images/cross_validation_model.jpg)
+
 ##### Problema dell'addestramento di un modello
 Il problema dell'addestramento di un modello richiede la soluzione del 
 * problema relativo alla codifica del dataset in forma numerica 
 * problema relativo allo splitting del dataset negli insiemi di training e testing descritti precedentemente
 * scelta del modello più appropriato alla soluzione del problema di learning.  
 Si tratta di un problema di classificazione binaria ed è possibile scegliere fra diversi modelli più o meno complessi. 
-Il problema è stato affrontato introducendo l'interfacccia classifier che mette a disposizione operazioni per
+Il problema è stato affrontato introducendo le interfaccce Classifier ed EnsembleClassifier. Mettono a disposizione operazioni per
 l'addestramento e per la previsione.
 
+![models_model](docs/images/models_model.jpg)
+
 ##### Problema della valutazione della fairness di un modello
+Una volta ottenuta una previsione da un modello si pone il problema della valutazione della fairness per capire se un modello,
+addestrato tramite un insieme di dati, prenda decisioni a favore di certi gruppi e discriminando invece altri gruppi. Esistono alcune metriche
+di gruppo calcolabili ed utilizzabili allo scopo come selection rate, accuratezza ... ma calcolate per ogni valore di un attributo sensibile.
+Esistono poi anche delle metriche aggregate, sempre di gruppo, che restituiscono un solo numero anziché un valore per ogni gruppo.
+Per affrontare il problema è stata introdotta l'interfaccia FairnessMetrics che offre metodi per calcolare le metriche di base di gruppo e
+quelle aggregate
+
+![fairness_metrics_model](docs/images/fairness_metrics_model.jpg)
 
 #### Progettazione della soluzione
 E' stata introdotta la classe ApplLogic che governa la logica dell'applicazione (rappresenta il componente di controllo
@@ -330,8 +360,10 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 
 ![fit_predict_model](docs/images/fit_predict_model.jpg)
 
-* Valutazione della fairness di un modello (scrivi qualcosa e fai i disegni di ciò che hai fatto)
-  *
+* Valutazione della fairness di un modello
+  * La valutazione della fairness di un modello è affidata a CalculateFairnessMetricsUseCase. Di seguito gli schemi di struttura ed interazione.
+
+![fairness_metrics_computation](docs/images/fairness_metrics_design_use_case_design_structure_interaction.jpg)
 
 ## Conclusioni
 ***In questa parte lo studente trae le conclusioni del lavoro svolto,

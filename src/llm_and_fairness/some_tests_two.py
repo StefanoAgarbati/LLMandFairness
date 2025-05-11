@@ -214,8 +214,8 @@ def create_detect_proxy_use_case(dataset_repository, proxy_detector):
 def create_proxy_detector(config):
     return ProxyDetectorFactory.create(config)
 
-def create_splitter(type):
-    return TrainTestSplitFactory.create_train_test_splitter(type)
+def create_splitter(stype):
+    return TrainTestSplitFactory.create_train_test_splitter(stype)
 
 def create_performance_metrics(type):
     return PerformanceMetricsFactory.create_performance_metrics(type)

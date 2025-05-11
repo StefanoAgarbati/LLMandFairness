@@ -1,7 +1,7 @@
 {
 	"templates": [
 		{
-			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.",
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}.Non rispondere",
 			"tool": "",
 			"params": [ {
 				"ruolo" : "un esperto di data science e analisi dei dati",
@@ -79,7 +79,7 @@
 			}]
 		},
 		{
-			"message": "Come {ruolo}, devo {obiettivo}. Di quale problema di learning si tratta (classificazione, regressione, clustering.....)? Rispondi nella forma: 'Si tratta di un problema di learning di [tipo_di_problema]'",
+			"message": "Come {ruolo}, devo {obiettivo}. Di quale problema di learning si tratta (classificazione, regressione, clustering.....)? Rispondi nella forma: 'Si tratta di un problema di learning di [tipo_di_problema]'. Quindi il tuo è un problema di learning di tipo [tipo_di_problema]",
 			"tool": "",
 			"params": [{
 				"ruolo": "data scientist",
@@ -92,7 +92,7 @@
 			"params": [{}]
 		},
 		{
-			"message": "Mostra le metriche di performance disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'metriche_di_performance_disponibili_per', 'args': {{'problema_di_learning': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json senza alcuna formattazione ed altro testo",
+			"message": "Mostra le metriche di performance disponibili per il mio problema di learning. Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'metriche_di_performance_disponibili_per', 'args': {{'problema_di_learning': 'problem'}}}}]}}. Sostituisci problem con il nome del mio tipo di problema di learning. Restituisci solo la stringa json pura. Non aggiungere altro testo o formattazione",
 			"tool": "metriche_di_performance_disponibili_per",
 			"params": [{}]
 		},
@@ -119,7 +119,7 @@
 			}]
 		},
 		{
-			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
+			"message": "Puoi addestrare il modello più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci esattamente la seguente stringa json con i parametri sostituiti : {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': 'dset'}}}}]}}. Sostituisci dset con il nome del mio dataset. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili oppure sostituisci model con il nome di un modello fra quelli disponibili per il mio problema di learning. Restituisci solo la stringa json pura senza alcuna formattazione ed altro testo.",
 			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
 			"params": [{
 				"dataset": "bank",
