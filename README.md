@@ -261,6 +261,9 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   * Un LLM, perché sia in grado di invocare funzioni, necessita di un binding. Il binding è affidato al BindToolsUseCase.
   Purtroppo non tutti gli LLM supportano la funzionalità di invocazione di tool e, in aggiunta a ciò, alcuni di quelli che la supportano
   possono comunque decidere, a propria discrezione, di non invocare comunque un tool e rispondere come meglio crede (il mio caso - Google Gemini).
+  Ovvero non è possibile in alcun modo forzare l'LLM ad eseguire una specifica funzione (ad eccezione di alcuni LLM).
+  La strategia usata è quella di sfruttare dei prompt particolari in cui si chiede all'LLM di restituire una stringa con una determinata struttura (json)
+  che renda possibile il suo successivo parsing e la conseguente invocazione della funzione corrispondente.
   
   <!-- Questo chiede ad un ToolRepository tutti i tool disponibili e poi chiama il metodo bind_tools() su un oggetto che
   implementa l'interfaccia ChatModel. I tool langchain sono stati implementati come funzioni annotate con l'annotazione
@@ -287,13 +290,13 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 * Visualizzazione delle richieste, delle risposte e dei grafici
   * La visualizzazione è delegata ad un DisplayUseCase che esponse delle operazioni per la visualizzazione di richieste,
   rispose, figure (grafici), testo semplice e markdown. Internamente, DisplayUseCase fa uso di un OutputDevice. DisplayUseCase
-  viene utilizzato sia all'interno dell'ApplLogic sia all'interno dei tool di basso livello langchain
+  viene utilizzato sia all'interno dell'ApplController sia all'interno dei tool del Toolkit
 
 ![display_use_case](docs/images/display_use_case.jpg)
 
 * Calcolo metriche statistiche e disegno dei grafici
   * La funzionalità è stata realizzata per mezzo di CalculateDistributionUseCase, GetCorrelationMatrixUseCase e
-  DrawStatisticalDataUseCase. I 3 casi di uso vengono invocati dal tool langchain di basso livello. CalculateDistributionUseCase
+  DrawStatisticalDataUseCase. I 3 casi di uso vengono invocati dai tool del Toolkit. CalculateDistributionUseCase
   e GetCorrelationMatrixUseCase fanno uso di un supporto StatisticsSupport per ottenere i valori delle statistiche.
   Il DrawStatisticalDataUseCase usa internamente uno StatisticalDrawer per costruire i grafici.
 
@@ -304,28 +307,30 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   Del caricamento di un dataset se ne occupa un LoadDatasetUseCase. Internamente utilizza un DatasetFactory, che si occupa del
   caricamento del dataset ovvero della sua trasformazione in una struttura dati interna quale DataFrame, e un DatasetRepository
   che tiene memoria del dataset astratto caricato. Per convenzione, i dataset devono trovarsi all'interno di un file del tipo {nome_dataset}.data
-  situato all'interno di una cartella avente nome {nome_dataset} a sua volta inserita all'interno della cartella datasets. Il DatasetFactory
-  utilizza l'interfaccia DatasetLoader che si occupa del caricamento vero e proprio da file su disco(come da convenzione). Inoltre
+  situato all'interno di una cartella avente nome {nome_dataset} a sua volta inserita all'interno della cartella datasets. 
+  Il DatasetFactory utilizza l'interfaccia DatasetLoader che si occupa del caricamento vero e proprio da file su disco(come da convenzione). Inoltre
   all'interno della cartella dove è presente il file .data deve essere presente un file {nome_dataset}columns.json che fornisca
   informazioni relative alle colonne del dataset. Questo per la gestione dell'intestazione del frame astratto poiché alcuni dataset vengono
-  già forniti con le intestazioni altri invece no.
+  già forniti con le intestazioni altri invece no. 
 
 ![load_dataset](docs/images/load_dataset.jpg)
 
 * Cleaning del dataset
   * L'attività di pulizia del dataset viene affidata ad un CleanDatasetUseCase. Internamente utilizza un DatasetRepository ed un 
-  DatasetCleaner. Il DatasetCleaner utilizza il file preprocessingconfig.json che deve riportare il nome dgli step di cleaning da eseguire,
-  il nome del dataset sul quale eseguire gli steps e l'elenco dei simboli da rimpiazzare con valori NaN. Usando il file di configurazione
+  DatasetCleaner. Il DatasetCleaner utilizza il file preprocessingconfig.json che deve riportare il nome degli step di cleaning da eseguire,
+  il nome del dataset sul quale eseguire gli steps e l'elenco dei simboli da rimpiazzare con valori NaN. Il file va collocato all'interno della
+  cartella in cui è presente anche il file .data (cartella datasets/{nome_dataset}/). Usando il file di configurazione
   DatasetCleaner crea un DatasetPreprocessingConfig che viene passato ad un DatasetPreprocessingBuilder. Questi crea un DatasetPreprocessing
   ed usa una ProcessingStepFactory per creare i diversi Step (azioni) di pulizia (quelli indicati nel file di config). Il builder ritorna 
   al chiamante un oggetto di interfaccia DatasetPreprocessing che fornisce l'operazione preprocess_dataset() invocata da DatasetCleaner il quale,
-  a sua volta viene invocato dal CleanDatasetUseCase (invocazione del moetodo clean_dataset())
+  a sua volta viene invocato dal CleanDatasetUseCase (invocazione del metodo clean_dataset()). Il CleanDatasetUseCase viene invocato da un tool
+  del Toolkit
 
 ![data_cleaning](docs/images/dataset_cleaning.jpg)
   
 * Encoding dataset
   * L'encoding è affidato ad un EncodeDatasetUseCase che internamente utilizza un DatasetRepository, per il recupero del dataset caricato
-  in precendeza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
+  in precendenza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
   alle variabili del dataset quali il nome della variabile, il tipo (nominale, ordinale, numerica) e l'insieme dei possibili valori
   che la variabile può assumere (nel caso categorico). DatasetInfo prende queste informazioni a partire da un file che deve essere presente
   nella cartella relativa al dataset e con nome {nome_dataset}columnsencoding.json. Il DatasetEncoder lascia le variabili numeriche inalterate operando
