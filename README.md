@@ -12,21 +12,24 @@ Questa prima fase di ricerca viene svolta, di norma, manualmente e richiede:
 * un po' di buonsenso (comunque soggettivo).
 
 Ogni problema da risolvere è inquadrabile in uno specifico contesto. La questione del contesto è importante perché alcuni attributi possono essere considerati biased in certi contesti e non biased
-in altri rendendo difficoltoso il processo di automatione del processo di analisi: una macchina così com'è, non è in grado di capire questa cosa.
+in altri rendendo difficoltosa l'automazione del processo di analisi: una macchina così com'è, non è in grado di capire questa cosa.
 L'utilizzo di un LLM addestrato consente, in qualche modo, di affrontare questa questione del contesto e fornire supporto all'automazione del processo di analisi.
 
 Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'analisi di un dataset:
 * Individuazione delle caratteristiche sensibili relativamente al contesto
-  * una caratteristica è detta sensibile quando è potenzialmente fonte di unfairenss, disparità (come ad es. l'etnia, l'orientamento sessuale, informazioni sanitarie.....)
+  * una caratteristica è detta sensibile quando è potenzialmente fonte di unfaireness, disparità (come ad es. l'etnia, l'orientamento sessuale, informazioni sanitarie.....)
 * caratteristiche non presenti nel dataset ma che ci si aspetterebbe di trovare nello specifico conteste applicativo
 * valori non considerati nelle caratteristiche presenti
   * come ad esempio il genere non binario per la caratteristica 'genere'
 * identificazione di caratteristiche proxy, di nicchie ed eventuali disproporzioni presenti nei dati di cui si dispone
   * una variabile proxy è una variabile strettamente correlata ad un'altra e che può essere sostituita ad essa (porta con se molta informazione  
-    sull'altra variabile). I proxy possono portare a distorsioni nei dati ed avere un impatto significativo sulla decisione presa da un modello  
+    sull'altra variabile). I proxy possono portare a distorsioni nei dati ed avere un impatto significativo sulla decisione presa da un modello.
+  * una nicchia può essere definita come un sottoinsieme di piccole dimensioni dei dati aventi caratteristiche simili. La loro minoranza nell'insieme
+  può essere fonte di disparità, discriminazione
+  * una disproporzione può essere definita come un mancato bilanciamento nei valori di una caratteristica (ad. esempio più femmine che maschi
+  nella caratteristica 'genere'). Le disproporzioni possono favorire gruppi a danno di altri
   * l'identificazione di proxy, nicchie e disproporzioni nei dati è importante perché possono influenzare, distorcere la decisione presa da un modello e  
     portare a fenomeni di unfairness e situazioni di svantaggio per alcuni gruppi.
-  * (**spiegare cosa si intende per nicchia e disproporzione e perché è importante la loro identificazione**)
 * identificare la caratteristica target
   * cioè la caratteristica sulla quale il modello dovrà fare una previsione usando come input le altre caratteristiche del dataset
 * individuare il modello di problema di learning più 'appropriato' per il problema in esame
