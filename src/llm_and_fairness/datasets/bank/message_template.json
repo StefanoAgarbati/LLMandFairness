@@ -9,12 +9,12 @@
 			}]
 		},
 		{
-			"message": "Sono un {ruolo}. Il mio obiettivo è {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possono essere critici (sensibili) per ciò che riguarda la fairness?",
+			"message": "Sono un {ruolo}. Il mio obiettivo è {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possone essere critici (sensibili) per ciò che riguarda la fairness?",
 			"tool": "",
 			"params": [{
 				"ruolo" : "data scientist",
-				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore o uguale a 50000 dollari oppure maggiore di 50000 dollari",
-				"attributi": "age, workclass, fnlwgt, education, education-num, marital-status, occupation, relationship, race, sex, capital-gain, capital-loss, hours-per-week, native-country, income"
+				"obiettivo": "predire se un cliente sottoscriverà oppure no un deposito bancario" ,
+				"attributi": "age, job, marital, education, default, balance, housing, loan, contact, day, month, duration, campaign, pdays, previous, poutcome, y"
 			}]
 		},
 		{
@@ -23,40 +23,44 @@
 			"params": [{}]
 		},
 		{
-			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori non presenti nell'elenco potrebbero essere importanti per il mio obiettivo? Genera solo l'elenco",
+			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori non presenti nell'elenco potrebbero essere importanti per il mio obiettivo? Solo elenco",
 			"tool": "",
 			"params" : [
 				{
-					"nome" : "workclass",
-					"valori": "Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked"
+					"nome" : "job",
+					"valori": "admin., unknown, unemployed, management, housemaid, entrepreneur, student, blue-collar, self-employed, retired, technician, services"
+				},
+				{
+					"nome" : "marital",
+					"valori": "married, divorced, single"
 				},
 				{
 					"nome" : "education",
-					"valori": "Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool"
+					"valori": "unknown, secondary, primary, tertiary"
 				},
 				{
-					"nome" : "marital-status",
-					"valori": "Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse"
+					"nome" : "default",
+					"valori": "yes, no"
 				},
 				{
-					"nome" : "occupation",
-					"valori": "Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces"
+					"nome" : "housing",
+					"valori": "yes, no"
 				},
 				{
-					"nome" : "relationship",
-					"valori": "Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried"
+					"nome" : "loan",
+					"valori": "yes, no"
 				},
 				{
-					"nome" : "race",
-					"valori": "White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black"
+					"nome" : "contact",
+					"valori": "unknown, telephone, cellular"
 				},
 				{
-					"nome" : "sex",
-					"valori": "Female, Male"
+					"nome" : "month",
+					"valori": "jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec"
 				},
 				{
-					"nome" : "native-country",
-					"valori": "United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands"
+					"nome" : "poutcome",
+					"valori": "unknown, other, failure, success"
 				}
 			]
 		},
@@ -69,70 +73,70 @@
 			"message": "Carica il mio dataset {dataset}. Genera e restituisci la seguente stringa JSON : {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "load_dataset",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Pulisci il dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "clean_dataset",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'calculate_the_distributions_of_all_attributes', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "calculate_the_distributions_of_all_attributes",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Mostra i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Noti qualche disproporzione, sbilanciamento negli attributi del dataset {dataset}?",
 			"tool": "",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Codifica il mio dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "esegui_codifica_dataset",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Calcola la matrice di correlazione del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "get_correlation_matrix",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset {dataset}?",
 			"tool": "",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Mostra la matrice di correlazione come heatmap del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'get_correlation_heatmap', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "get_correlation_heatmap",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
 			"message": "Rileva eventuali variabili proxy presenti nel dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'rileva_eventuali_variabili_proxy', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
 			"tool": "rileva_eventuali_variabili_proxy",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{
@@ -146,7 +150,7 @@
 			"tool": "",
 			"params": [{
 				"ruolo": "data scientist",
-				"obiettivo": "predire se il reddito annuo di un soggetto sarà minore od uguale a 50000 dollari oppure maggiore di 50000 dollari"
+				"obiettivo": "predire se un cliente sottoscriverà oppure no un deposito bancario"
 			}]
 		},
 		{
@@ -160,34 +164,34 @@
 			"params": [{}]
 		},
 		{
-			"message": "Valuta i modelli usando il dataset {dataset}, variable target {target}, le metriche di performance disponibili e i modelli disponibili per il mio problema di learning. Genera e Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'evaluate_models', 'args': {{'models': 'amod', 'metrics': 'amet', 'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Sostituisci amod con una stringa composta dall'elenco dei modelli disponibili per il problema di learning. Sostituisci amet con le metriche di performance disponibili per il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"message": "Valuta i modelli usando il dataset {dataset}, variable target {target}, le metriche di performance disponibili e i modelli disponibili per il mio problema di learning. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'evaluate_models', 'args': {{'models': 'amod', 'metrics': 'amet', 'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Sostituisci amod con una stringa composta dall'elenco dei modelli disponibili per il problema di learning. Sostituisci amet con le metriche di performance disponibili per il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
 			"tool": "evaluate_models",
 			"params": [{
-				"dataset": "adult",
-				"target": "income"
+				"dataset": "bank",
+				"target": "y"
 			}]
 		},
 		{
 			"message": "Da un'analisi delle valutazioni ottenute qual'è, secondo te, il modello più appropriato per {obiettivo}?",
 			"tool": "",
 			"params": [{
-				"obiettivo": "predire il reddito annuo income"
+				"obiettivo": "predire se un cliente sottoscriverà oppure no un deposito bancario"
 			}]
 		},
 		{
-			"message": "Puoi eseguire lo split del mio dataset in train test set usando come target {target}? Genera e Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'split_dataset_in_train_test_set', 'args': {{'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"message": "Puoi eseguire lo split del mio dataset in train test set usando come target {target}? Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'split_dataset_in_train_test_set', 'args': {{'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
 			"tool": "split_dataset_in_train_test_set",
 			"params": [{
-				"dataset": "adult",
-				"target": "income"
+				"dataset": "bank",
+				"target": "y"
 			}]
 		},
 		{
 			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': '{dataset}'}}}}]}}. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili oppure sostituisci model con il nome di un modello fra quelli disponibili per il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON.",
 			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
 			"params": [{
-				"dataset": "adult",
-				"target": "income"
+				"dataset": "bank",
+				"target": "y"
 			}]
 		},
 		{
@@ -204,7 +208,7 @@
 			"message": "Calcola le metriche di fairness di gruppo. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'calcola_le_metriche_di_fairness_di_gruppo', 'args': {{'metriche': 'metriche_disponibili', 'sensible': 'variabili_sensibili', 'dataset_name': '{dataset}'}}}}]}}. Sostituisci variabili_sensibili con una stringa composta dall'elenco delle variabili, secondo te, sensibili.Sostituisci metriche_disponibili con una stringa composta dall'elenco delle metriche di fairness di gruppo disponibili. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
 			"tool": "calcola_le_metriche_di_fairness_di_gruppo",
 			"params": [{
-				"dataset": "adult"
+				"dataset": "bank"
 			}]
 		},
 		{

@@ -32,7 +32,7 @@ class ChatModelLangchain(ChatModel):
         #print(f"send_tool_message with tool {tool}")
         #response = self.chat.invoke(message, config={"tool_choice": tool})
         response = self.chat.invoke(message)
-        print("ChatModelLangchain->response->", response.text())
+        #print("ChatModelLangchain->response->", response.text())
         chat_message = ChatMessageLangchain.create_message(response, tool)
         return chat_message
 

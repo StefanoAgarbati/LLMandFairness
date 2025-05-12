@@ -7,7 +7,7 @@ class GetAvailableMetricsUseCase:
         self.metrics = metrics
 
     def get_available_metrics_for(self, problem_type):
-        print(f"GetAvailableMetrics: -> problem_type {problem_type}")
+        #print(f"GetAvailableMetrics: -> problem_type {problem_type}")
         for metric in self.metrics:
             if metric['problem'] == problem_type:
                 return metric['metrics']

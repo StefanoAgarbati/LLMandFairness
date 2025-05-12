@@ -8,9 +8,9 @@ class StringParsingUtils:
     def from_json_to_dict(json_string):
         json_string = StringParsingUtils.remove_prefix_and_suffix(json_string, "{", "}")
         json_string = json_string.replace("'", '"')
-        print("StringParsingUtils->from_json_to_dict->json_string->",json_string)
+        #print("StringParsingUtils->from_json_to_dict->json_string->",json_string)
         json_dict = json.loads(json_string)
-        print("StringParsingUtils->from_json_to_dict->", json_dict)
+        #print("StringParsingUtils->from_json_to_dict->", json_dict)
         return json_dict
 
     @staticmethod
