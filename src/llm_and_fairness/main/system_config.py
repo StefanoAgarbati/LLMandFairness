@@ -15,9 +15,9 @@ class SystemConfig:
     api_key = 'AIzaSyCNfAQnkwlkPZbE_CTIn-GSQPks-fmQMkY'
     out_dev_type = OutputDeviceType.Jupyter
     tool_repo_type = ToolRepositoryType.STANDARD
-    dataset_name = 'bank'
-    cleaning_config_path = 'datasets/bank/preprocessingconfig.json'
-    user_message_path = 'datasets/bank/message_template_test.json'
+    dataset_name = 'adult'
+    cleaning_config_path = 'datasets/adult/preprocessingconfig.json'
+    user_message_path = 'datasets/adult/message_template.json'
     classifier_config = {"model": ClassifierModel.GRADIENT_BOOSTING}
     scorings = ['accuracy', 'precision', 'recall', 'f1']
     models = [ClassifierModel.RANDOM_FOREST, ClassifierModel.GRADIENT_BOOSTING]

@@ -8,10 +8,14 @@ class ChatMessageLangchain(ChatMessage):
     def __init__(self, ai_message, tool_calls=''):
         self.ai_message = ai_message
         self.tool_calls = tool_calls
+        self.tool_calls_error = False
 
     def has_calls(self):
         #return len(self.get_tool_calls()) != 0
         return self.tool_calls != ''
+
+    def has_calls_error(self):
+        return self.tool_calls_error
 
     @staticmethod
     def create_message(aimessage, tool=''):
@@ -26,7 +30,7 @@ class ChatMessageLangchain(ChatMessage):
             return []
         calls = []
         msg = self.get_message()
-        print("get_tool_calls->msg->",msg)
+        #print("get_tool_calls->msg->",msg)
         tools = StringParsingUtils.from_json_to_dict(msg)
         for call in tools['tool_calls']:
             tc = ToolCall(call)
@@ -54,3 +58,7 @@ class ChatMessageLangchain(ChatMessage):
             tc = ToolCall(call)
             tool_calls.append(tc)
         return tool_calls"""
+
+    def set_tool_calls_error(self, is_error):
+        self.tool_calls_error = True
+

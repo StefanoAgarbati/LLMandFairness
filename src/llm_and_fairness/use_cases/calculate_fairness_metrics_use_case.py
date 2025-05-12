@@ -17,12 +17,12 @@ class CalculateFairnessMetricsUseCase:
         return group_metrics
 
     def get_metrics_list(self, metrics):
-        res = metrics.split(",")
+        res = metrics.replace(" ", "").split(",")
         print(f"CalculateFairnessUC->get_metrics_list->{res}")
         return res
 
     def get_sensitive_list(self, sensitive_groups):
-        res = sensitive_groups.split(",")
+        res = sensitive_groups.replace(" ", "").split(",")
         print(f"CalculateFairnessUC->get_sensitive_list->{res}")
         return res
 

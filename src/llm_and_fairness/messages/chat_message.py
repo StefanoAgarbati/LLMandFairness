@@ -14,5 +14,13 @@ class ChatMessage(Message):
         pass
 
     @abstractmethod
+    def has_calls_error(self):
+        pass
+
+    @abstractmethod
     def get_tool_calls(self) -> list[ToolCall]:
+        pass
+
+    @abstractmethod
+    def set_tool_calls_error(self, is_error):
         pass

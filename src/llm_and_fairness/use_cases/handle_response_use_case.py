@@ -9,11 +9,16 @@ class HandleResponseUseCase:
             #self.show_response(aresponse.get_message())
             return [aresponse]
         else:
+            try:
             #tool_execution_message = ToolExecutionMessage()
             #tool_execution_message.append(amessage.get_message())
-            print("HandleResponseUC->handle->", aresponse.get_message())
-            exec_results = self.execute_calls(aresponse.get_tool_calls())
-            return exec_results
+            #print("HandleResponseUC->handle->", aresponse.get_message())
+                exec_results = self.execute_calls(aresponse.get_tool_calls())
+                return exec_results
+            except Exception:
+                print("HandleResponseUseCas->handle->exception raised->")
+                aresponse.set_tool_calls_error(True)
+                return [aresponse]
             #self.process_execution_result(exec_results)
 
     def execute_calls(self, tool_calls):
@@ -24,7 +29,7 @@ class HandleResponseUseCase:
             #print("tool_exec_result: " , tool_exec_result.get_tool_name())
             #print("tool_exec_result: ", tool_exec_result.get_args())
             exec_results.append(tool_exec_result)
-            #print("HandleResponseUC->execute_calls->")
+            print("HandleResponseUC->execute_calls->")
             return exec_results
             #self.process_execution_result(exec_results)
 

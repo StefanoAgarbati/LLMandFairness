@@ -28,11 +28,10 @@
 			}]
 		},
 		{
-			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {json}. Sostituisci dset con il nome del mio dataset. Restituisci solo la stringa json pura.",
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Restituisci esattamente la seguente stringa json con i parametri sostituiti: {{'tool_calls': [{{'name': 'calculate_the_distributions_of_all_attributes', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci solo la stringa json pura.",
 			"tool": "calculate_the_distributions_of_all_attributes",
 			"params": [{
-				"dataset": "adult",
-				"json": "{'tool_calls': [{'name': 'calculate_the_distributions_of_all_attributes', 'args': {'dataset_name': 'dset'}}]}"
+				"dataset": "adult"
 			}]
 		},
 		{

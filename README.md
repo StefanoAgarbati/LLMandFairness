@@ -255,27 +255,34 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   Attende una risposta e crea un ChatMessageLangchain che rappresenta l'implementazione concreta basata su langchain dell'interfaccia
   ChatMessage. Il ChatMessageLangchain incapsula un AIMessage del framework Langchain (un adapter).
   
-![google_chat_model_langchain](docs/images/google_chat_model_langchain.jpg)
+![google_chat_model_langchain](docs/images/google_chat_design_struct_inter.jpg)
 
 * Binding dei tool
-  * Un LLM, perché sia in grado di invocare funzioni, necessita di un binding. Il binding è affidato al BindToolSUseCase.
-  Questo chiede ad un ToolRepository tutti i tool disponibili e poi chiama il metodo bind_tools() su un oggetto che
+  * Un LLM, perché sia in grado di invocare funzioni, necessita di un binding. Il binding è affidato al BindToolsUseCase.
+  Purtroppo non tutti gli LLM supportano la funzionalità di invocazione di tool e, in aggiunta a ciò, alcuni di quelli che la supportano
+  possono comunque decidere, a propria discrezione, di non invocare comunque un tool e rispondere come meglio crede (il mio caso - Google Gemini).
+  
+  <!-- Questo chiede ad un ToolRepository tutti i tool disponibili e poi chiama il metodo bind_tools() su un oggetto che
   implementa l'interfaccia ChatModel. I tool langchain sono stati implementati come funzioni annotate con l'annotazione
   @tool di langchain ed inserite tutte all'interno del modulo tool_functions. L'interfaccia ToolRepository del dominio
   è stata realizzata dalla classe ToolRepositoryLangchain che altro non fa se non chiamare get_all_tools() del modulo 
-  tool_functions per riempire il repository (una lista in memory)
+  tool_functions per riempire il repository (una lista in memory) -->
 
 ![bind_tools_use_case](docs/images/bind_tools.jpg)
 
 * Elaborazione delle risposte ricevute
   * l'elaborazione delle risposte ricevute da un LLM viene affidata ad un HandleResponseUseCase. Se il messaggio di risposta
-  ricevuto non contiene tool calls questo viene restituito al chimante così com'è senza ulteriori elaborazioni. Se invece fossero
+  ricevuto non contiene tool calls questo viene restituito al chimante così com'è senza ulteriori elaborazioni (ChatMessage). Se invece fossero
   presenti delle calls nella risposta allora l'handler le manda tutte in esecuzione. Le calls sono rappresentate dalla classe
-  ToolCall che incapsula il nome del tool da invocare e gli argomenti con i quali invocare il tool. Il tool è rappresentato
-  dalla classe ToolLangchain che implementa la classe astratta di dominio Tool e ne implementa il metodo execute() che va
-  creando un ToolExecutionMessageLangchain il quale incapsula il nome del tool invocato e il risultato dell'esecuzione del tool.
+  ToolCall che incapsula il nome del tool da invocare e gli argomenti con i quali invocare il tool.
+  Il tool è implementato dalla classe ToolLocal che estende la classe astratta di dominio Tool (che modella un tool) e ne implementa il metodo execute(ToolCall) che va
+  creando un ToolExecutionMessageImpl (che rappresenta una implementazione dell'interfaccia ToolExecutionMessage) il quale incapsula 
+  il nome del tool invocato e il risultato dell'esecuzione del tool. Internamente, un tool incapsula il riferimento ad una funzione parte del
+  modulo Toolkit. Le funzioni del Toolkit usano uno UseCaseRepository per invocare la logica applicativa specifica. L'esecuzione di un tool restituisce una tupla-2 composta da una stringa
+  content, che verrà utilizzata per arricchire la memoria dell'LLM, ed un oggetto artifact, che contiene il risultato dell'esecuzione della
+  logica applicativa (restituita dallo specifico UseCase)
   
-![handle_response_use_case](docs/images/handle_response.jpg)
+![handle_response_use_case](docs/images/handle_response_new.jpg)
 
 * Visualizzazione delle richieste, delle risposte e dei grafici
   * La visualizzazione è delegata ad un DisplayUseCase che esponse delle operazioni per la visualizzazione di richieste,

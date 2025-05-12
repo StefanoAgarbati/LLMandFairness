@@ -15,7 +15,7 @@ def get_available_tools_names():
              'calculate_the_distributions_of_all_attributes',
              'valuta_modelli_su_dataset_rispetto_a_target',
              'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi',
-             'disegna_la_matrice_di_correlazione_come_heatmap', 'rileva_eventuali_variabili_proxy',
+             'get_correlation_heatmap', 'rileva_eventuali_variabili_proxy',
              'available_models_for',
              'evaluate_models', 'metriche_di_performance_disponibili_per', 'esegui_trasformazione_inversa',
              'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target',
@@ -47,8 +47,8 @@ def get_tool_by_name(toolname):
             return valuta_modelli_su_dataset_rispetto_a_target
         case 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi':
             return disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi
-        case 'disegna_la_matrice_di_correlazione_come_heatmap':
-            return disegna_la_matrice_di_correlazione_come_heatmap
+        case 'get_correlation_heatmap':
+            return get_correlation_heatmap
         case 'rileva_eventuali_variabili_proxy':
             return rileva_eventuali_variabili_proxy
         case 'available_models_for':
@@ -116,7 +116,7 @@ def clean_dataset(dataset_name: str) -> tuple[str, pd.DataFrame]:
 
 def calculate_the_distributions_of_all_attributes(dataset_name: str) -> tuple[str, list[pd.Series]]:
     """Calcola la distribuzione di frequenza di tutti gli attributi presenti nel dataset"""
-    print(f"calculate_distributions_tool->invoked with dataset->{dataset_name}")
+    #print(f"calculate_distributions_tool->invoked with dataset->{dataset_name}")
     data = UseCaseRepository.get_use_case_by_name(UseCase.GET_DISTRIBUTION).calculate_all_frequency_distributions(
         dataset_name)
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
@@ -215,7 +215,7 @@ def split_dataset_in_train_test_set(dataset_name: str, target: list | str) -> tu
 def addestra_un_modello_e_fai_una_previsione_su_dataset_e_target(model_name: str, dataset_name: str) -> tuple[
     str, Prediction]:
     """
-    addestra un modello e fa una previsione utilizzando un dataset e una variabile target.
+    addestra un modello e fa una previsione utilizzando un dataset.
     Richiede il nome di un modello e il nome di un dataset
     """
     data = UseCaseRepository.get_use_case_by_name(UseCase.TRAIN_MODEL_MAKE_PREDICTION).fit_predict(model_name,
@@ -298,7 +298,7 @@ def disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi(dataset_name: s
     return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 
 
-def disegna_la_matrice_di_correlazione_come_heatmap(dataset_name: str) -> tuple[str, list]:
+def get_correlation_heatmap(dataset_name: str) -> tuple[str, list]:
     """
     Disegna la matrice di correlazione come una heatmap di un dataset
     Richiede il nome del dataset come parametro
@@ -386,7 +386,7 @@ def mostra_metriche_di_fairness_aggregate_disponibili(problem_type: str) -> tupl
     display_uc = UseCaseRepository.get_use_case_by_name(UseCase.DISPLAY)
     msg = f"Ecco le metriche di fairness aggregate disponibili per problemi di {problem_type} : {data}"
     display_uc.display_markdown(msg)
-    content = msg
+    content = '{"metriche di fairness aggregate disponibili":' + f"{data}" + "}"
     # print("Tool metricheAggregate -> invoked with " + problem_type)
     return namedtuple("ToolExecutionResult", ["content", "artifact"])(content, data)
 

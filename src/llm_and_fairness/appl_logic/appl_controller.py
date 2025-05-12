@@ -1,6 +1,8 @@
 import time
 
 from basesupport import ActiveObject
+from messages.chat_message import ChatMessage
+from messages.tool_execution_message import ToolExecutionMessage
 from messages.user_message import UserMessage
 
 
@@ -34,6 +36,13 @@ class ApplController(ActiveObject):
         #print("Memories:" , memories)
         response = self.send_memory_to_chat(memories, message)
         responses = self.handle_response(response)
+        i = 0
+        while all((isinstance(x, ChatMessage) and x.has_calls_error()) for x in responses) and i < 30:
+            self.add_memory("Genera e restituisci solo la stringa JSON che ho richiesto")
+            response = self.send_memory_to_chat(memories, message)
+            responses = self.handle_response(response)
+            time.sleep(15)
+            i += 1
         self.show_response(responses)
         self.add_memories(responses)
 
