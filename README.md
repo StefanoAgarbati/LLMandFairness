@@ -332,22 +332,22 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   * L'encoding è affidato ad un EncodeDatasetUseCase che internamente utilizza un DatasetRepository, per il recupero del dataset caricato
   in precendenza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
   alle variabili del dataset quali il nome della variabile, il tipo (nominale, ordinale, numerica) e l'insieme dei possibili valori
-  che la variabile può assumere (nel caso categorico). DatasetInfo prende queste informazioni a partire da un file che deve essere presente
+  che la variabile può assumere (nel caso categorico). DatasetInfo prende queste informazioni da un file che deve essere presente
   nella cartella relativa al dataset e con nome {nome_dataset}columnsencoding.json. Il DatasetEncoder lascia le variabili numeriche inalterate operando
-  la codifica numerica delle sole variabili categoriche. Per ciascuna di essere, in base al tipo (ordinale o nominale) viene creata una mappa di encoder
-  del tipo 'nome_attributo': nome, 'encoder': encoder attraverso una EncoderFactory che crea oggetti di interfaccia Encoder. Quindi procede ad
-  invocare il metodo encode su ogni encoder della mappa. Viene restituito al chiamante (EncodeDatasetUseCase)il dataset codificato il
-  quale viene salvato all'interno del DatasetRepository con il nome {dataset_name}_encoded.
+  la codifica numerica delle sole variabili categoriche. Per ciascuna di esse, in base al tipo (ordinale o nominale), viene creata una mappa di encoder
+  del tipo 'nome_attributo': nome, 'encoder': encoder attraverso una EncoderFactory che crea oggetti di interfaccia Encoder. Quindi procede ad 
+  invocare il metodo encode su ogni encoder della mappa. Viene restituito al chiamante (EncodeDatasetUseCase) il dataset codificato il
+  quale viene salvato all'interno del DatasetRepository.
 
 ![dataset_encoding](docs/images/encode_dataset.jpg)
 
 * Identificazione delle variabili proxy
   * La soluzione che utilizza un modello per predire una variabile a partire da tutte le altre per poi verificare l'importanza di
-  ciascuna variabile nella determinazione della previsione non è stata possibile nel mio pc data la mancanza di risorse computazionali (memoria insufficiente).
-  Ho utilizzato la mutua informazione. L'identificazione è affidata al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
+  ciascuna variabile nella determinazione della previsione (feature importances) non è stata possibile nel mio pc data la mancanza di risorse computazionali (memoria insufficiente).
+  Pertanto ho utilizzato la mutua informazione. L'identificazione è affidata al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
   un ProxyDetector (che calcola la mutua informazione fra una variabile e tutte le altre presenti nel dataset). Il DetectProxyUseCase restituisce
   una lista di ProxyDetection (memorizza un dizionario del tipo {'nome_variabile': nome,'mutua_informazione': mi}) invocando il metodo detect_proxy()
-  per ogni variabile del dataset ed inserendo poi la ProxyDetection ottenuta all'interno di una lista detections retistuita poi al chiamante. 
+  per ogni variabile del dataset ed inserendo poi la ProxyDetection ottenuta all'interno di una lista detections restituita poi al chiamante. 
   L'interfaccia ProxyDetector è implementata dalle classi ProxyDetectorMutualInfoBased e ProxyDetectorTreeBased. Il ProxyDetectorMutulaInfoBased usa 
   un MutualInfoUtils per ottenere la mutua informazione fra una variabile e tutte le altre. MutualInfoUtils è implementata usando la funzione mutual_info_classif()
   della libreria scikit-learn.
@@ -355,22 +355,23 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 ![detect_proxy](docs/images/proxy_detection.jpg)
 
 * Suddivisione del dataset in training set e testing set
-  * La suddivisione del dataset è affidata ad un TrainTestSpliUseCase, sempre invocato dal corrispondente tool del framework Langchain.
+  * La suddivisione del dataset è affidata ad un TrainTestSpliUseCase, sempre invocato dal corrispondente tool del Toolkit.
   Esso usa uno SplitRepository, un DatasetRepository ed un TrainTestSplitter. Il TrainTestSplitter offre il metodo split() che
   a partire dal nome del dataset e dal nome della variabile target suddivide il dataset negli insiemi di training e testing. Questi vengono poi incapsulati all'interno
   di uno Split (contiene il nome del dataset, X_train, X_test, y_train, y_test ed offre metodi per recuperare tali elementi). Lo split viene poi
-  memorizzato all'interno di uno SplitRepository per poter utilizzare lo Split nelle fasi successive. Lo Split viene restituito al chiamante TrainTestSplitUseCase
-  che a sua volta lo resituisce al tool di basso livello Langchain
+  memorizzato all'interno di uno SplitRepository per poter essere utilizzato nelle fasi successive. Lo Split viene restituito al chiamante TrainTestSplitUseCase
+  che a sua volta lo resituisce al tool del Toolkit
   
 ![train_test_split](docs/images/train_test_split.jpg)
 
 * Addestramento di un modello
-  * Affidato a FitPredictModelUseCase che offre il metodo fit_predict() che a partire dal nome di uno split addestra un modello usando l'insieme
-  di training e poi procede facendo una previsione usando l'insieme di testing. Usa l'interfaccia Classifier (da modificare con Model, più generale)
-  per addestrare un modello e fare una previsione. Quindi la previsione viene incapsulata all'interno di una Prediction e salvata nel repository
-  PredictionRespository. La Prediction viene restituita al chiamante avvero il tool Langchain
+  * Affidato a TrainModelAndMakePredictionUseCase che offre il metodo fit_predict() che a partire dal nome di uno split e dal nome di un dataset 
+  addestra un modello usando l'insieme di training e poi procede facendo una previsione usando l'insieme di testing. Usa l'interfaccia 
+  Classifier (da estendere con Model, più generale) per addestrare un modello e fare una previsione. 
+  Quindi la previsione viene incapsulata all'interno di una Prediction e salvata nel repository
+  PredictionRepository. La Prediction viene restituita al chiamante ovvero il tool corrispondente del Toolkit
 
-![fit_predict_model](docs/images/fit_predict_model.jpg)
+![fit_predict_model](docs/images/train_model_make_prediction_design.jpg)
 
 * Valutazione della fairness di un modello
   * La valutazione della fairness di un modello è affidata a CalculateFairnessMetricsUseCase. Di seguito gli schemi di struttura ed interazione.
