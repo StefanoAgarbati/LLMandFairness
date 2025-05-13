@@ -267,7 +267,7 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   
 ![google_chat_model_langchain](docs/images/google_chat_design_struct_inter.jpg)
 
-* Binding dei tool
+* Invocazione dei tool
   * Un LLM, perché sia in grado di invocare funzioni o tool, necessita di un cosiddetto binding.
   Purtroppo non tutti gli LLM supportano la funzionalità di invocazione di tool e, in aggiunta a ciò, alcuni di quelli che la supportano
   possono comunque decidere, a propria discrezione, di non invocare comunque un tool e rispondere come meglio credono (il mio caso - Google Gemini).
@@ -347,7 +347,7 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   
 * Encoding dataset
   * L'encoding è affidato ad un EncodeDatasetUseCase che internamente utilizza un DatasetRepository, per il recupero del dataset caricato
-  in precendenza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
+  in precedenza, un DatasetEncoder, che si occupa della codifica vera e propria e un DatasetInfo che contiene informazioni relative
   alle variabili del dataset quali il nome della variabile, il tipo (nominale, ordinale, numerica) e l'insieme dei possibili valori
   che la variabile può assumere (nel caso categorico). DatasetInfo prende queste informazioni da un file che deve essere presente
   nella cartella relativa al dataset e con nome {nome_dataset}columnsencoding.json. Il DatasetEncoder lascia le variabili numeriche inalterate operando
@@ -361,21 +361,22 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 * Identificazione delle variabili proxy
   * La soluzione che utilizza un modello per predire una variabile a partire da tutte le altre per poi verificare l'importanza di
   ciascuna variabile nella determinazione della previsione (feature importances) non è stata possibile nel mio pc data la mancanza di risorse computazionali (memoria insufficiente).
-  Pertanto ho utilizzato la mutua informazione. L'identificazione è affidata al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
+  Pertanto ho utilizzato la mutua informazione per ottenere informazioni utili all'identificazione di proxy. 
+  Il calcolo della mutua informazione è affidato al DetectProxyUseCase che internamente utilizza un DatasetRepository ed
   un ProxyDetector (che calcola la mutua informazione fra una variabile e tutte le altre presenti nel dataset). Il DetectProxyUseCase restituisce
   una lista di ProxyDetection (memorizza un dizionario del tipo {'nome_variabile': nome,'mutua_informazione': mi}) invocando il metodo detect_proxy()
   per ogni variabile del dataset ed inserendo poi la ProxyDetection ottenuta all'interno di una lista detections restituita poi al chiamante. 
-  L'interfaccia ProxyDetector è implementata dalle classi ProxyDetectorMutualInfoBased e ProxyDetectorTreeBased. Il ProxyDetectorMutulaInfoBased usa 
+  L'interfaccia ProxyDetector è implementata dalle classi ProxyDetectorMutualInfoBased e ProxyDetectorTreeBased. Il ProxyDetectorMutualInfoBased usa 
   un MutualInfoUtils per ottenere la mutua informazione fra una variabile e tutte le altre. MutualInfoUtils è implementata usando la funzione mutual_info_classif()
   della libreria scikit-learn.
   
 ![detect_proxy](docs/images/proxy_detection.jpg)
 
 * Suddivisione del dataset in training set e testing set
-  * La suddivisione del dataset è affidata ad un TrainTestSpliUseCase, sempre invocato dal corrispondente tool del Toolkit.
+  * La suddivisione del dataset è affidata ad un TrainTestSplitUseCase, sempre invocato dal corrispondente tool del Toolkit.
   Esso usa uno SplitRepository, un DatasetRepository ed un TrainTestSplitter. Il TrainTestSplitter offre il metodo split() che
   a partire dal nome del dataset e dal nome della variabile target suddivide il dataset negli insiemi di training e testing. Questi vengono poi incapsulati all'interno
-  di uno Split (contiene il nome del dataset, X_train, X_test, y_train, y_test ed offre metodi per recuperare tali elementi). Lo split viene poi
+  di uno Split (che contiene il nome del dataset, X_train, X_test, y_train, y_test ed offre metodi per recuperare tali elementi). Lo split viene poi
   memorizzato all'interno di uno SplitRepository per poter essere utilizzato nelle fasi successive. Lo Split viene restituito al chiamante TrainTestSplitUseCase
   che a sua volta lo resituisce al tool del Toolkit
   
@@ -386,7 +387,7 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   addestra un modello usando l'insieme di training e poi procede facendo una previsione usando l'insieme di testing. Usa l'interfaccia 
   Classifier (da estendere con Model, più generale) per addestrare un modello e fare una previsione. 
   Quindi la previsione viene incapsulata all'interno di una Prediction e salvata nel repository
-  PredictionRepository. La Prediction viene restituita al chiamante ovvero il tool corrispondente del Toolkit
+  PredictionRepository per un utilizzo successivo. La Prediction viene restituita al chiamante ovvero il tool corrispondente del Toolkit
 
 ![fit_predict_model](docs/images/train_model_make_prediction_design.jpg)
 
@@ -396,12 +397,10 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 ![fairness_metrics_computation](docs/images/fairness_metrics_design_use_case_design_structure_interaction.jpg)
 
 ## Conclusioni
-***In questa parte lo studente trae le conclusioni del lavoro svolto,
-valutando pregi e difetti dell’esperienza e, più specificamente, riassumendo quanto
-appreso.***
+
 Questa attività di tirocinio è stata, a mio avviso, molto formativa. Ho avuto l'opportunità di apprendere cose nuove ed attuali
 non trattate in nessuno dei corsi inclusi del mio corso di studi. In particolare ho potuto apprendere le basi dell'analisi di un insieme di dati come 
-* il preprocessing dell'insieme dati (consistente nella pulizia, l'identificazione di errori, duplicazioni e dati mancanti)
+* il preprocessing dell'insieme dati (che può includere la pulizia dei dati, l'identificazione di errori nei dati, duplicazioni di dati e dati mancanti)
 * la valutazione delle feature principali presenti nel dataset e della possibile mancanza di alcune di esse per la specifica applicazione
 * la valutazione dell'insieme dei valori delle singole feature e della possible mancanza di alcuni di essi per la specifica applicazione
 * il calcolo di alcune statistiche descrittive utili ad estrarre informazioni dai dati e valutare alcuni aspetti legati alla fairness
@@ -419,12 +418,12 @@ non trattate in nessuno dei corsi inclusi del mio corso di studi. In particolare
 
 Ho potuto familiarizzare anche con i principali concetti del dominio del machine learning come
 * le principali tipologie di apprendimento (supervisionato, non supervisionato)
-* i principali tipi di problemi di apprendimento come classificazione (binaria, multiclasse, multilabel)
+* i principali tipi di problemi di apprendimento come classificazione (binaria, multiclasse, multilabel), regressione, clustering
 * i principali modelli di apprendimento automatico come alberi decisionali, regressione lineare e logistica, gradient descent,
   i modelli ensemble come random forest, la tecnica del boosting
 * le principali metriche usate per valutare le perfomance di un modello
 
-Ho dovuto familiarizzare con il "prompt engineering" ovvero la capacità di generare richieste ben formulate ad un LLM al fine di ottenere
+Ho dovuto familiarizzare con il "prompt engineering" ovvero la capacità di generare richieste opportunamente formulate ad un LLM al fine di ottenere
 determinate risposte.
 
 Ho appreso anche le principali metriche usate per valutare la fairness di un modello come
@@ -438,9 +437,10 @@ la non sempre correttezza nelle risposte fornite dall'LLM , la non predicibilit�
 guidare l'LLM verso un determinato comportamento (cioè nel fornire risposte deterministiche che siano poi facilmente interpretabili).
 
 Il progetto software è stato applicato al dataset Adult prima, poi è stato testato su di un nuovo dataset, Bank Marketing. Questo per valutare
-la capacità di generalizzazione dell'applicativo.
-
-Il tutto è stato svolto con il supporto delle tecnologie descritte sopra quali python, pandas, langchain, scikit-learn, fairlearn, jupyter lab.
+la capacità di generalizzazione dell'applicativo. In ogni caso due soli dataset non sono, secondo me, sufficienti per valutare appieno tale
+capacità, poiché, di volta in volta, l'applicazione potrebbe subire estensioni e modifiche a causa della scoperta di nuovi
+problemi non considerati nella soluzione corrente.
+Il tutto è stato svolto con il supporto delle tecnologie descritte sopra quali python, pandas, langchain, scikit-learn, seaborn, fairlearn, jupyter lab.
 Tecnologie per me nuove e mai trattate se non in questa attività di tirocinio. 
     
 Ringrazio infine il Prof. Giovanni Ciatto per avermi dato questa opportunità e per la sua disponibilità.
