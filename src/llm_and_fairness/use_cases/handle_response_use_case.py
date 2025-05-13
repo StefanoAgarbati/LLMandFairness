@@ -30,7 +30,7 @@ class HandleResponseUseCase:
             #print("tool_exec_result: ", tool_exec_result.get_args())
             exec_results.append(tool_exec_result)
             #print("HandleResponseUC->execute_calls->")
-            return exec_results
+        return exec_results
             #self.process_execution_result(exec_results)
 
     """def process_execution_result(self, exec_results):

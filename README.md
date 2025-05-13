@@ -4,7 +4,7 @@
 ## Introduzione
 Scopo di questo progetto è quello di provare ad automatizzare, con l'ausilio di un LLM (large language model), alcuni dei passi compiuti da un data scientist nel processo di analisi di un insieme di dati.
 Quando si opera nel campo delle scienze sociali, una delle prime cose che un analista cerca di capire, è se l'insieme di dati di cui dispone mostra dei difetti, delle distorsioni che possano portare
-a fenomeni di bias ed unfaireness nelle fasi successive del processo di analisi.
+a fenomeni di bias ed unfairness nelle fasi successive del processo di analisi.
 Questa prima fase di ricerca viene svolta, di norma, manualmente e richiede:
 * la capacità, di natura tecnica, del saper gestire, manipolare i dati presenti in un dataset
 * la conoscenza del contesto applicativo per capire come selezionare le caratteristiche e le variabili target (ad es. se si operasse nel campo bancario l'analista dovrebbe conoscere i concetti e 
@@ -17,7 +17,7 @@ L'utilizzo di un LLM addestrato consente, in qualche modo, di affrontare questa 
 
 Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'analisi di un dataset:
 * Individuazione delle caratteristiche sensibili relativamente al contesto
-  * una caratteristica è detta sensibile quando è potenzialmente fonte di unfaireness, disparità (come ad es. l'etnia, l'orientamento sessuale, informazioni sanitarie.....)
+  * una caratteristica è detta sensibile quando è potenzialmente fonte di unfairness, disparità (come ad es. l'etnia, l'orientamento sessuale, informazioni sanitarie.....)
 * caratteristiche non presenti nel dataset ma che ci si aspetterebbe di trovare nello specifico conteste applicativo
 * valori non considerati nelle caratteristiche presenti
   * come ad esempio il genere non binario per la caratteristica 'genere'
@@ -38,48 +38,46 @@ Quelli che seguono sono alcuni passi eseguiti da un data scientist durante l'ana
 L'obiettivo principale del progetto è quello di riuscire ad automatizzare, attraverso il supporto di un LLM, almeno i punti descritti precedentemente.
 
 ## Tecnologie
-***In questa sezione il tirocinante elenca e commenta brevemente le
-tecnologie utilizzate (linguaggi, piattaforme, sistemi operativi, ecc.)***
+
 Nello sviluppo del progetto software sono state utilizzate diverse tecnologie.
 ### Linguaggio di programmazione Python
-Il codice è stato realizzato interamente in linguaggio python. Si tratta di un liguaggio interpretato e di tipo dinamico (non è necessario dichiarare il tipo delle variabili come in js)
-E' uno dei linguaggi più utilizzati nel campo dell'inteligenza artificiale poiché supportato da un'ampia gamma di librerie e framework
+
+Il codice è stato realizzato interamente in linguaggio python. Si tratta di un linguaggio interpretato e di tipo dinamico (non è necessario dichiarare il tipo delle variabili come in js)
+E' uno dei linguaggi più utilizzati nel campo dell'intelligenza artificiale poiché supportato da un'ampia gamma di librerie e framework.
+
 ### Libreria Pandas
-Per la parte legata alla manipolazione e gestione dei dati è stata utiilzzata la libreria Pandas. Questa fornisce strutture dati adatte a modellare insiemi di dati ed operazioni 
+Per la parte legata alla manipolazione e gestione dei dati è stata utilizzata la libreria Pandas. Questa fornisce strutture dati adatte a modellare insiemi di dati ed operazioni 
 per la loro manipolazione e selezione.
+
 ### Framework LangChain
-LancgChain è un framework che fornisce supporto allo sviluppo di applicazioni che fanno uso di LLM (large language model). Fornisce un'iterfaccia uniforme verso le diverse api fornite dai
-diversi vendor è produttori di LLM. Implementa omogeneità al di sopra dell'eterogeità derivante dalle diverse api
+LangChain è un framework che fornisce supporto allo sviluppo di applicazioni che fanno uso di LLM (large language model). Fornisce un'interfaccia uniforme verso le diverse api fornite dai
+diversi vendor è produttori di LLM. Implementa omogeneità al di sopra dell'eterogeneità derivante dalle diverse api vendor-dependent.
+
 ### Libreria Scikit-learn
-Scikit-learn è una libreria python di supporto allo sviluppo di applicazioni che utilizzano il machine learning. 
+Scikit-learn è una libreria python di supporto allo sviluppo di applicazioni che utilizzano il machine learning.
+
 ### Libreria Seaborn
 Seaborn è una libreria python che fornisce funzioni per la visualizzazione di dati statistici come istogrammi, heatmap, diagrammi di dispersione.......
+
 ### Libreria Fairlearn
 Fairlearn è una libreria che fornisce supporto alla valutazione della fairness nella decisione presa da un modello. Mette a disposizione classi e  
 funzioni per calcolare le principali metriche, per gruppi, usate per valutare la fairness di un modello (selection_rate, parità demografica...). Offre
 anche funzionalità di mitigazione di eventuali distorsioni.
+
 ### Jupyter Lab
 E' un ambiente web-based che consente di produrre documenti interattivi contenti codice, testo normale, grafici vari e controlli interattivi (come bottoni, slider....)
-E' utile per prototyping, per spiegare codice, per visualizzare dati di varia natura e condividere informazioni con altri
+E' utile per prototyping, per spiegare codice, per visualizzare dati di varia natura e condividere informazioni con altri.
 
 
 ## Attività
-***Questa sezione, eventualmente frazionata in sottosezioni, è quella
-centrale e più corposa dell’elaborato e deve illustrare (dal punto di vista tecnico, non
-necessariamente cronologico) le attività svolte durante il tirocinio. A eccezione di
-eventuali esempi, non deve includere il codice sviluppato; per descrivere algoritmi si
-usino piuttosto pseudo-codice e/o diagrammi di vario tipo. Per lavori di tipo progettuale
-è utile includere una sintetica documentazione formale di progetto***
-
-#### Spiegazione breve di ciò che hai fatto durante questa attività di tirocinio
 Durante l'attività di tirocinio è stata sviluppata un'applicazione software per capire se fosse o meno possibile l'utilizzo di LLM
-per automatizzare alcune delle fasi di un processo di analisi di un insieme di dati sfruttando la conoscenza ed il "buon senso" acquisiti da esso
+per automatizzare alcune delle fasi di un processo di analisi di un insieme di dati sfruttando la conoscenza ed il "buon senso" acquisiti da esso (LLM)
 durante l'addestramento. 
 
 #### Requisiti del software
 Scopo del progetto software è quello di cercare di automatizzare il più possibile certe azioni che un data scientist esegue durante il processo di analisi di un dataset.  
 Alcune di queste azioni sono state descritte nella sezione [Introduzione](#introduzione) di questo documento:
-* Indentificazione delle caratteristiche sensibili relativamente al contesto
+* Identificazione delle caratteristiche sensibili relativamente al contesto
   * una caratteristica è detta sensibile quando è potenzialmente fonte di unfairenss, disparità (come ad es. l'etnia, l'orientamento sessuale, informazioni sanitarie.....)
 * identificazione di caratteristiche non presenti nel dataset ma che ci si aspetterebbe di trovare nello specifico contesto applicativo
 * identificazione di valori non considerati nelle caratteristiche presenti
@@ -90,13 +88,13 @@ Alcune di queste azioni sono state descritte nella sezione [Introduzione](#intro
 * identificazione del modello di problema di learning più 'appropriato' per il problema in esame
   * capire se è più 'consono' trattare il problema come problema di classificazione o regressione o clustering o ranking .....
 
-Si richiede che il software da sviluppare, per poter soddisfare tali requisiti, faccia uso di un LLM come supporto all'attività di analisi 
+Si richiede che il software da sviluppare, per soddisfare tali requisiti, faccia uso di un LLM come supporto all'attività di analisi 
 
 #### Analisi dei requisiti
 L'artefatto software deve:  
 * inviare richieste ad un LLM
 * ricevere ed elaborare risposte ricevute da un LLM
-* visualizzare le richieste inoltrare all'LLM e le risposte ricevute
+* visualizzare le richieste inoltrate all'LLM e le risposte ricevute
 * calcolare alcune metriche statistiche relative alle caratteristiche
 * visualizzare le metriche statistiche attraverso grafici
 * caricare un dataset
@@ -111,9 +109,9 @@ L'artefatto software deve:
 * fornire informazioni relative al modello di machine learning più appropriato in relazione ai risultati di performance ottenuti testando alcuni modelli disponibili
 * preparare il dataset suddividendolo in un insieme per il testing e un insieme per il training di un modello
 * addestramento del modello più appropriato e relativa previsione del target
-* fornire informazioni relative alla analisi delle prestazioni del modello
+* fornire informazioni relative all'analisi delle prestazioni del modello
 * calcolo di alcune metriche di gruppo legate alla fairness della decisione presa dal modello
-* valutazione della fairness relativamente alle decisioni prese da un modello
+* fornire informazioni relative alla fairness delle decisioni prese da un modello
 
 #### Analisi del problema
 L'applicazione deve inviare ad un LLM una sequenza di messaggi predeterminati e definiti dall'utente. I messaggi sono memorizzati 
@@ -122,7 +120,8 @@ sincrona. Successivamente all'invio di un messaggio l'LLM può rispondere con un
 semplicemente visualizzato all'utente attraverso un dispositivo di output oppure può rispondere attraverso un messaggio 
 che richiede l'esecuzione di un tool specifico. In quest'ultimo caso il messaggio contiene il nome del tool che deve essere eseguito e i parametri da passare ad esso.  
 Il tool viene eseguito localmente ma alcuni dei parametri vengono generati dall'LLM in base al messaggio di 
-richiesta che esso ha ricevuto e in base alla cronologia delle interazioni. L'esecuzione di un tool porta ad un risultato parte del quale viene usato per arricchire la 
+richiesta che esso ha ricevuto e in base alla cronologia delle interazioni (composta da tutti i messaggi da esso inviati e ricevuti precedentemente). 
+L'esecuzione di un tool porta ad un risultato, parte del quale viene usato per arricchire la 
 memoria dell'LLM. Infatti sorge il problema della memoria che può essere risolto tenendo traccia di tutte le interazioni e passando, ad ogni richiesta fatta all'LLM,  
 tutti i messaggi inviati e ricevuti fino a quel momento. L'esecuzione di un tool porterà all'innesco di una specifica logica applicativa.  
 La descrizione a parole di cui sopra può essere espressa anche attraverso un disegno che mostra l'architettura generale del sistema software  
@@ -137,7 +136,7 @@ da un LLM. Il messaggio utente è stato modellato come UserMessage mentre i mess
 
 ##### Elaborazione delle risposte ricevute dall'LLM (ChatModel)
 Il ChatModel risponde ad una richiesta attraverso un ChatMessage. Questo può essere un semplice messaggio testuale che non richiede
-alcuna elaborazione oppure può contere delle ToolCalls. L'interfaccia ToolCall modella una chiamata ad un tool richiesta dall'LLM
+alcuna elaborazione oppure può contenere delle ToolCalls. L'interfaccia ToolCall modella una chiamata ad un tool richiesta dall'LLM
 in risposta ad una richiesta. In tal caso il messaggio di risposta deve essere elaborato al fine di invocare il tool (oppure i tools) 
 richiesto e restituirne il risultato. La gestione dell'elaborazione può essere affidata ad un ResponseHandlerUseCase. Tale interfaccia 
 contiene il metodo handle il quale prende in ingresso un messaggio di risposta ottenuto da un ChatModel (ChatMessage) e restituisce:
@@ -146,8 +145,16 @@ contiene il metodo handle il quale prende in ingresso un messaggio di risposta o
 
 ![handle_response_sequence](docs/images/handleResponseUseCase.jpg)
 
+##### Problema della memoria
+Un LLM, di per se, non mantiene memoria dei messaggi ricevuti ed inviati in una conversazione con un utente. Ma affinché la
+conversazione sia proficua è necessario che esso ricordi ciò che ha ricevuto e ciò che ha inviato. Il problema della memoria
+è stato affrontato introducendo l'interfaccia MemoryRepository che offre metodi per aggiungere una memoria e recuperare la
+cronologia delle memorie
+
+![memory](docs/images/memory.jpg)
+
 ##### Problema della visualizzazione delle richieste e delle risposte ricevute
-Tutte le richieste inoltrate all'LLM e le risposte da esso ricevute devono essere mostrate all'utente. La visualizzzione
+Tutte le richieste inoltrate all'LLM e le risposte da esso ricevute devono essere mostrate all'utente. La visualizzazione
 potrebbe avvenire attraverso un qualunque dispositivo di output. Il problema è stato affrontato introducendo l'interfaccia
 OutputDevice che mette a disposizione alcuni metodi per la visualizzazione di informazioni testuali e disegni
 
@@ -202,8 +209,8 @@ StatisticsSupport fornisce una operazione per calcolare la matrice di correlazio
 
 ##### Problema della suddivisione del dataset in preparazione dell'addestramento di un modello e successiva previsione
 Un modello di ML dovrebbe essere addestrato usando un certo insieme di dati. Successivamente all'addestramento, al modello
-verrà chiesto di fare una previsione usando un insieme di dati (privato della variabile target) che il modella non abbia 
-mai visto. Potremmo, ad esempio, suddividere l'insieme dati a disposizione in due parti (nel senso orizzontale) andando
+verrà chiesto di fare una previsione usando un insieme di dati (privato della variabile target) che non abbia 
+mai visto prima. Potremmo, ad esempio, suddividere l'insieme dati a disposizione in due parti (nel senso orizzontale) andando
 così a creare un insieme di training e un insieme di test. Tale problema è stato affrontato introducendo l'interfaccia
 TrainTestSplitter che fornisce il metodo split() e restituisce una tupla-4 che rappresenta
 un insieme di 4 elementi: insieme X per il testing (il dataset meno la colonna della variabile target), 
@@ -224,26 +231,26 @@ CrossValidation che fornisce un metodo per cross validare un modello ed ottenere
 Il problema dell'addestramento di un modello richiede la soluzione del 
 * problema relativo alla codifica del dataset in forma numerica 
 * problema relativo allo splitting del dataset negli insiemi di training e testing descritti precedentemente
-* scelta del modello più appropriato alla soluzione del problema di learning.  
-Si tratta di un problema di classificazione binaria ed è possibile scegliere fra diversi modelli più o meno complessi. 
-Il problema è stato affrontato introducendo le interfaccce Classifier ed EnsembleClassifier. Mettono a disposizione operazioni per
+* scelta del modello più appropriato alla soluzione del problema di learning (suggerito dalla cross validation).  
+E' possibile scegliere fra diversi modelli più o meno complessi. 
+Il problema è stato affrontato introducendo le interfacce Classifier ed EnsembleClassifier. Mettono a disposizione operazioni per
 l'addestramento e per la previsione.
 
 ![models_model](docs/images/models_model.jpg)
 
 ##### Problema della valutazione della fairness di un modello
 Una volta ottenuta una previsione da un modello si pone il problema della valutazione della fairness per capire se un modello,
-addestrato tramite un insieme di dati, prenda decisioni a favore di certi gruppi e discriminando invece altri gruppi. Esistono alcune metriche
+addestrato tramite un insieme di dati, prenda decisioni a favore di certi gruppi discriminandone invece altri. Esistono alcune metriche
 di gruppo calcolabili ed utilizzabili allo scopo come selection rate, accuratezza ... ma calcolate per ogni valore di un attributo sensibile.
-Esistono poi anche delle metriche aggregate, sempre di gruppo, che restituiscono un solo numero anziché un valore per ogni gruppo.
+Esistono poi anche delle metriche aggregate, sempre calcolate per gruppo, che restituiscono un solo numero anziché un valore per ogni gruppo.
 Per affrontare il problema è stata introdotta l'interfaccia FairnessMetrics che offre metodi per calcolare le metriche di base di gruppo e
 quelle aggregate
 
 ![fairness_metrics_model](docs/images/fairness_metrics_model.jpg)
 
 #### Progettazione della soluzione
-E' stata introdotta la classe ApplLogic che governa la logica dell'applicazione (rappresenta il componente di controllo
-dell'architettura generale del sistema). L'ApplLogic si appoggia sopra uno strato di use cases ciascuno dei quali realizza
+E' stata introdotta la classe ApplController che governa la logica dell'applicazione (rappresenta il componente di controllo
+dell'architettura generale del sistema). L'ApplController si appoggia sopra uno strato di use cases ciascuno dei quali realizza
 qualche funzionalità (logica) specifica. Lo strato degli use cases si appoggia al di sopra di uno strato di dominio composto
 da interfacce, modelli dati, interfacce di repository (astrazione di una base di dati). Sono stati definiti degli adapters
 per agganciare la tecnologia al modello del dominio. Il modello architetturale è clean architecture like.
@@ -261,12 +268,19 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
 ![google_chat_model_langchain](docs/images/google_chat_design_struct_inter.jpg)
 
 * Binding dei tool
-  * Un LLM, perché sia in grado di invocare funzioni, necessita di un binding. Il binding è affidato al BindToolsUseCase.
+  * Un LLM, perché sia in grado di invocare funzioni o tool, necessita di un cosiddetto binding.
   Purtroppo non tutti gli LLM supportano la funzionalità di invocazione di tool e, in aggiunta a ciò, alcuni di quelli che la supportano
-  possono comunque decidere, a propria discrezione, di non invocare comunque un tool e rispondere come meglio crede (il mio caso - Google Gemini).
-  Ovvero non è possibile in alcun modo forzare l'LLM ad eseguire una specifica funzione (ad eccezione di alcuni LLM).
+  possono comunque decidere, a propria discrezione, di non invocare comunque un tool e rispondere come meglio credono (il mio caso - Google Gemini).
+  Ovvero non è sempre possibile forzare un LLM ad eseguire una specifica funzione (ad eccezione di alcuni LLM).
   La strategia usata è quella di sfruttare dei prompt particolari in cui si chiede all'LLM di restituire una stringa con una determinata struttura (json)
-  che renda possibile il suo successivo parsing e la conseguente invocazione della funzione corrispondente.
+  che renda possibile il suo successivo parsing e la conseguente invocazione della funzione corrispondente. In particolare si chiede all'LLM la
+  restituzione di una stringa json della forma '{"tool_calls": \[{"name":nome_tool, "args":{"arg1":"val1",....,"argn":"valn"}}\]}' la quale può 
+  essere poi trasformata in un oggetto json astratto utilizzabile per invocare il tool. Un ChatMessage, il quale modella la risposta fornita
+  dall'LLM, può contenere informazioni che indicano la necessità di invocare un tool locale. In caso affermativo un HandleResponseUseCase 
+  si occuperà di recuperare lo specifico tool da un ToolRepository (implementato da ToolRepositoryStandard) e poi invocarlo con i giusti parametri incapsulati all'interno di un
+  ToolCall. 
+  
+![tool_calling](docs/images/tool_calling.jpg)
   
   <!-- Questo chiede ad un ToolRepository tutti i tool disponibili e poi chiama il metodo bind_tools() su un oggetto che
   implementa l'interfaccia ChatModel. I tool langchain sono stati implementati come funzioni annotate con l'annotazione
@@ -274,7 +288,7 @@ per agganciare la tecnologia al modello del dominio. Il modello architetturale �
   è stata realizzata dalla classe ToolRepositoryLangchain che altro non fa se non chiamare get_all_tools() del modulo 
   tool_functions per riempire il repository (una lista in memory) -->
 
-![bind_tools_use_case](docs/images/bind_tools.jpg)
+<!-- ![bind_tools_use_case](docs/images/bind_tools.jpg) -->
 
 * Elaborazione delle risposte ricevute
   * l'elaborazione delle risposte ricevute da un LLM viene affidata ad un HandleResponseUseCase. Se il messaggio di risposta

@@ -5,7 +5,7 @@ from messages.user_message_repository import UserMessageRepository
 
 
 class UserMessageRepositoryFiller:
-    def __init__(self, userMessageRepository, pathname=".\messageTemplates.json"):
+    def __init__(self, userMessageRepository, pathname=".\message_templates.json"):
         self.pathname = pathname
         self.repository = userMessageRepository
 
@@ -23,7 +23,7 @@ class UserMessageRepositoryFiller:
 class UserMessageRepositoryFactory:
 
     @staticmethod
-    def createUserMessageRepository(pathname=".\messageTemplates.json"):
+    def createUserMessageRepository(pathname=".\message_templates.json"):
         repository = UserMessageRepository()
         filler = UserMessageRepositoryFiller(repository, pathname)
         filler.initRepository()

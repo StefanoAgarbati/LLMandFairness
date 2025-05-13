@@ -1,0 +1,216 @@
+{
+	"templates": [
+		{
+			"message": "Comportati come se fossi {ruolo}. Il contesto è {contesto}. Non devi rispondere. Non devi generare alcun testo",
+			"tool": "",
+			"params": [ {
+				"ruolo" : "",
+				"contesto": ""
+			}]
+		},
+		{
+			"message": "Sono un {ruolo}. Il mio obiettivo è {obiettivo}. Il mio dataset contiene i seguenti attributi {attributi}. Quali di questi attributi possono essere critici (sensibili) per ciò che riguarda la fairness?",
+			"tool": "",
+			"params": [{
+				"ruolo" : "",
+				"obiettivo": "",
+				"attributi": ""
+			}]
+		},
+		{
+			"message": "Quali altri attributi potrebbero essere necessari a raggiungere il mio obiettivo ma non presenti nell'elenco che ti ho fornito?",
+			"tool": "",
+			"params": [{}]
+		},
+		{
+			"message": "Nel mio dataset ho un attributo il cui nome è {nome}. Esso assume i seguenti valori: {valori}. Quali altri valori non presenti nell'elenco potrebbero essere importanti per il mio obiettivo? Genera solo l'elenco",
+			"tool": "",
+			"params" : [
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				},
+				{
+					"nome" : "",
+					"valori": ""
+				}
+			]
+		},
+		{
+			"message": "Rispetto al mio obiettivo, quale fra gli attributi del mio dataset individui come variabile target? Genera solo il nome della variabile target",
+			"tool": "",
+			"params": [{}]
+		},
+		{
+			"message": "Carica il mio dataset {dataset}. Genera e restituisci la seguente stringa JSON : {{'tool_calls': [{{'name': 'load_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "load_dataset",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Pulisci il dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'clean_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "clean_dataset",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Calcola la distribuzione di tutti gli attributi del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'calculate_the_distributions_of_all_attributes', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "calculate_the_distributions_of_all_attributes",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Disegna i grafici delle distribuzioni di tutti gli attributi del mio dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "disegna_i_grafici_delle_distribuzioni_di_tutti_gli_attributi",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Noti qualche disproporzione, sbilanciamento negli attributi del dataset {dataset}?",
+			"tool": "",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Esegui la codifica del mio dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'esegui_codifica_dataset', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "esegui_codifica_dataset",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Calcola la matrice di correlazione del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'get_correlation_matrix', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "get_correlation_matrix",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Noti qualche correlazione importante fra i diversi attributi presenti nella matrice di correlazione del dataset {dataset}?",
+			"tool": "",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Disegna la matrice di correlazione come heatmap del dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'get_correlation_heatmap', 'args': {{'dataset_name': 'dset'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "get_correlation_heatmap",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Rileva eventuali variabili proxy presenti nel dataset {dataset}. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'rileva_eventuali_variabili_proxy', 'args': {{'dataset_name': '{dataset}'}}}}]}}. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "rileva_eventuali_variabili_proxy",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Analizzando i dati ottenuti puoi dirmi se esistono possibli variabili proxy di altre variabili?",
+			"tool": "",
+			"params": [{
+			}]
+		},
+		{
+			"message": "Come {ruolo}, devo {obiettivo}. Di quale problema di learning si tratta (classificazione, regressione, clustering.....)? Rispondi nella forma: 'Problema di learning di [tipo_di_problema]'",
+			"tool": "",
+			"params": [{
+				"ruolo": "",
+				"obiettivo": ""
+			}]
+		},
+		{
+			"message": "Quali modelli sono disponibili per risolvere il mio problema di learning?. Genera e resituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'available_models_for', 'args': {{'problem_type': 'problem'}}}}]}}. Sostituisci problem con il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare testo diverso dalla stringa JSON richiesta.",
+			"tool": "available_models_for",
+			"params": [{}]
+		},
+		{
+			"message": "Mostra le metriche di performance disponibili per il mio problema di learning. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'metriche_di_performance_disponibili_per', 'args': {{'problema_di_learning': 'problem'}}}}]}}. Sostituisci problem con il problema di learning. Restituisci unicamente la stringa JSON. Non generare stringhe diverse dalla stringa JSON richiesta.",
+			"tool": "metriche_di_performance_disponibili_per",
+			"params": [{}]
+		},
+		{
+			"message": "Valuta i modelli usando il dataset {dataset}, variable target {target}, le metriche di performance disponibili e i modelli disponibili per il mio problema di learning. Genera e Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'evaluate_models', 'args': {{'models': 'amod', 'metrics': 'amet', 'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Sostituisci amod con una stringa composta dall'elenco dei modelli disponibili per il problema di learning. Sostituisci amet con le metriche di performance disponibili per il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"tool": "evaluate_models",
+			"params": [{
+				"dataset": "",
+				"target": ""
+			}]
+		},
+		{
+			"message": "Da un'analisi delle valutazioni ottenute qual'è, secondo te, il modello più appropriato per {obiettivo}?",
+			"tool": "",
+			"params": [{
+				"obiettivo": ""
+			}]
+		},
+		{
+			"message": "Puoi eseguire lo split del mio dataset in train test set usando come target {target}? Genera e Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'split_dataset_in_train_test_set', 'args': {{'dataset_name': '{dataset}', 'target': '{target}'}}}}]}}. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"tool": "split_dataset_in_train_test_set",
+			"params": [{
+				"dataset": "",
+				"target": ""
+			}]
+		},
+		{
+			"message": "Puoi addestrare il modello per te più appropriato fra quelli disponibili e fare una previsione relativa al dataset {dataset}, usando {target} come target? Restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'addestra_un_modello_e_fai_una_previsione_su_dataset_e_target', 'args': {{'model_name': 'model', 'dataset_name': '{dataset}'}}}}]}}. Sostituisci model con il nome del modello per te più appropriato fra quelli disponibili oppure sostituisci model con il nome di un modello fra quelli disponibili per il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON.",
+			"tool": "addestra_un_modello_e_fai_una_previsione_su_dataset_e_target",
+			"params": [{
+				"dataset": "",
+				"target": ""
+			}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness di gruppo per il mio problema di learning. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_di_gruppo_disponibili', 'args': {{'problem_type': 'ptype'}}}}]}}. Sostituisci ptype con il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"tool": "mostra_metriche_di_fairness_di_gruppo_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Mostrami le metriche di fairness aggregate per il mio problema di learning. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'mostra_metriche_di_fairness_aggregate_disponibili', 'args': {{'problem_type': 'ptype'}}}}]}}. Sostituisci ptype con il problema di learning. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"tool": "mostra_metriche_di_fairness_aggregate_disponibili",
+			"params": [{}]
+		},
+		{
+			"message": "Calcola le metriche di fairness di gruppo. Genera e restituisci la seguente stringa JSON: {{'tool_calls': [{{'name': 'calcola_le_metriche_di_fairness_di_gruppo', 'args': {{'metriche': 'metriche_disponibili', 'sensible': 'variabili_sensibili', 'dataset_name': '{dataset}'}}}}]}}. Sostituisci variabili_sensibili con una stringa composta dall'elenco delle variabili, secondo te, sensibili.Sostituisci metriche_disponibili con una stringa composta dall'elenco delle metriche di fairness di gruppo disponibili. Restituisci unicamente la stringa JSON. Non devi generare altro testo diverso dalla stringa JSON richiesta.",
+			"tool": "calcola_le_metriche_di_fairness_di_gruppo",
+			"params": [{
+				"dataset": ""
+			}]
+		},
+		{
+			"message": "Dall'analisi delle metriche di fairness puoi dirmi se il modello sia problematico dal punto di vista della fairness stessa?",
+			"tool": "",
+			"params": [{}]
+		}
+	]
+}
