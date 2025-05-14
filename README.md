@@ -255,7 +255,7 @@ qualche funzionalità (logica) specifica. Lo strato degli use cases si appoggia 
 da interfacce, modelli dati, interfacce di repository (astrazione di una base di dati). Sono stati definiti degli adapters
 per agganciare la tecnologia al modello del dominio. Il modello architetturale è clean architecture like.
 
-![generalHiLevArchitecture](docs/images/architecture2.jpg)
+![generalHiLevArchitecture](docs/images/architecture2_correct.jpg)
 
 * Comunicazione con un LLM - invio richieste e ricezione risposte
   * Per ciò che concerne la comunicazione con un LLM fisico l'interfaccia ChatModel è stata implementata facendo uso del
